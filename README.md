@@ -154,6 +154,10 @@ is idempotent; the web tier never provisions; fail closed. Read them in [CLAUDE.
   business model is allowed before you sell.
 - **Tax, payments and law.** Invoice formats, VAT rules, KYC and payment rules differ by country. The Bangladesh
   settings are examples and not legal advice. Get local advice.
+- **Your own company details.** The company registration number (BIN), trade licence and address on the legal
+  pages, in `apps/web/public/facts.json` and on invoices belong to whoever runs the site. In the public copy
+  of this repository they are placeholders. Search for `000000000-0000`, `TRAD/DNCC/000000/2000` and
+  `Example House`, and replace every hit with your own details before you publish a site or issue an invoice.
 - **Not affiliated.** Amazon Web Services, AWS and Amazon Lightsail are trademarks of Amazon.com, Inc. or its
   affiliates. WHMCS is a trademark of WHMCS Limited. This project is independent and is not affiliated with or
   endorsed by either.

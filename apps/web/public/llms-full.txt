@@ -3,8 +3,8 @@
 > TryAWS.now is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. TryAWS.now sells, bills and supports the service.
 
 Canonical site: https://tryaws.now
-Published by TryAWS.now, Level 6, House of Veritas, 8 Gareeb-e-Newaz Avenue, Sector-13, Uttara, Dhaka-1230
-Identifiers: BIN: 008073062-0507, Trade License: TRAD/DNCC/098737/2020
+Published by TryAWS.now, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000
+Identifiers: BIN: 000000000-0000, Trade License: TRAD/DNCC/000000/2000
 Last updated: 2026-11-15
 
 ## English

@@ -17,6 +17,6 @@ TiCON Cloud is a prepaid, self-service cloud panel (in the style of Vultr or Dig
 | Launch gates | Core (signup, KYC, wallet, EPS, invoices, Linux instances, static IP, firewall, backups, disks, admin) is guaranteed on launch day. Gate A (Windows, database, load balancer, object storage) and Gate B (containers, CDN, DNS, domains) open only if they pass the Day 6 tests. Every product has a feature flag |
 | Customer panel URL | `my.ticoncloud.com` (assumption, configurable) |
 | Admin panel URL | `ops.ticoncloud.com` (assumption, configurable) |
-| Company address on invoices and legal pages | TiCON System Limited, Level 6, House of Veritas, 8 Gareeb-e-Newaz Avenue, Sector-13, Uttara, Dhaka-1230 |
+| Company address on invoices and legal pages | TiCON System Limited, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000 |
 | Default locale | Bengali (`bn`), English (`en`) second |
 

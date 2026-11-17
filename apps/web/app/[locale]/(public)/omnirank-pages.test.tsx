@@ -211,11 +211,11 @@ describe("structured data (OmniRank gates schema, schema-required, speakable)", 
           legalName: "TryAWS.now",
           description: MESSAGES[locale].entity.statement,
           identifier: [
-            { "@type": "PropertyValue", propertyID: "BIN", value: "008073062-0507" },
+            { "@type": "PropertyValue", propertyID: "BIN", value: "000000000-0000" },
             {
               "@type": "PropertyValue",
               propertyID: "Trade License",
-              value: "TRAD/DNCC/098737/2020",
+              value: "TRAD/DNCC/000000/2000",
             },
           ],
         });

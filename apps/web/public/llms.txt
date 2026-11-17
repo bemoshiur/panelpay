@@ -14,8 +14,8 @@ Last updated: 2026-11-15
 - Locations: Singapore (ap-southeast-1), Mumbai (ap-south-1)
 - Prices: Prices are in taka (BDT), for 30 days, and include VAT and fees. You pay from your taka wallet, and you see the amount before you confirm. 100% AWS infrastructure. Built on Amazon Lightsail.
 - Support: TryAWS.now gives support through support requests only, and our support team answers every request in writing. With an account, open a request in the panel and follow the answers there. Without an account, use the form on the support page and we answer by email. There is no support phone line and no support email address.
-- Company: TryAWS.now, Level 6, House of Veritas, 8 Gareeb-e-Newaz Avenue, Sector-13, Uttara, Dhaka-1230
-- Identifiers: BIN: 008073062-0507, Trade License: TRAD/DNCC/098737/2020
+- Company: TryAWS.now, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000
+- Identifiers: BIN: 000000000-0000, Trade License: TRAD/DNCC/000000/2000
 - Machine-readable facts: https://tryaws.now/facts.json
 - Full text: https://tryaws.now/llms-full.txt
 

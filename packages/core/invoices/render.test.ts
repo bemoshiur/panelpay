@@ -128,15 +128,15 @@ describe("renderInvoiceHtml", () => {
   });
   // WPU-Y6 (owner, 2026-11-14): the seller is printed with its BIN as the owner gives it (9 and 4 digits
   // with a hyphen) and, when entered, its trade licence number.
-  it("prints the seller BIN as 008073062-0507 and the trade licence when it is entered", () => {
-    const owner = { ...seller, bin: "0080730620507", tradeLicense: "TRAD/DNCC/098737/2020" };
+  it("prints the seller BIN as 000000000-0000 and the trade licence when it is entered", () => {
+    const owner = { ...seller, bin: "0000000000000", tradeLicense: "TRAD/DNCC/000000/2000" };
     const en = renderInvoiceHtml({ ...doc, seller: owner }, "en");
-    expect(en).toContain("<strong>BIN:</strong> 008073062-0507");
-    expect(en).toContain("<strong>Trade License:</strong> TRAD/DNCC/098737/2020");
+    expect(en).toContain("<strong>BIN:</strong> 000000000-0000");
+    expect(en).toContain("<strong>Trade License:</strong> TRAD/DNCC/000000/2000");
     const bn = plain(renderInvoiceHtml({ ...doc, seller: owner }, "bn"));
-    expect(bn).toContain("০০৮০৭৩০৬২-০৫০৭");
+    expect(bn).toContain("০০০০০০০০০-০০০০");
     expect(bn).toContain("ট্রেড লাইসেন্স");
-    expect(bn).toContain("TRAD/DNCC/098737/2020");
+    expect(bn).toContain("TRAD/DNCC/000000/2000");
     expect(renderInvoiceHtml(doc, "en")).not.toContain("Trade License");
   });
   it("splits the stored VAT line from the rest, never recomputing it", () => {

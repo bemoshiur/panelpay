@@ -34,7 +34,7 @@ const TRADEMARK =
 // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now, with its BIN and trade licence written exactly
 // as the owner gave them (the same as the footer of the site, Shell.footer).
 const ADDRESS =
-  "TryAWS.now, Level 6, House of Veritas, 8 Gareeb-e-Newaz Avenue, Sector-13, Uttara, Dhaka-1230. BIN: 008073062-0507. Trade License: TRAD/DNCC/098737/2020";
+  "TryAWS.now, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000. BIN: 000000000-0000. Trade License: TRAD/DNCC/000000/2000";
 
 export const SHARED: Readonly<Record<"bn" | "en", SharedText>> = {
   bn: {

@@ -126,8 +126,8 @@ describe("shellMessages", () => {
       expect(leaf(bn, `Shell.footer.${key}`)).toBe(leaf(en, `Shell.footer.${key}`));
     }
     expect(leaf(en, "Shell.footer.companyName")).toBe("TryAWS.now");
-    expect(leaf(en, "Shell.footer.bin")).toBe("BIN: 008073062-0507");
-    expect(leaf(en, "Shell.footer.tradeLicense")).toBe("Trade License: TRAD/DNCC/098737/2020");
+    expect(leaf(en, "Shell.footer.bin")).toBe("BIN: 000000000-0000");
+    expect(leaf(en, "Shell.footer.tradeLicense")).toBe("Trade License: TRAD/DNCC/000000/2000");
     for (const tree of [bn, en]) expect(JSON.stringify(tree)).not.toMatch(/TiCON System/i);
   });
 

@@ -120,7 +120,7 @@ describe("the printable invoice", () => {
     const html = en.html as string;
     expect(html).toContain("Mushak-6.3");
     expect(html).toContain("Seller &lt;Ltd&gt;");
-    // WPU-Y6: the seller BIN prints in the grouping 9 and 4 ("008073062-0507" form).
+    // WPU-Y6: the seller BIN prints in the grouping 9 and 4 ("000000000-0000" form).
     expect(html).toContain("123456789-0123");
     expect(html).toContain("Dhaka");
     expect(html).toContain("Karim");

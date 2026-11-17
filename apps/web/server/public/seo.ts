@@ -130,8 +130,8 @@ export const websiteId = (origin: string): string => `${origin}/#website`;
  * them. The footer prints them with their labels (`Shell.footer.bin`, `Shell.footer.tradeLicense`); a
  * test keeps the two in step.
  */
-export const COMPANY_BIN = "008073062-0507";
-export const COMPANY_TRADE_LICENSE = "TRAD/DNCC/098737/2020";
+export const COMPANY_BIN = "000000000-0000";
+export const COMPANY_TRADE_LICENSE = "TRAD/DNCC/000000/2000";
 
 /** The identifiers of the company as schema.org PropertyValue items (Organization `identifier`). */
 export const companyIdentifiers = (): Ld[] => [

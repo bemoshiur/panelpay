@@ -35,9 +35,9 @@ export const en: Same<typeof bn> = {
       // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now everywhere a customer or crawler reads it,
       // with its two identifiers written exactly as the owner gave them, in both locales.
       companyName: "TryAWS.now",
-      bin: "BIN: 008073062-0507",
-      tradeLicense: "Trade License: TRAD/DNCC/098737/2020",
-      address: "Level 6, House of Veritas, 8 Gareeb-e-Newaz Avenue, Sector-13, Uttara, Dhaka-1230",
+      bin: "BIN: 000000000-0000",
+      tradeLicense: "Trade License: TRAD/DNCC/000000/2000",
+      address: "Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000",
     },
     // WPU-X30: the open-source credit (Apache-2.0 NOTICE). One link, to the author.
     credit: {

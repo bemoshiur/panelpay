@@ -97,12 +97,12 @@ it("the e-mail footer names the company TryAWS.now with its BIN and trade licenc
   for (const locale of ["bn", "en"] as const) {
     const address = SHARED[locale].address;
     expect(address.startsWith("TryAWS.now, ")).toBe(true);
-    expect(address).toContain("BIN: 008073062-0507");
-    expect(address).toContain("Trade License: TRAD/DNCC/098737/2020");
+    expect(address).toContain("BIN: 000000000-0000");
+    expect(address).toContain("Trade License: TRAD/DNCC/000000/2000");
     const id = TEMPLATE_IDS[0];
     const email = renderEmail(id, parsed(id), ctx(locale));
     for (const part of [email.text, email.html]) {
-      expect(part).toContain("BIN: 008073062-0507");
+      expect(part).toContain("BIN: 000000000-0000");
       expect(part).not.toMatch(/TiCON System/i);
     }
   }

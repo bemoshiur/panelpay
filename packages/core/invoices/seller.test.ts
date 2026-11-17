@@ -26,13 +26,13 @@ describe("seller details (invoice_seller)", () => {
     expect(sellerValueOf(got!)).not.toHaveProperty("extra");
   });
   // WPU-Y6: the optional trade licence number is kept, and the BIN prints in the grouping 9 and 4.
-  it("keeps an optional trade licence and prints the BIN as 008073062-0507", () => {
-    const got = parseSellerDetails({ ...good, tradeLicense: " TRAD/DNCC/098737/2020 " });
-    expect(got?.tradeLicense).toBe("TRAD/DNCC/098737/2020");
-    expect(sellerValueOf(got!)).toHaveProperty("tradeLicense", "TRAD/DNCC/098737/2020");
+  it("keeps an optional trade licence and prints the BIN as 000000000-0000", () => {
+    const got = parseSellerDetails({ ...good, tradeLicense: " TRAD/DNCC/000000/2000 " });
+    expect(got?.tradeLicense).toBe("TRAD/DNCC/000000/2000");
+    expect(sellerValueOf(got!)).toHaveProperty("tradeLicense", "TRAD/DNCC/000000/2000");
     expect(parseSellerDetails({ ...good, tradeLicense: "x".repeat(61) })).toBeNull();
     expect(sellerFieldErrors({ ...good, tradeLicense: "x".repeat(61) })).toEqual(["tradeLicense"]);
-    expect(formatBin("0080730620507")).toBe("008073062-0507");
+    expect(formatBin("0000000000000")).toBe("000000000-0000");
     expect(formatBin("bad")).toBe("bad");
   });
   it("BIN is exactly 13 Latin digits", () => {

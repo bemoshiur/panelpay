@@ -119,14 +119,14 @@ it("the company is TryAWS.now with its BIN and trade licence where the legal ent
     "apps/web/public/facts.json",
   ]) {
     const text = readFileSync(file, "utf8");
-    expect(text, file).toContain("008073062-0507");
-    expect(text, file).toContain("TRAD/DNCC/098737/2020");
+    expect(text, file).toContain("000000000-0000");
+    expect(text, file).toContain("TRAD/DNCC/000000/2000");
   }
   for (const file of ["packages/ui/shells/messages/en.ts", "packages/ui/shells/messages/bn.ts"]) {
     const text = readFileSync(file, "utf8");
     expect(text, file).toContain('companyName: "TryAWS.now"');
-    expect(text, file).toContain('bin: "BIN: 008073062-0507"');
-    expect(text, file).toContain('tradeLicense: "Trade License: TRAD/DNCC/098737/2020"');
+    expect(text, file).toContain('bin: "BIN: 000000000-0000"');
+    expect(text, file).toContain('tradeLicense: "Trade License: TRAD/DNCC/000000/2000"');
   }
   expect(readFileSync("apps/web/public/facts.json", "utf8")).toContain('"legalName": "TryAWS.now"');
 });

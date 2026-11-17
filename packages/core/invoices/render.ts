@@ -451,7 +451,7 @@ function renderMushak(doc: InvoiceDocument, locale: Locale): string {
       `<h1>${esc(title)}</h1>${credit ? "" : `<div>${esc(t.rule)}</div>`}</div>`,
       `<div class="grid"><div><h2>${t.seller}</h2>`,
       `<div><strong>${t.sellerName}:</strong> ${esc(name)}</div>`,
-      // WPU-Y6: the seller BIN in the grouping the owner gives it (9 and 4 digits, "008073062-0507").
+      // WPU-Y6: the seller BIN in the grouping the owner gives it (9 and 4 digits, "000000000-0000").
       `<div><strong>${t.bin}:</strong> ${num(esc(formatBin(seller.bin)))}</div>`,
       seller.tradeLicense !== undefined
         ? `<div><strong>${t.tradeLicense}:</strong> ${esc(seller.tradeLicense)}</div>`

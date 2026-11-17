@@ -74,10 +74,10 @@ describe("llms.txt", () => {
   it("names the company TryAWS.now with its BIN and trade licence, never the old legal name", () => {
     expect(text).toContain("- Company: TryAWS.now, ");
     expect(text).toContain(
-      "- Identifiers: BIN: 008073062-0507, Trade License: TRAD/DNCC/098737/2020",
+      "- Identifiers: BIN: 000000000-0000, Trade License: TRAD/DNCC/000000/2000",
     );
     expect(llmsFullTxt()).toContain(
-      "Identifiers: BIN: 008073062-0507, Trade License: TRAD/DNCC/098737/2020",
+      "Identifiers: BIN: 000000000-0000, Trade License: TRAD/DNCC/000000/2000",
     );
     for (const file of [text, llmsFullTxt(), factsJson()])
       expect(file).not.toMatch(/TiCON System/i);
@@ -155,7 +155,7 @@ describe("facts.json", () => {
       license: GEO_LICENSE,
       attribution: geoAttribution(),
       legalName: "TryAWS.now",
-      identifiers: { bin: "008073062-0507", tradeLicense: "TRAD/DNCC/098737/2020" },
+      identifiers: { bin: "000000000-0000", tradeLicense: "TRAD/DNCC/000000/2000" },
       dateModified: CONTENT_UPDATED,
     });
     expect(facts.sameAs).toBeUndefined();

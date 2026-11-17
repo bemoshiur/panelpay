@@ -98,8 +98,8 @@ describe("structured data", () => {
       description: "d",
       // WPU-Y6: the BIN and the trade licence of the company as identifiers, exactly as the owner gave them.
       identifier: [
-        { "@type": "PropertyValue", propertyID: "BIN", value: "008073062-0507" },
-        { "@type": "PropertyValue", propertyID: "Trade License", value: "TRAD/DNCC/098737/2020" },
+        { "@type": "PropertyValue", propertyID: "BIN", value: "000000000-0000" },
+        { "@type": "PropertyValue", propertyID: "Trade License", value: "TRAD/DNCC/000000/2000" },
       ],
     });
     const crumbs = breadcrumbLd(ORIGIN, "en", [

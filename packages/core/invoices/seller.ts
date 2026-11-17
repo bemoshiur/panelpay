@@ -15,7 +15,7 @@ export interface SellerDetails {
   signatoryDesignation: string;
   /** VAT circle / commissionerate, optional. */
   vatCircle?: string;
-  /** WPU-Y6: the trade licence number, optional, printed as given (e.g. TRAD/DNCC/098737/2020). */
+  /** WPU-Y6: the trade licence number, optional, printed as given (e.g. TRAD/DNCC/000000/2000). */
   tradeLicense?: string;
   phone?: string;
   email?: string;
@@ -51,7 +51,7 @@ export function isValidBin(value: unknown): value is string {
 
 /**
  * WPU-Y6: a BIN as printed: the 13 digits in the NBR grouping of 9 and 4 with a hyphen
- * ("008073062-0507", exactly as the owner gives it). Stored as 13 digits; anything else is unchanged.
+ * ("000000000-0000", exactly as the owner gives it). Stored as 13 digits; anything else is unchanged.
  */
 export function formatBin(bin: string): string {
   return BIN.test(bin) ? `${bin.slice(0, 9)}-${bin.slice(9)}` : bin;

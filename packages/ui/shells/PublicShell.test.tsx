@@ -176,8 +176,8 @@ describe.each(LOCALES)("PublicShell (%s)", (locale) => {
     const { container } = shell(locale);
     const bottom = container.querySelector("footer .footer-bottom")?.textContent ?? "";
     expect(bottom).toContain("TryAWS.now");
-    expect(bottom).toContain("BIN: 008073062-0507");
-    expect(bottom).toContain("Trade License: TRAD/DNCC/098737/2020");
+    expect(bottom).toContain("BIN: 000000000-0000");
+    expect(bottom).toContain("Trade License: TRAD/DNCC/000000/2000");
     expect(bottom).not.toMatch(/TiCON System/i);
   });
 
