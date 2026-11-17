@@ -39,7 +39,7 @@ export const bn = {
     // WPU-X30: the open-source credit (Apache-2.0 NOTICE). One link, to the author.
     credit: {
       text: "ওপেন সোর্স সফটওয়্যার, নির্মাতা",
-      link: "এস এম মশিউর রহমান, LinkedIn",
+      link: "এস এম মসিউর রহমান, LinkedIn",
     },
     auth: {
       backHome: "হোমে ফিরুন",
