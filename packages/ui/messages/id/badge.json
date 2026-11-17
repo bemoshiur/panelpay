@@ -1,0 +1,15 @@
+{
+  "kit": {
+    "state": {
+      "creating": "Membuat",
+      "running": "Berjalan",
+      "stopped": "Berhenti",
+      "grace": "Ditangguhkan, perpanjangan jatuh tempo",
+      "retained": "Dihapus, cadangan disimpan",
+      "problem": "Bermasalah",
+      "paid": "Lunas",
+      "pending": "Menunggu",
+      "failed": "Gagal"
+    }
+  }
+}

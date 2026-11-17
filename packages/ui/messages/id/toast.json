@@ -1,0 +1,11 @@
+{
+  "kit": {
+    "toast": {
+      "region": "Pemberitahuan",
+      "success": "Berhasil",
+      "info": "Informasi",
+      "warning": "Peringatan",
+      "danger": "Bermasalah"
+    }
+  }
+}

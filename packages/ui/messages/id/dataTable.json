@@ -1,0 +1,10 @@
+{
+  "kit": {
+    "dataTable": {
+      "paging": "Halaman",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya",
+      "empty": "Tidak ada data untuk ditampilkan"
+    }
+  }
+}

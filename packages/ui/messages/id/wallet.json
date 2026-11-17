@@ -1,0 +1,8 @@
+{
+  "kit": {
+    "wallet": {
+      "balance": "Saldo",
+      "topUp": "Isi ulang"
+    }
+  }
+}

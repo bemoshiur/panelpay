@@ -1,0 +1,10 @@
+{
+  "kit": {
+    "timeline": {
+      "done": "Selesai",
+      "current": "Sedang berlangsung",
+      "pending": "Menunggu",
+      "failed": "Gagal"
+    }
+  }
+}

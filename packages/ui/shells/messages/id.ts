@@ -1,0 +1,106 @@
+import type { bn } from "./bn.ts";
+
+type Same<T> = { [K in keyof T]: T[K] extends string ? string : Same<T[K]> };
+
+// The `Aws` strings follow docs/spec/16/16.13 (rule U6).
+export const id: Same<typeof bn> = {
+  Shell: {
+    skip: "Lewati ke konten utama",
+    brand: "TryAWS.now",
+    logoAlt: "TryAWS.now",
+    homeLabel: "Beranda TryAWS.now",
+    menu: "Menu",
+    close: "Tutup",
+    public: {
+      supportPhone: "Telepon bantuan",
+      menuLabel: "Menu utama",
+      pricing: "Harga",
+      products: "Produk",
+      domains: "Domain",
+      help: "Bantuan",
+      login: "Masuk",
+      console: "Konsol",
+    },
+    footer: {
+      products: "Produk",
+      company: "Perusahaan",
+      support: "Dukungan",
+      legal: "Legal",
+      pricing: "Harga",
+      payments: "Pembayaran",
+      help: "Pusat bantuan",
+      contact: "Permintaan bantuan",
+      terms: "Ketentuan layanan",
+      privacy: "Kebijakan privasi",
+      companyName: "TryAWS.now",
+      bin: "BIN: 008073062-0507",
+      tradeLicense: "Trade License: TRAD/DNCC/098737/2020",
+      address: "Level 6, House of Veritas, 8 Gareeb-e-Newaz Avenue, Sector-13, Uttara, Dhaka-1230",
+    },
+    credit: {
+      text: "Perangkat lunak sumber terbuka, dibuat oleh",
+      link: "S M Moshiur Rahman di LinkedIn",
+    },
+    auth: {
+      backHome: "Kembali ke beranda",
+    },
+    nav: {
+      dashboard: "Dasbor",
+      cloudServers: "Cloud Servers",
+      databases: "Basis Data",
+      objectStorage: "Penyimpanan Objek",
+      loadBalancers: "Penyeimbang Beban",
+      containers: "Kontainer",
+      cdn: "CDN",
+      domains: "Domain dan DNS",
+      wallet: "Dompet",
+      invoices: "Faktur",
+      support: "Dukungan",
+      settings: "Pengaturan",
+    },
+    app: {
+      navLabel: "Menu panel",
+      openNav: "Buka navigasi",
+      soon: "Segera",
+      notifications: "Notifikasi",
+      account: "Akun",
+      profile: "Profil",
+      security: "Keamanan",
+    },
+    admin: {
+      ops: "OPS",
+      navLabel: "Admin menu",
+      signedInAs: "Masuk sebagai",
+      roles: {
+        superadmin: "Superadmin",
+        ops: "Ops",
+        finance: "Keuangan",
+        support: "Dukungan",
+      },
+      nav: {
+        today: "Hari ini",
+        customers: "Pelanggan",
+        payments: "Pembayaran",
+        pricing: "Penetapan harga",
+        catalog: "Katalog",
+        capacity: "Kapasitas",
+        operations: "Operasi",
+        support: "Dukungan",
+        abuse: "Penyalahgunaan",
+        reconciliation: "Rekonsiliasi",
+        audit: "Audit",
+        admins: "Admin",
+      },
+    },
+    notFound: {
+      title: "Halaman tidak ditemukan",
+      body: "Periksa tautan Anda, atau kembali ke halaman beranda.",
+    },
+  },
+  Aws: {
+    short: "100% infrastruktur AWS. Dibangun di atas Amazon Lightsail.",
+    long: "Setiap server, basis data, dan penyimpanan yang Anda beli di sini adalah sumber daya Amazon Lightsail yang berjalan di AWS Region (Singapura atau Mumbai). TryAWS.now menjual, menagih, dan mendukung layanan ini. Anda mengelola semuanya dari panel ini dan tidak memerlukan akun AWS.",
+    trademark:
+      "Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of Amazon.com, Inc. or its affiliates.",
+  },
+};

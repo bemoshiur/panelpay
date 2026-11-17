@@ -32,6 +32,22 @@ import en_summary from "./en/summary.json" with { type: "json" };
 import en_timeline from "./en/timeline.json" with { type: "json" };
 import en_toast from "./en/toast.json" with { type: "json" };
 import en_wallet from "./en/wallet.json" with { type: "json" };
+import id_badge from "./id/badge.json" with { type: "json" };
+import id_button from "./id/button.json" with { type: "json" };
+import id_common from "./id/common.json" with { type: "json" };
+import id_confirmDestroy from "./id/confirmDestroy.json" with { type: "json" };
+import id_copy from "./id/copy.json" with { type: "json" };
+import id_dataTable from "./id/dataTable.json" with { type: "json" };
+import id_field from "./id/field.json" with { type: "json" };
+import id_locale from "./id/locale.json" with { type: "json" };
+import id_plan from "./id/plan.json" with { type: "json" };
+import id_priceBreakdown from "./id/priceBreakdown.json" with { type: "json" };
+import id_secret from "./id/secret.json" with { type: "json" };
+import id_states from "./id/states.json" with { type: "json" };
+import id_summary from "./id/summary.json" with { type: "json" };
+import id_timeline from "./id/timeline.json" with { type: "json" };
+import id_toast from "./id/toast.json" with { type: "json" };
+import id_wallet from "./id/wallet.json" with { type: "json" };
 
 /** One level under `kit`: group name to key to text. */
 export type KitMessages = { kit: Record<string, Record<string, unknown>> };
@@ -86,15 +102,35 @@ const enParts: KitMessages[] = [
   en_wallet,
 ];
 
-export const kitMessages: Record<Locale, KitMessages> = {
+const idParts: KitMessages[] = [
+  id_badge,
+  id_button,
+  id_common,
+  id_confirmDestroy,
+  id_copy,
+  id_dataTable,
+  id_field,
+  id_locale,
+  id_plan,
+  id_priceBreakdown,
+  id_secret,
+  id_states,
+  id_summary,
+  id_timeline,
+  id_toast,
+  id_wallet,
+];
+
+export const kitMessages: Record<Locale, KitMessages> & { readonly id: KitMessages } = {
   bn: mergeKit(bnParts),
   en: mergeKit(enParts),
+  id: mergeKit(idParts),
 };
 
 /** The kit messages of one locale, for the app to put under NextIntlClientProvider. */
-export function loadKitMessages(locale: Locale): KitMessages {
-  if (locale !== "bn" && locale !== "en") {
-    throw new RangeError(`unknown locale ${JSON.stringify(locale)}; expected "bn" or "en"`);
+export function loadKitMessages(locale: Locale | "id" | (string & {})): KitMessages {
+  if (locale !== "bn" && locale !== "en" && locale !== "id") {
+    throw new RangeError(`unknown locale ${JSON.stringify(locale)}; expected "bn", "en" or "id"`);
   }
-  return kitMessages[locale];
+  return kitMessages[locale as Locale | "id"];
 }

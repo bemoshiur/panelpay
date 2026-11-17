@@ -1,0 +1,9 @@
+{
+  "kit": {
+    "copy": {
+      "copy": "Salin",
+      "copied": "Tersalin",
+      "failed": "Gagal menyalin"
+    }
+  }
+}

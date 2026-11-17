@@ -1,0 +1,8 @@
+{
+  "kit": {
+    "confirmDestroy": {
+      "typeName": "Ketik {name} untuk konfirmasi",
+      "confirm": "Hapus"
+    }
+  }
+}

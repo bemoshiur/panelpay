@@ -1,0 +1,8 @@
+{
+  "kit": {
+    "field": {
+      "optional": "Opsional",
+      "error": "Kesalahan:"
+    }
+  }
+}

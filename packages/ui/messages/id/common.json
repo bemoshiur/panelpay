@@ -1,0 +1,9 @@
+{
+  "kit": {
+    "common": {
+      "close": "Tutup",
+      "cancel": "Batal",
+      "loading": "Memuat"
+    }
+  }
+}
