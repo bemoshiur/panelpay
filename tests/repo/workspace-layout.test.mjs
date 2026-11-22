@@ -174,6 +174,14 @@ it("WORKSPACE_FOLDERS and the globs of pnpm-workspace.yaml name the same folders
   ]);
 });
 
+// PRO-1 review: a workspace folder that the root Vitest config does not list has tests that CI never runs.
+it("the root Vitest projects cover every workspace folder", () => {
+  const config = readFileSync("vitest.config.mjs", "utf8");
+  for (const glob of ["apps/*", "packages/*", "functions/*", "pro/*"]) {
+    expect(config).toContain(`"${glob}",`);
+  }
+});
+
 it("runs on the Node version pinned in .nvmrc", () => {
   const pinned = readFileSync(".nvmrc", "utf8").trim();
   expect(pinned).toMatch(/^24\.\d+\.\d+$/);
