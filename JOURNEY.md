@@ -232,3 +232,6 @@ Open:
 - Pricing ($199 for a 36-month contract, entitlement dimension "pro"), the EULA and procurement (Step 3) are not done yet.
 - The India declaration banner in Partner Central (no PE, TRC, Form 41) must be answered before Q4 2026, or paid offers to buyers in India may be suspended.
 - The scan result is pending.
+
+## 2026-11-23 05:30 PRO-8 AMI scan result (track Pro, Claude)
+"Test add version 1.0.0" of prod-ill7oycvmsrme **Succeeded** (started 04:42, finished 05:10 GMT+6). ami-0e2d9ec91e9f6ebb7 passes the AWS Marketplace self-service scan. A test adds no version and changes no live listing. Next: owner decision on the Pro prerequisites (roles and Cognito, see the PRO-8 part 1 entry), then pricing ($199 for 36 months), the EULA and the real version.
