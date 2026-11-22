@@ -1,0 +1,21 @@
+{
+  "name": "@tc/pro-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tc/core": "workspace:*",
+    "@tc/fn-catalog-sync": "workspace:*",
+    "@tc/fn-notifier": "workspace:*",
+    "@tc/fn-payments-sweeper": "workspace:*",
+    "@tc/fn-provisioner": "workspace:*",
+    "@tc/fn-reconciler": "workspace:*",
+    "@tc/fn-scheduler": "workspace:*"
+  }
+}

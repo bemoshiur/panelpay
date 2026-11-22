@@ -23,6 +23,7 @@ import {
   type UnpaidReport,
   type NoticeWriter,
   type LogEvent,
+  type OperationQueue,
   type Logger,
   type AttentionHook,
   type SweepDeps,
@@ -224,13 +225,16 @@ export function createHandler(
 }
 
 // Fail closed (R16): the message names the variable and never its value (R3, R14). TC_ENV is not read.
-export function readConfig(env: Record<string, string | undefined>): {
+export function readConfig(
+  env: Record<string, string | undefined>,
+  options: { readonly needsQueueUrl?: boolean } = {},
+): {
   readonly queueUrl: string;
   readonly region: string;
 } {
   const bad = (name: string): Error => new Error(`scheduler: ${name} is missing or invalid`);
-  const queueUrl = env.PROVISIONING_QUEUE_URL;
-  if (typeof queueUrl !== "string" || !QUEUE_URL_PATTERN.test(queueUrl)) {
+  const queueUrl = env.PROVISIONING_QUEUE_URL ?? "";
+  if ((options.needsQueueUrl ?? true) && !QUEUE_URL_PATTERN.test(queueUrl)) {
     throw bad("PROVISIONING_QUEUE_URL");
   }
   const region = env.AWS_REGION;
@@ -241,17 +245,26 @@ export function readConfig(env: Record<string, string | undefined>): {
 // Built on the first call, not at import; a failed build keeps nothing.
 let inner: (() => Promise<SchedulerReport>) | undefined;
 
+// PRO-1: the single-EC2 edition passes its local queue; the Lambda builds the SQS one.
+export function buildSchedulerHandler(
+  options: { readonly queue?: OperationQueue } = {},
+): () => Promise<SchedulerReport> {
+  const config = readConfig(process.env, { needsQueueUrl: options.queue === undefined });
+  return createHandler({
+    runTx: withTx,
+    clock: { now: () => new Date() },
+    queue:
+      options.queue ??
+      createFifoQueue(createSqsSend(createSqsClient(config.region), config.queueUrl)),
+    onAttention: planChangeAttention,
+    dnsLookup: createNsLookup(nodeNsResolver()),
+    log: (e: LogEvent) => console.log(JSON.stringify(e)),
+  });
+}
+
 export const handler = async (): Promise<SchedulerReport> => {
   if (inner === undefined) {
-    const config = readConfig(process.env);
-    inner = createHandler({
-      runTx: withTx,
-      clock: { now: () => new Date() },
-      queue: createFifoQueue(createSqsSend(createSqsClient(config.region), config.queueUrl)),
-      onAttention: planChangeAttention,
-      dnsLookup: createNsLookup(nodeNsResolver()),
-      log: (e: LogEvent) => console.log(JSON.stringify(e)),
-    });
+    inner = buildSchedulerHandler();
   }
   return inner();
 };

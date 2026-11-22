@@ -25,6 +25,7 @@ const packages = {
   "functions/kyc-check": "@tc/fn-kyc-check",
   "functions/notifier": "@tc/fn-notifier",
   "functions/cognito-messages": "@tc/fn-cognito-messages",
+  "pro/worker": "@tc/pro-worker",
 };
 
 // The shared form of a package's tsconfig.json (kit plan, Task 7). A package that needs more, for
@@ -159,16 +160,17 @@ it("no longer has mockup/ at the root", () => {
 
 // The places of workspace packages are named twice: WORKSPACE_FOLDERS (scripts/lib/changed-packages.mjs,
 // which --quick and the graph test read) and the globs of pnpm-workspace.yaml (which pnpm installs).
-// They must be the same three folders, so that no package is installed that the checks never read.
+// They must be the same four folders, so that no package is installed that the checks never read.
 it("WORKSPACE_FOLDERS and the globs of pnpm-workspace.yaml name the same folders", () => {
   const source = readFileSync("scripts/lib/changed-packages.mjs", "utf8");
   const folders = /const WORKSPACE_FOLDERS = (\[[^\]]*\]);/.exec(source)?.[1];
   expect(folders).toBeDefined();
-  expect(JSON.parse(folders)).toEqual(["apps", "packages", "functions"]);
+  expect(JSON.parse(folders)).toEqual(["apps", "packages", "functions", "pro"]);
   expect(parse(readFileSync("pnpm-workspace.yaml", "utf8")).packages).toEqual([
     "apps/*",
     "packages/*",
     "functions/*",
+    "pro/*",
   ]);
 });
 

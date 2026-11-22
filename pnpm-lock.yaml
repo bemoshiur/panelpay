@@ -463,6 +463,30 @@ importers:
         specifier: 8.5.32
         version: 8.5.32
 
+  pro/worker:
+    dependencies:
+      '@tc/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@tc/fn-catalog-sync':
+        specifier: workspace:*
+        version: link:../../functions/catalog-sync
+      '@tc/fn-notifier':
+        specifier: workspace:*
+        version: link:../../functions/notifier
+      '@tc/fn-payments-sweeper':
+        specifier: workspace:*
+        version: link:../../functions/payments-sweeper
+      '@tc/fn-provisioner':
+        specifier: workspace:*
+        version: link:../../functions/provisioner
+      '@tc/fn-reconciler':
+        specifier: workspace:*
+        version: link:../../functions/reconciler
+      '@tc/fn-scheduler':
+        specifier: workspace:*
+        version: link:../../functions/scheduler
+
 packages:
 
   '@aws-sdk/checksums@3.1002.5':
