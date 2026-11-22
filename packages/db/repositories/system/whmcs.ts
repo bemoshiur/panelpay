@@ -18,7 +18,8 @@ export type WhmcsCustomerMatch =
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,253}$/;
 
 async function customerByVerifiedEmail(tx: Tx, email: string): Promise<WhmcsCustomerMatch> {
-  if (typeof email !== "string" || email.length > 320 || !EMAIL.test(email)) return { kind: "none" };
+  if (typeof email !== "string" || email.length > 320 || !EMAIL.test(email))
+    return { kind: "none" };
   const { rows } = await tx.execute<{ id: string; currency: string }>(sql`
     select c.id::text as id, m.currency as currency
       from customers c join markets m on m.code = c.market
