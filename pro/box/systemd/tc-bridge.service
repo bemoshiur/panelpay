@@ -9,8 +9,10 @@ ConditionPathExists=/etc/tc/bridge.env
 [Service]
 Type=simple
 User=tc-bridge
-# Group caddy: the socket below is created with it, so Caddy (and no other user) can connect.
-Group=caddy
+Group=tc-bridge
+# Member of caddy's group only to hand Caddy the socket (chgrp after listen, mode 0660). The bridge's own
+# files keep its own group (security review L6).
+SupplementaryGroups=caddy
 WorkingDirectory=/opt/tc/current/bridge
 EnvironmentFile=/etc/tc/common.env
 EnvironmentFile=/etc/tc/bridge.env
@@ -20,7 +22,8 @@ Restart=on-failure
 RestartSec=5
 MemoryMax=300M
 RuntimeDirectory=tc-bridge
-RuntimeDirectoryMode=0750
+# 0755 so Caddy can reach the socket; the socket itself is 0660, group caddy.
+RuntimeDirectoryMode=0755
 
 NoNewPrivileges=true
 PrivateTmp=true

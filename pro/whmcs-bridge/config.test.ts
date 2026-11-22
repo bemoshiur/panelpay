@@ -8,10 +8,13 @@ const good = {
   TC_BRIDGE_SECRET: "a".repeat(48),
 };
 
-it("reads the bridge settings and derives a stable install id from the WHMCS host", () => {
+it("derives the install id from the bridge secret, so a new WHMCS host keeps it (money review 1)", () => {
   const a = readBridgeConfig(good);
-  expect(a.installId).toMatch(/^[0-9a-f]{8}$/);
-  expect(readBridgeConfig({ ...good, WHMCS_URL: "https://BILLING.example.test/" }).installId).toBe(
+  expect(a.installId).toMatch(/^[0-9a-f]{12}$/);
+  expect(
+    readBridgeConfig({ ...good, WHMCS_URL: "https://my.other-host.test/whmcs" }).installId,
+  ).toBe(a.installId);
+  expect(readBridgeConfig({ ...good, TC_BRIDGE_SECRET: "b".repeat(48) }).installId).not.toBe(
     a.installId,
   );
   expect(a.socketPath).toBe("/run/tc-bridge/bridge.sock");

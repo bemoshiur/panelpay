@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHmac } from "node:crypto";
 import { whmcsApi, type WhmcsApi } from "./whmcs-api";
 
 // PRO-6. The bridge configuration, from /etc/tc/bridge.env (root:root 0600, read by systemd).
@@ -25,15 +25,18 @@ export function readBridgeConfig(env: Readonly<Record<string, string | undefined
   if (!/^[A-Za-z0-9]{8,128}$/.test(identifier) || !/^[A-Za-z0-9]{8,128}$/.test(apiSecret))
     return fail();
   if (!/^[0-9a-f]{48,128}$/.test(secret)) return fail();
-  let host: string;
   let api: WhmcsApi;
   try {
-    host = new URL(url).host;
     api = whmcsApi({ url, identifier, secret: apiSecret });
   } catch {
     return fail();
   }
-  // A stable short id of this WHMCS install, part of every merchant id (credit.ts).
-  const installId = createHash("sha256").update(host.toLowerCase()).digest("hex").slice(0, 8);
+  // The install id, part of every merchant id (credit.ts). Derived from the bridge secret, which the
+  // installer generates once and keeps, never from the WHMCS URL: moving WHMCS to another host must not
+  // give old invoices new merchant ids (money review 1).
+  const installId = createHmac("sha256", secret)
+    .update("tc-whmcs-install")
+    .digest("hex")
+    .slice(0, 12);
   return { socketPath, secret, installId, api };
 }

@@ -33,6 +33,7 @@ describe("whmcsApi", () => {
       status: "Paid",
       balance: "0.00",
       total: "25.00",
+      credit: "0.00",
       items: { item: [{ description: "TryAWS.now wallet top-up", amount: "25.00" }] },
     });
     expect(await a.getInvoice("1001")).toEqual({
@@ -41,6 +42,7 @@ describe("whmcsApi", () => {
       status: "Paid",
       balance: "0.00",
       total: "25.00",
+      credit: "0.00",
       items: [{ description: "TryAWS.now wallet top-up", amount: "25.00" }],
     });
     expect(calls[0]!.url).toBe("https://billing.example.test/includes/api.php");
@@ -74,17 +76,44 @@ describe("whmcsApi", () => {
     await expect(api("<html>").a.getInvoice("1001")).rejects.toBeInstanceOf(WhmcsUnavailable);
   });
 
-  it("reads the client's e-mail and currency", async () => {
+  it("reads the client's id, e-mail and currency, and refuses an answer for another client", async () => {
     const { a } = api({
       result: "success",
-      client: { email: "b@example.test", currency_code: "USD" },
+      client: { id: 7, email: "b@example.test", currency_code: "USD" },
     });
-    expect(await a.getClient("7")).toEqual({ email: "b@example.test", currencyCode: "USD" });
+    expect(await a.getClient("7")).toEqual({
+      clientId: "7",
+      email: "b@example.test",
+      currencyCode: "USD",
+    });
+    const other = api({
+      result: "success",
+      client: { id: 8, email: "b@example.test", currency_code: "USD" },
+    });
+    await expect(other.a.getClient("7")).rejects.toBeInstanceOf(WhmcsUnavailable);
   });
 
   it("a WHMCS error answer is no invoice", async () => {
     expect(
       await api({ result: "error", message: "Invoice ID Not Found" }).a.getInvoice("5"),
     ).toBeNull();
+  });
+});
+
+describe("whmcsApi size and list", () => {
+  it("refuses an answer larger than 512 KiB while reading it", async () => {
+    await expect(api("x".repeat(600 * 1024)).a.getInvoice("1001")).rejects.toBeInstanceOf(
+      WhmcsUnavailable,
+    );
+  });
+
+  it("lists the newest paid invoice ids, dropping anything that is not an id", async () => {
+    const { a, calls } = api({
+      result: "success",
+      invoices: { invoice: [{ id: 12 }, { id: "11" }, { id: "x" }] },
+    });
+    expect(await a.listRecentPaidInvoiceIds(50)).toEqual(["12", "11"]);
+    expect(calls[0]!.body.get("action")).toBe("GetInvoices");
+    expect(calls[0]!.body.get("status")).toBe("Paid");
   });
 });

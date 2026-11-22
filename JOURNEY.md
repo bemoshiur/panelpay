@@ -155,3 +155,29 @@ Proof:
 VERIFY results: WHMCS API GetInvoice and GetClientsDetails field names (userid, status, balance, total, items.item[].description and amount; client.email and currency_code) come from WHMCS's own API documentation and are not yet checked against a live WHMCS. Do that against the first reseller's WHMCS before launch.
 
 Next: a money and security review of this PR, then PRO-7 (AMI build; the owner approves the build instance and its cost first).
+
+## 2026-11-23 05:30 PRO-6 review fixes (track Pro, Claude)
+Done: money-reviewer and security-reviewer over pro-5-licence..pro-6-whmcs. Fixed:
+- money 1 (high): the install id comes from the bridge secret, not the WHMCS host. Moving WHMCS can no longer give an old invoice a new merchant id and a second credit.
+- money 2: an invoice paid with WHMCS credit balance is refused (review). New InvoiceRefunded, InvoiceCancelled and InvoiceUnpaid hooks call `/bridge/whmcs/invoice-changed`; the bridge re-reads the invoice and flags a credited one that is no longer Paid as a payment discrepancy. Nothing is reversed automatically.
+- money 3 + 5 / security L4: every top-up line carries its currency, amount and a client reference: HMAC(bridge secret, "<client id>:<e-mail>"). The bridge recomputes the reference from the client WHMCS returns at payment, so an e-mail or currency changed after the invoice was made is refused. The PHP and TypeScript values are pinned against each other (cc002447a02fea47).
+- money 4: every refused paid top-up is recorded as a payment discrepancy (`note`: whmcs invoice <n>: <reason>; `note` added to PAYMENT_DISCREPANCY_KEYS, a key the reconciliation screen shows). A 15-minute sweeper (GetInvoices, status Paid, newest 100) credits what the hook missed, with record:false so retries add no duplicates.
+- security M1: a repo test allows systemWhmcs only in pro/whmcs-bridge, its module, db index and tests. A planted import in apps/web fails it.
+- security L3: the endpoint validates the body before the rate limit (R9 order). The body check stays a strict regex: the bridge package has no zod dependency.
+- security L6: tc-bridge has its own group, with SupplementaryGroups=caddy only to chgrp its socket; RuntimeDirectoryMode 0755; socket 0660, group caddy.
+- security L7: the WHMCS answer size is capped while streaming.
+
+Proof:
+- `vitest run packages/db packages/eps pro tests/repo` plus the web loopback and login tests: 4198 passed, 6 skipped, 1 failed (the .nvmrc Node version check, sandbox only).
+- `credit.test` (real PostgreSQL) adds tests for: the e-mail moved to another account, paid with credit, unmatched recorded, the sweeper recording nothing, an amount changed after the credit, and refund flagging.
+- `php -l`, `php pro/whmcs/test/lib-test.php`, tsc, eslint and shellcheck are clean.
+
+Needs decision:
+1. When WHMCS refunds a top-up the panel already credited, may the bridge reverse the wallet automatically (a reversing ledger transaction), or does an operator always decide? Today an operator always decides (R5). Options: automatic reversal capped at the wallet balance; operator only. Blocks: nothing.
+
+Open (low, not done here):
+- security L5: a dedicated bridge_rw database role (forward-only migration + grants) instead of web_rw.
+- WHMCS API field names (credit, client id, GetInvoices) are still to be checked on a live WHMCS.
+- Reconciling EPS settlements against gateway_clearing must filter on payments.gateway, because WHMCS top-ups post to the same account.
+
+Next: PR for PRO-6, then PRO-7 (AMI build; the owner approves the build instance and its cost first).

@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { chmodSync } from "node:fs";
+import { chmodSync, chownSync } from "node:fs";
 import { createServer, type Server } from "node:http";
 
 // PRO-6. The one endpoint WHMCS calls: POST /bridge/whmcs/invoice-paid {"invoiceId":"123"}, from the
@@ -14,7 +14,10 @@ export const SIGNATURE_HEADER = "x-tc-signature";
 export const TIMESTAMP_HEADER = "x-tc-timestamp";
 const WINDOW_S = 300;
 const MAX_BODY = 1024;
-const PATH = "/bridge/whmcs/invoice-paid";
+// invoice-paid: the InvoicePaid hook. invoice-changed: InvoiceRefunded, InvoiceCancelled and
+// InvoiceUnpaid (money review 2): the bridge only re-reads and flags, never credits, on that path.
+const PATHS = ["/bridge/whmcs/invoice-paid", "/bridge/whmcs/invoice-changed"] as const;
+export type BridgePath = (typeof PATHS)[number];
 
 export interface BridgeRequest {
   readonly method: string;
@@ -31,6 +34,7 @@ export function createBridgeHandler(options: {
   readonly secret: string;
   readonly clock: { now(): Date };
   readonly credit: (invoiceId: string) => Promise<string>;
+  readonly changed: (invoiceId: string) => Promise<string>;
   readonly perMinute?: number;
 }): (req: BridgeRequest) => Promise<{ status: number; body: string }> {
   if (options.secret.length < 32) throw new Error("bridge secret too short");
@@ -43,7 +47,7 @@ export function createBridgeHandler(options: {
   });
 
   return async (req) => {
-    if (req.path !== PATH) return reply(404, { error: "not_found" });
+    if (!(PATHS as readonly string[]).includes(req.path)) return reply(404, { error: "not_found" });
     if (req.method !== "POST") return reply(405, { error: "method" });
     if (Buffer.byteLength(req.body) > MAX_BODY) return reply(413, { error: "too_large" });
 
@@ -63,13 +67,7 @@ export function createBridgeHandler(options: {
     if (given === null || !timingSafeEqual(given, expected))
       return reply(401, { error: "unauthenticated" });
 
-    const minute = Math.floor(now / 60);
-    if (minute !== windowStart) {
-      windowStart = minute;
-      count = 0;
-    }
-    if (++count > limit) return reply(429, { error: "rate_limited" });
-
+    // R9 order: authenticate (above), validate, then rate limit, then execute.
     let invoiceId: unknown;
     try {
       invoiceId = (JSON.parse(req.body) as { invoiceId?: unknown }).invoiceId;
@@ -79,14 +77,29 @@ export function createBridgeHandler(options: {
     if (typeof invoiceId !== "string" || !/^[1-9][0-9]{0,9}$/.test(invoiceId)) {
       return reply(400, { error: "validation" });
     }
-    const kind = await options.credit(invoiceId);
+    const minute = Math.floor(now / 60);
+    if (minute !== windowStart) {
+      windowStart = minute;
+      count = 0;
+    }
+    if (++count > limit) return reply(429, { error: "rate_limited" });
+
+    const kind =
+      req.path === "/bridge/whmcs/invoice-paid"
+        ? await options.credit(invoiceId)
+        : await options.changed(invoiceId);
     return reply(200, { kind });
   };
 }
 
-/** Listens on a Unix socket in the bridge's runtime directory (mode 0660, group caddy). */
+/**
+ * Listens on a Unix socket in the bridge's runtime directory, mode 0660, group `socketGid` (caddy):
+ * the bridge has its own primary group, and is a member of caddy's only to hand it the socket
+ * (security review L6).
+ */
 export function startBridgeServer(options: {
   readonly socketPath: string;
+  readonly socketGid?: number;
   readonly handle: (req: BridgeRequest) => Promise<{ status: number; body: string }>;
 }): Server {
   if (
@@ -126,6 +139,9 @@ export function startBridgeServer(options: {
   });
   server.requestTimeout = 30_000;
   server.headersTimeout = 10_000;
-  server.listen(options.socketPath, () => chmodSync(options.socketPath, 0o660));
+  server.listen(options.socketPath, () => {
+    if (options.socketGid !== undefined) chownSync(options.socketPath, -1, options.socketGid);
+    chmodSync(options.socketPath, 0o660);
+  });
   return server;
 }

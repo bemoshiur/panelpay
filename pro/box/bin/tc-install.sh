@@ -142,8 +142,9 @@ for u in tc-web tc-admin tc-worker; do
 done
 getent group caddy >/dev/null || groupadd --system caddy
 id caddy >/dev/null 2>&1 || useradd --system --gid caddy --home-dir /var/lib/tc-caddy --shell /usr/sbin/nologin caddy
-# PRO-6: the WHMCS bridge. Its primary group is caddy, so its socket is reachable by Caddy only.
-id tc-bridge >/dev/null 2>&1 || useradd --system --gid caddy --home-dir /nonexistent --shell /usr/sbin/nologin tc-bridge
+# PRO-6: the WHMCS bridge, with its own group; the unit adds caddy's group only to hand Caddy its socket.
+getent group tc-bridge >/dev/null || groupadd --system tc-bridge
+id tc-bridge >/dev/null 2>&1 || useradd --system --gid tc-bridge --home-dir /nonexistent --shell /usr/sbin/nologin tc-bridge
 install -d -m 0700 -o root -g root /var/log/tc
 install -d -m 0700 -o caddy -g caddy /var/lib/tc-caddy
 mkdir -p /var/backups/tc && chown postgres:postgres /var/backups/tc && chmod 0700 /var/backups/tc
@@ -258,6 +259,7 @@ WHMCS_URL=${A[WHMCS_URL]}
 WHMCS_API_IDENTIFIER=${A[WHMCS_API_IDENTIFIER]}
 WHMCS_API_SECRET=${A[WHMCS_API_SECRET]}
 TC_BRIDGE_SECRET=$BRIDGE
+TC_BRIDGE_SOCKET_GID=$(getent group caddy | cut -d: -f3)
 EOF
   # The reseller pastes this into the WHMCS addon (Bridge secret). Root only; never printed.
   write_env "$ETC/bridge-secret.txt" root root 0600 <<EOF

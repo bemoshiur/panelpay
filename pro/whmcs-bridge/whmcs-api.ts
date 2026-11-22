@@ -9,6 +9,8 @@ import type { WhmcsClient, WhmcsInvoice } from "./invoice";
 export interface WhmcsApi {
   getInvoice(invoiceId: string): Promise<WhmcsInvoice | null>;
   getClient(userId: string): Promise<WhmcsClient | null>;
+  /** The ids of the newest paid invoices, newest first (the sweeper, money review 4). */
+  listRecentPaidInvoiceIds(limit: number): Promise<string[]>;
 }
 
 export class WhmcsUnavailable extends Error {
@@ -66,8 +68,21 @@ export function whmcsApi(options: {
     } catch {
       throw new WhmcsUnavailable();
     }
-    const text = await res.text().catch(() => "");
-    if (!res.ok || text.length > MAX_ANSWER) throw new WhmcsUnavailable();
+    // Security review L7: the size is capped while reading, not after the whole answer is in memory.
+    const declared = Number(res.headers.get("content-length") ?? "0");
+    if (!res.ok || declared > MAX_ANSWER || res.body === null) throw new WhmcsUnavailable();
+    const chunks: Uint8Array[] = [];
+    let size = 0;
+    try {
+      for await (const chunk of res.body as unknown as AsyncIterable<Uint8Array>) {
+        size += chunk.byteLength;
+        if (size > MAX_ANSWER) throw new WhmcsUnavailable();
+        chunks.push(chunk);
+      }
+    } catch {
+      throw new WhmcsUnavailable();
+    }
+    const text = Buffer.concat(chunks).toString("utf8");
     let json: unknown;
     try {
       json = JSON.parse(text);
@@ -96,17 +111,19 @@ export function whmcsApi(options: {
       const status = str(j["status"]);
       const balance = str(j["balance"]);
       const total = str(j["total"]);
+      const credit = str(j["credit"] ?? "0.00");
       const id = str(j["invoiceid"]);
       if (
         userId === null ||
         status === null ||
         balance === null ||
         total === null ||
+        credit === null ||
         id !== invoiceId
       ) {
         throw new WhmcsUnavailable();
       }
-      return { invoiceId: id, userId, status, balance, total, items };
+      return { invoiceId: id, userId, status, balance, total, credit, items };
     },
 
     async getClient(userId) {
@@ -116,8 +133,29 @@ export function whmcsApi(options: {
       const client = (j["client"] ?? j) as Record<string, unknown>;
       const email = str(client["email"]);
       const currencyCode = str(client["currency_code"]);
-      if (email === null || currencyCode === null) throw new WhmcsUnavailable();
-      return { email, currencyCode };
+      const clientId = str(client["id"] ?? client["userid"] ?? client["client_id"]);
+      if (email === null || currencyCode === null || clientId !== userId)
+        throw new WhmcsUnavailable();
+      return { clientId, email, currencyCode };
+    },
+
+    async listRecentPaidInvoiceIds(limit) {
+      if (!Number.isInteger(limit) || limit < 1 || limit > 250)
+        throw new TypeError("whmcs: limit 1..250");
+      const j = await call("GetInvoices", {
+        status: "Paid",
+        limitnum: String(limit),
+        orderby: "id",
+        order: "desc",
+      });
+      if (j["result"] !== "success") throw new WhmcsUnavailable();
+      const list = (j["invoices"] as { invoice?: unknown } | undefined)?.invoice;
+      const ids: string[] = [];
+      for (const it of Array.isArray(list) ? list : []) {
+        const id = str((it as Record<string, unknown>)?.["id"]);
+        if (id !== null && ID.test(id)) ids.push(id);
+      }
+      return ids;
     },
   };
 }

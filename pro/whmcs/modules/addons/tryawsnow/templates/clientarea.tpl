@@ -10,6 +10,8 @@
     <h4>Top up wallet</h4>
     {if $error eq 'invalid_amount'}
       <div class="alert alert-danger">Enter an amount from {$minTopup|escape:'html'} to {$maxTopup|escape:'html'} {$currency|escape:'html'}.</div>
+    {elseif $error eq 'not_configured'}
+      <div class="alert alert-danger">Top-ups are not set up yet. Please contact support.</div>
     {elseif $error eq 'invoice_failed'}
       <div class="alert alert-danger">The invoice could not be created. Please contact support.</div>
     {/if}

@@ -24,9 +24,34 @@ function tryawsnow_format_amount(int $cents): string
     return intdiv($cents, 100) . '.' . str_pad((string) ($cents % 100), 2, '0', STR_PAD_LEFT);
 }
 
-function tryawsnow_topup_description(string $currency, int $cents): string
+/**
+ * The reference of a WHMCS client when the invoice is made: HMAC-SHA256(bridge secret,
+ * "<client id>:<e-mail, trimmed, lower case>"), first 16 hex. The bridge recomputes it at payment and
+ * refuses the credit when the client's e-mail changed in between (pro/whmcs-bridge/invoice.ts clientRef).
+ */
+function tryawsnow_client_ref(string $secret, int $clientId, string $email): string
 {
-    return TRYAWSNOW_TOPUP_MARKER . ' (' . preg_replace('/[^A-Z]/', '', $currency) . ' ' . tryawsnow_format_amount($cents) . ')';
+    return substr(hash_hmac('sha256', $clientId . ':' . strtolower(trim($email)), $secret), 0, 16);
+}
+
+/** "TryAWS.now wallet top-up (USD 25.00) [ref 0123456789abcdef]": the only line format the panel credits. */
+function tryawsnow_topup_description(string $currency, int $cents, string $ref): string
+{
+    return TRYAWSNOW_TOPUP_MARKER . ' (' . preg_replace('/[^A-Z]/', '', $currency) . ' '
+        . tryawsnow_format_amount($cents) . ') [ref ' . preg_replace('/[^0-9a-f]/', '', $ref) . ']';
+}
+
+/**
+ * One addon setting, the same way in every place (client area, admin page, hooks): read from
+ * tbladdonmodules; the password field is stored encrypted and decrypted here.
+ */
+function tryawsnow_setting(string $name): string
+{
+    $value = (string) \WHMCS\Database\Capsule::table('tbladdonmodules')
+        ->where('module', 'tryawsnow')
+        ->where('setting', $name)
+        ->value('value');
+    return $name === 'bridge_secret' ? (string) decrypt($value) : $value;
 }
 
 /** The panel URL if it is a plain https origin, else null. */
@@ -65,8 +90,11 @@ function tryawsnow_is_topup_invoice(array $invoice): bool
  * "<timestamp>.<body>"). The panel reads the invoice from the WHMCS API itself before it credits.
  * Returns a short status for the admin page; never the secret.
  */
-function tryawsnow_notify_panel(string $panelUrl, string $secret, string $invoiceId): string
+function tryawsnow_notify_panel(string $panelUrl, string $secret, string $invoiceId, string $path = 'invoice-paid'): string
 {
+    if ($path !== 'invoice-paid' && $path !== 'invoice-changed') {
+        return 'bad_path';
+    }
     $panel = tryawsnow_panel_url($panelUrl);
     if ($panel === null || strlen($secret) < 48) {
         return 'not_configured';
@@ -74,7 +102,7 @@ function tryawsnow_notify_panel(string $panelUrl, string $secret, string $invoic
     $body = json_encode(['invoiceId' => $invoiceId]);
     $timestamp = (string) time();
     $signature = hash_hmac('sha256', $timestamp . '.' . $body, $secret);
-    $ch = curl_init($panel . '/bridge/whmcs/invoice-paid');
+    $ch = curl_init($panel . '/bridge/whmcs/' . $path);
     curl_setopt_array($ch, [
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => $body,

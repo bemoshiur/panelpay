@@ -77,7 +77,8 @@ function tryawsnow_clientarea($vars)
     $client = localAPI('GetClientsDetails', ['clientid' => $clientId, 'stats' => false]);
     $email = (string) ($client['email'] ?? '');
     $currency = (string) ($client['currency_code'] ?? '');
-    $panelUrl = tryawsnow_panel_url($vars['panel_url'] ?? '');
+    $panelUrl = tryawsnow_panel_url(tryawsnow_setting('panel_url'));
+    $secret = tryawsnow_setting('bridge_secret');
     $error = '';
 
     if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['topup_amount'])) {
@@ -87,12 +88,18 @@ function tryawsnow_clientarea($vars)
         $max = tryawsnow_parse_amount((string) ($vars['max_topup'] ?? '1000.00'));
         if ($amount === null || $min === null || $max === null || $amount < $min || $amount > $max) {
             $error = 'invalid_amount';
+        } elseif (strlen($secret) < 48 || !preg_match('/^[A-Z]{3}$/', $currency) || $email === '') {
+            $error = 'not_configured';
         } else {
             $invoice = localAPI('CreateInvoice', [
                 'userid' => $clientId,
                 'status' => 'Unpaid',
                 'sendinvoice' => true,
-                'itemdescription1' => tryawsnow_topup_description($currency, $amount),
+                'itemdescription1' => tryawsnow_topup_description(
+                    $currency,
+                    $amount,
+                    tryawsnow_client_ref($secret, $clientId, $email)
+                ),
                 'itemamount1' => tryawsnow_format_amount($amount),
                 'itemtaxed1' => false,
             ]);
@@ -130,7 +137,11 @@ function tryawsnow_output($vars)
         if (!preg_match('/^[1-9][0-9]{0,9}$/', $invoiceId)) {
             $message = 'Not an invoice number.';
         } else {
-            $result = tryawsnow_notify_panel($vars['panel_url'] ?? '', $vars['bridge_secret'] ?? '', $invoiceId);
+            $result = tryawsnow_notify_panel(
+                tryawsnow_setting('panel_url'),
+                tryawsnow_setting('bridge_secret'),
+                $invoiceId
+            );
             $message = 'Panel answer: ' . htmlspecialchars($result, ENT_QUOTES);
         }
     }

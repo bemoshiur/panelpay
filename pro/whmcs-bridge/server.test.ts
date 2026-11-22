@@ -7,6 +7,7 @@ const ts = String(Math.floor(NOW.getTime() / 1000));
 
 function setup(perMinute?: number) {
   const credited: string[] = [];
+  const changedIds: string[] = [];
   const handle = createBridgeHandler({
     secret: SECRET,
     clock: { now: () => NOW },
@@ -14,9 +15,13 @@ function setup(perMinute?: number) {
       credited.push(id);
       return "credited";
     },
+    changed: async (id) => {
+      changedIds.push(id);
+      return "flagged";
+    },
     ...(perMinute === undefined ? {} : { perMinute }),
   });
-  return { handle, credited };
+  return { handle, credited, changedIds };
 }
 
 const req = (body: string, at = ts, sig = sign(SECRET, at, body)) => ({
@@ -69,6 +74,23 @@ describe("createBridgeHandler", () => {
     expect((await handle({ ...req("{}"), method: "GET" })).status).toBe(405);
   });
 
+  it("sends invoice-changed to the change check, never to the credit (money review 2)", async () => {
+    const { handle, credited, changedIds } = setup();
+    const res = await handle({
+      ...req('{"invoiceId":"1001"}'),
+      path: "/bridge/whmcs/invoice-changed",
+    });
+    expect(res).toEqual({ status: 200, body: '{"kind":"flagged"}' });
+    expect(changedIds).toEqual(["1001"]);
+    expect(credited).toEqual([]);
+  });
+
+  it("does not count a malformed body against the limit (R9 order)", async () => {
+    const { handle } = setup(1);
+    expect((await handle(req("not json"))).status).toBe(400);
+    expect((await handle(req('{"invoiceId":"1001"}'))).status).toBe(200);
+  });
+
   it("limits signed calls per minute", async () => {
     const { handle } = setup(2);
     const body = '{"invoiceId":"1001"}';
@@ -85,7 +107,12 @@ describe("createBridgeHandler", () => {
 
   it("refuses a short secret at start", () => {
     expect(() =>
-      createBridgeHandler({ secret: "short", clock: { now: () => NOW }, credit: async () => "x" }),
+      createBridgeHandler({
+        secret: "short",
+        clock: { now: () => NOW },
+        credit: async () => "x",
+        changed: async () => "x",
+      }),
     ).toThrow();
   });
 });

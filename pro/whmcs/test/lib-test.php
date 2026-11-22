@@ -13,7 +13,9 @@ check('parse 12.5', tryawsnow_parse_amount('12.5'), 1250);
 check('parse 7', tryawsnow_parse_amount('7'), 700);
 foreach (['-1', '1.005', '1e3', '', '01.00', '1,000'] as $bad) check("parse $bad", tryawsnow_parse_amount($bad), null);
 check('format', tryawsnow_format_amount(1205), '12.05');
-check('description', tryawsnow_topup_description('USD', 2500), 'TryAWS.now wallet top-up (USD 25.00)');
+check('description', tryawsnow_topup_description('USD', 2500, '0123456789abcdef'), 'TryAWS.now wallet top-up (USD 25.00) [ref 0123456789abcdef]');
+// The client reference the bridge recomputes (pro/whmcs-bridge/invoice.ts clientRef): printed for the cross-check.
+echo 'REF ' . tryawsnow_client_ref(str_repeat('s', 48), 7, ' Buyer@Example.test') . "\n";
 check('panel ok', tryawsnow_panel_url('https://panel.example.com/'), 'https://panel.example.com');
 check('panel http', tryawsnow_panel_url('http://panel.example.com'), null);
 check('panel path', tryawsnow_panel_url('https://panel.example.com/x?y'), null);

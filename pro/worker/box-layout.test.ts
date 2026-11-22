@@ -308,12 +308,16 @@ describe("firewall (M2)", () => {
 describe("WHMCS bridge (PRO-6)", () => {
   const u = read("systemd/tc-bridge.service");
 
-  it("runs only when set up, as its own user, with group caddy for its socket", () => {
+  it("runs only when set up, as its own user and group, with caddy's group only for the socket (L6)", () => {
     expect(directive(u, "ConditionPathExists")).toEqual(["/etc/tc/bridge.env"]);
     expect(directive(u, "User")).toEqual(["tc-bridge"]);
-    expect(directive(u, "Group")).toEqual(["caddy"]);
+    expect(directive(u, "Group")).toEqual(["tc-bridge"]);
+    expect(directive(u, "SupplementaryGroups")).toEqual(["caddy"]);
     expect(directive(u, "RuntimeDirectory")).toEqual(["tc-bridge"]);
-    expect(directive(u, "RuntimeDirectoryMode")).toEqual(["0750"]);
+    expect(directive(u, "RuntimeDirectoryMode")).toEqual(["0755"]);
+    expect(read("bin/tc-install.sh")).toContain(
+      "TC_BRIDGE_SOCKET_GID=$(getent group caddy | cut -d: -f3)",
+    );
   });
 
   it("the installer never prints the bridge secret and asks for the WHMCS API secret without echo", () => {
