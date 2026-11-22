@@ -203,3 +203,32 @@ Cost: three t3.small runs of about 25 minutes in total (about 1 cent) and S3 for
 VERIFY results: AWS Marketplace AMI rules checked in the bake (no keys, no history, cleared logs, fresh machine-id, IMDSv2, root volume not encrypted). Not yet run: the Marketplace AMI scan (done in PRO-8 when the AMI is shared with the seller account) and an end-to-end `sudo tc-install` on an instance launched from the AMI. Both need the owner's approval: the scan touches the seller account (the management account); the test launch costs a few cents.
 
 Next: PRO-8 (Marketplace listing: share the AMI with the seller account and run the scan; the owner decides on the management account first).
+
+## 2026-11-23 05:00 PRO-8 Marketplace listing, part 1 (track Pro, Claude)
+Owner approvals: share the AMI with the seller account and run the scan ("ok"); copy the AMI to us-east-1 in the seller account at about 5–10 cents once and about $0.15–0.25 a month for its snapshot ("হ্যাঁ, কপি করো").
+
+Done:
+- The AMI was copied from ap-southeast-1 to us-east-1 in 739275468267 and shared with the seller account, 542374379351 (the management account, used only for Marketplace).
+- In the seller account: copied as **ami-0e2d9ec91e9f6ebb7** (owned by 542374379351, not encrypted). Created IAM role `AWSMarketplaceAmiIngestionRole` (AWS managed policy AWSMarketplaceAmiIngestion, trust marketplace.amazonaws.com). No other resource was touched in that account; the root connector was not used.
+- Both copies in 739275468267 (ap-southeast-1 and us-east-1) were deregistered and their snapshots deleted. That account now has no PRO storage.
+- Draft product **prod-ill7oycvmsrme** "TryAWS.now Pro: Prepaid Lightsail Reseller Panel with WHMCS" (Software, AMI):
+  - product details (logo, descriptions, highlights, support business@ticonsys.com, three categories);
+  - 34 commercial Regions (GovCloud excluded);
+  - 9 x86_64 instance types (t3/t3a small–large, t3.xlarge, m6i.large, m7i.large; t3.medium recommended);
+  - "Test add version 1.0.0" with Ubuntu 24.04, user ubuntu, scan port 22, and security group recommendations 443/80/22.
+- make-release.sh now puts the WHMCS addon (pro/whmcs/modules) into the release; the 827212537a7a archive lacked it.
+
+Needs decision (blocks making the listing public, not the scan):
+1. Pro still uses the SaaS design for AWS access. The worker assumes TcProvisioner, TcReader, TcAccessDetails and the DNS roles with ExternalIds (packages/aws/access.ts, roles.ts), the account must be registered as the pool account in pool_accounts, and tc-install asks for two Cognito user pools. A buyer therefore needs, before the panel can create anything:
+   - an adapted infra/org/pool-roles.yaml that trusts the instance role;
+   - the Cognito pools;
+   - the pool account row.
+   Nothing on the AMI or in the installer creates these today. Options:
+   - (a) deliver "AMI with CloudFormation": one template that makes the instance role, the Tc* roles trusting it, and the Cognito pools, with tc-install registering the pool account;
+   - (b) a Pro-only credentials path that uses the instance role directly, plus local sign-in instead of Cognito. This changes R3/R9 behaviour and auth, so it needs the owner and a security review.
+   Until one is built, the usage instructions on the listing are incomplete, and the listing stays Draft or Limited.
+
+Open:
+- Pricing ($199 for a 36-month contract, entitlement dimension "pro"), the EULA and procurement (Step 3) are not done yet.
+- The India declaration banner in Partner Central (no PE, TRC, Form 41) must be answered before Q4 2026, or paid offers to buyers in India may be suspended.
+- The scan result is pending.
