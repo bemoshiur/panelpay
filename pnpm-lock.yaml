@@ -480,6 +480,9 @@ importers:
       '@tc/fn-kyc-check':
         specifier: workspace:*
         version: link:../../functions/kyc-check
+      '@tc/fn-migrator':
+        specifier: workspace:*
+        version: link:../../functions/migrator
       '@tc/fn-notifier':
         specifier: workspace:*
         version: link:../../functions/notifier

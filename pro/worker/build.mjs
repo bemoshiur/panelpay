@@ -1,5 +1,5 @@
-// PRO-3. Bundles main.ts and the workspace packages it imports into one ESM file for the box
-// (/opt/tc/current/worker/main.mjs). Node cannot run the workspace .ts packages directly. Dependencies
+// PRO-3, PRO-4. Bundles main.ts (the worker) and migrate.ts (tc-migrate), with the workspace packages they
+// import, into dist/main.mjs and dist/migrate.mjs for the box (/opt/tc/current/worker). Node cannot run the workspace .ts packages directly. Dependencies
 // from npm stay external and are installed next to the bundle with the lockfile (R17).
 import { build } from "esbuild";
 import { fileURLToPath, URL } from "node:url";
@@ -7,8 +7,9 @@ import { fileURLToPath, URL } from "node:url";
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
 
 await build({
-  entryPoints: [here("./main.ts")],
-  outfile: here("./dist/main.mjs"),
+  entryPoints: { main: here("./main.ts"), migrate: here("./migrate.ts") },
+  outdir: here("./dist"),
+  outExtension: { ".js": ".mjs" },
   bundle: true,
   platform: "node",
   target: "node24",

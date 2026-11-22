@@ -89,8 +89,9 @@ describe("Caddy", () => {
 });
 
 describe("PostgreSQL", () => {
-  it("listens on loopback only with SCRAM and logs no bind values", () => {
+  it("listens on loopback only with TLS and SCRAM and logs no bind values", () => {
     const conf = read("postgres/tc.conf");
+    expect(conf).toMatch(/^ssl = on$/m);
     expect(conf).toMatch(/^listen_addresses = 'localhost'$/m);
     expect(conf).toMatch(/^password_encryption = scram-sha-256$/m);
     expect(conf).toMatch(/^log_parameter_max_length = 0$/m);
@@ -105,7 +106,8 @@ describe("PostgreSQL", () => {
       if (r[0] === "local") {
         expect(r).toEqual(["local", "all", "postgres", "peer"]);
       } else {
-        expect(r[0]).toBe("host");
+        // TLS only, even on loopback (R2).
+        expect(r[0]).toBe("hostssl");
         expect(["127.0.0.1/32", "::1/128"]).toContain(r[3]);
         expect(r[4]).toBe("scram-sha-256");
         expect(r[2]).not.toBe("all");
@@ -139,5 +141,58 @@ describe("env templates", () => {
     expect(read("env/web.env.example")).toContain("//web_rw:");
     expect(read("env/admin.env.example")).toContain("//admin_rw:");
     expect(read("env/worker.env.example")).toContain("//worker_rw:");
+  });
+});
+
+describe("installer", () => {
+  const sh = read("bin/tc-install.sh");
+
+  it("stops on the first error and creates files private by default", () => {
+    expect(sh).toContain("set -euo pipefail");
+    expect(sh).toMatch(/^umask 077$/m);
+  });
+
+  it("writes each env file with the owner and mode of env/README.md", () => {
+    const table = read("env/README.md");
+    const calls = [...sh.matchAll(/write_env "\$ETC\/([a-z]+\.env)" (\S+) (\S+) (\d{4})/g)];
+    expect(calls.map((c) => c[1]).sort()).toEqual([
+      "admin.env",
+      "backup.env",
+      "caddy.env",
+      "common.env",
+      "migrate.env",
+      "web.env",
+      "worker.env",
+    ]);
+    for (const [, file, owner, group, mode] of calls) {
+      expect(table).toMatch(
+        new RegExp(`\\| ${file!.replace(".", "\\.")}\\s+\\| ${owner}:${group} ${mode}\\s+\\|`),
+      );
+    }
+  });
+
+  it("never prints a generated secret, and passes the owner password on stdin only", () => {
+    const secrets = ["OWNER", "WEB_RW", "ADMIN_RW", "WORKER_RW", "MIGRATOR", "REPORT_RO", "INVOKE"];
+    for (const line of sh.split("\n")) {
+      if (!/^\s*(say|echo|printf)\b/.test(line)) continue;
+      if (line.includes('>"$SECRETS"') || /^\s*echo "[A-Z_]+=\$\(secret\)"$/.test(line)) continue;
+      if (line.includes("| su postgres")) continue; // the one stdin hand-over to psql
+      for (const name of secrets) expect(line).not.toContain(`$${name}`);
+    }
+    expect(sh).not.toMatch(/psql[^\n]*password '\$/);
+  });
+
+  it("pins the Node.js release and its checksum", () => {
+    expect(read("node-version").trim()).toMatch(/^24\.\d+\.\d+$/);
+    const sums = read("node-sha256");
+    for (const arch of ["x64", "arm64"]) {
+      expect(sums).toMatch(
+        new RegExp(
+          `^[0-9a-f]{64}  node-v${read("node-version").trim()}-linux-${arch}\\.tar\\.xz$`,
+          "m",
+        ),
+      );
+    }
+    expect(sh).toContain("sha256sum -c");
   });
 });

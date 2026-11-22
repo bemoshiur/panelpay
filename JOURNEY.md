@@ -42,3 +42,33 @@ Proof: vitest run pro/worker -> 4 files, 31 passed (a removed header_up line mak
 VERIFY results: caddy validate not run (no Caddy binary in the sandbox); to run on the first box, PRO-7.
 Decided: owner, 2026-11-23 02:20: the Pro edition may keep PostgreSQL and its secrets on the buyer's instance (R2, R3 for Pro only), on the condition that TiCON has no AWS bill. The edition creates no AWS resource in TiCON's accounts.
 Next: PRO-4 (installer and first-run wizard, including a migrator entry that reads the role passwords from the box instead of SST links).
+
+## 2026-11-23 03:05 PRO-4 (track Pro, Claude)
+Done:
+- `pro/box/bin/tc-install.sh` (Ubuntu 24.04, idempotent, unattended with `--answers`):
+  - installs PostgreSQL 16 and Caddy from Ubuntu's archive, and Node 24.22.2 from nodejs.org with a pinned SHA-256;
+  - creates the users, and generates the secrets once (`openssl rand`; the owner password goes to psql on stdin);
+  - makes a TLS certificate for the local PostgreSQL and writes `/etc/tc/*.env` with the owner and mode of `env/README.md`;
+  - runs the migrations, then grants CONNECT to the five roles only;
+  - installs the units and checks the Caddyfile with `caddy validate` before starting Caddy.
+- PostgreSQL is TLS-only, even on loopback (`hostssl`, TLS 1.3, `sslmode=verify-full` against the box's certificate), because the migrator refuses a session without TLS (R2). `tc_owner` (CREATEROLE) owns the database.
+- `functions/migrator`: `migratorDeps(config)` is exported, so the Lambda handler and Pro run the same `runMigrator`.
+- `pro/worker/migrate.ts` + `migrate-config.ts`: config from `/etc/tc/migrate.env`. It requires a local URL with verify-full, five distinct passwords of 32+ characters and an absolute folder; the stage is "pro", so all flags start off.
+- `pro/worker/bundle-deps.mjs` pins the npm dependencies of the bundles to the versions the workspace resolves (R17).
+- Plan: the partner-solution step after the Marketplace listing; price confirmed.
+
+Proof:
+- `vitest run pro/worker functions/migrator` -> 12 files, 98 passed. Two planted mistakes in the installer (a wrong env file mode; a secret printed) each make box-layout fail.
+- The bundled `dist/migrate.mjs`, with its pinned npm dependencies installed by `npm install --omit=dev --ignore-scripts`, ran against a fresh PostgreSQL 16 cluster with the repo's `pg_hba` and TLS:
+  - first run: 5 roles created, 29 migrations, 8 system accounts, production seed (12 flags, all off);
+  - second run: nothing changed.
+- web_rw connects with verify-full (ssl true); a plaintext connection is refused by `pg_hba`.
+- `shellcheck -S warning` is clean; tsc and eslint are clean.
+
+VERIFY results:
+- Ubuntu 24.04 has no awscli package: the backup's S3 copy needs the CLI from the AMI (PRO-7) and fails closed without it.
+- The nodejs.org SHASUMS256.txt for 24.22.2 was read over HTTPS on 2026-11-23. Its GPG signature was not checked: do that in PRO-7.
+
+Not run: the installer end to end. It needs an Ubuntu 24.04 instance with systemd, which comes in PRO-7, after the owner approves the build instance and its cost.
+
+Next: PRO-5 (licence check with AWS License Manager CheckoutLicense; no cost to TiCON).

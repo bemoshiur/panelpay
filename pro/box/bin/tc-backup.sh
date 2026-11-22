@@ -29,6 +29,8 @@ mv "$tmp" "$file"
 if [[ -n "${TC_BACKUP_S3_URI:-}" ]]; then
   [[ "$TC_BACKUP_S3_URI" =~ ^s3://[a-z0-9][a-z0-9.-]{1,61}[a-z0-9](/[A-Za-z0-9._/-]*)?$ ]] \
     || { echo '{"event":"backup_failed","stage":"s3_config"}'; exit 1; }
+  # The AWS CLI is not in Ubuntu 24.04's archive; the AMI installs it (PRO-7) only for this copy.
+  command -v aws >/dev/null || { echo '{"event":"backup_failed","stage":"s3_cli"}'; exit 1; }
   if ! aws s3 cp --only-show-errors --sse AES256 "$file" "${TC_BACKUP_S3_URI%/}/$(basename "$file")" >/dev/null 2>&1; then
     echo '{"event":"backup_failed","stage":"s3_copy"}'
     exit 1

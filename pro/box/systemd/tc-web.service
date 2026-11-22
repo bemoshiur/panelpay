@@ -31,6 +31,8 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 CapabilityBoundingSet=
 SystemCallArchitectures=native
 UMask=0077
+# Next.js writes its cache under .next/cache; the rest of the release stays read-only.
+ReadWritePaths=-/opt/tc/current/web/apps/web/.next/cache
 
 [Install]
 WantedBy=multi-user.target

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "node build.mjs"
+    "build": "node build.mjs && node bundle-deps.mjs"
   },
   "dependencies": {
     "@tc/core": "workspace:*",
@@ -16,6 +16,7 @@
     "@tc/fn-catalog-sync": "workspace:*",
     "@tc/fn-invoice-renderer": "workspace:*",
     "@tc/fn-kyc-check": "workspace:*",
+    "@tc/fn-migrator": "workspace:*",
     "@tc/fn-notifier": "workspace:*",
     "@tc/fn-payments-sweeper": "workspace:*",
     "@tc/fn-provisioner": "workspace:*",
