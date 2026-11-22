@@ -9,6 +9,7 @@ import { ledgerCheckHandler, reconcilerHandler } from "@tc/fn-reconciler";
 import { handler as readerHandler } from "@tc/fn-reader";
 import { buildSchedulerHandler } from "@tc/fn-scheduler";
 import { createInvokeHandler, startInvokeServer } from "./invoke-server";
+import { licenceCheckFromEnv } from "./licence-aws";
 import { createWorker } from "./worker";
 
 // PRO-1. Entry of the systemd unit tc-worker (PRO-3). Reads the same environment as the Lambdas, minus
@@ -41,6 +42,7 @@ async function main(): Promise<void> {
         catalogSync: () => catalogSyncHandler(),
         reconciler: () => reconcilerHandler(),
         ledgerCheck: () => ledgerCheckHandler(),
+        licence: licenceCheckFromEnv(process.env, log),
       }),
     });
   } catch {

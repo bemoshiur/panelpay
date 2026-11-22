@@ -72,3 +72,9 @@ VERIFY results:
 Not run: the installer end to end. It needs an Ubuntu 24.04 instance with systemd, which comes in PRO-7, after the owner approves the build instance and its cost.
 
 Next: PRO-5 (licence check with AWS License Manager CheckoutLicense; no cost to TiCON).
+
+## 2026-11-23 03:25 PRO-5 (track Pro, Claude)
+Done: pro/worker/licence.ts: CheckoutLicense check (PROVISIONAL, AWS Marketplace key fingerprint, entitlement "pro") at start and every 12 hours, recorded in /var/lib/tc/licence.json (systemd StateDirectory). Missing or ended licence -> expired; a check that could not complete -> unknown, never expired; only the error name is logged. licenceAllowsUpdate: updates only with an active licence checked in the last 48 hours (R16); the running platform never reads the status (EULA: an ended contract keeps the installed version). licence-gate.mjs for tc-update (exit 0 or 3). @aws-sdk/client-license-manager 3.1166.0 (same version as the other AWS clients; not an auth or crypto dependency). Installer writes TC_PRODUCT_SKU from the release (baked into the AMI in PRO-7).
+Proof: vitest run pro/worker -> 6 files, 46 passed; licence-gate.mjs with no status file prints "refused" and exits 3; tsc, eslint, shellcheck clean.
+VERIFY results: AWS Marketplace seller guide (ami-license-manager-integration, container-anywhere-license-manager-integration), read 2026-11-23: the key fingerprint for licences issued by AWS Marketplace is aws:294406891311:AWS/Marketplace:issuer-fingerprint; after a contract ends the buyer cannot launch new instances of the AMI, but running ones are not stopped. The tiered entitlement name and unit must be checked against the test licence once the product exists (PRO-8).
+Next: PRO-6 (WHMCS bridge).

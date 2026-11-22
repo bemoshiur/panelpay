@@ -33,6 +33,9 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 CapabilityBoundingSet=
 SystemCallArchitectures=native
 UMask=0077
+# PRO-5: /var/lib/tc/licence.json (the licence status; the update gate reads it).
+StateDirectory=tc
+StateDirectoryMode=0755
 
 [Install]
 WantedBy=multi-user.target

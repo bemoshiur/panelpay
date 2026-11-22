@@ -183,10 +183,14 @@ ADMIN_IP_ALLOWLIST=$(tr ' ' ',' <<<"${A[TC_ADMIN_ALLOW]}")
 COGNITO_ADMIN_POOL_ID=${A[COGNITO_ADMIN_POOL_ID]}
 COGNITO_ADMIN_CLIENT_ID=${A[COGNITO_ADMIN_CLIENT_ID]}
 EOF
+# PRO-5: the AWS Marketplace product SKU is baked into the AMI (PRO-7); empty outside a Marketplace install.
+PRODUCT_SKU="$(tr -d '[:space:]' <"$RELEASE/box/product-sku" 2>/dev/null || true)"
+[[ -z "$PRODUCT_SKU" || "$PRODUCT_SKU" =~ ^[A-Za-z0-9-]{1,128}$ ]] || die "invalid product SKU in the release"
 write_env "$ETC/worker.env" root tc-worker 0640 <<EOF
 DATABASE_URL=$(url worker_rw "$WORKER_RW")
 PRO_INVOKE_PORT=9700
 PRO_INVOKE_TOKEN=$INVOKE
+TC_PRODUCT_SKU=$PRODUCT_SKU
 EOF
 write_env "$ETC/caddy.env" root caddy 0640 <<EOF
 TC_ACME_EMAIL=${A[TC_ACME_EMAIL]}

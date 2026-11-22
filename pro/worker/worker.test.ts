@@ -12,6 +12,7 @@ const handlers = {
   catalogSync: noop,
   reconciler: noop,
   ledgerCheck: noop,
+  licence: noop,
 };
 
 it("keeps the schedules of the Lambda edition", () => {
@@ -23,6 +24,8 @@ it("keeps the schedules of the Lambda edition", () => {
     ["reconciler", 3600],
     ["catalog-sync", 86_400],
     ["ledger-check", { hour: 20, minute: 0 }],
+    // PRO-5: twice a day, so one missed check still leaves the 48-hour update window open.
+    ["licence", 43_200],
   ]);
 });
 
