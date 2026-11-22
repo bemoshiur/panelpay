@@ -61,8 +61,9 @@ rm -f /var/lib/dbus/machine-id
 apt-get clean
 journalctl --rotate >/dev/null 2>&1 || true
 journalctl --vacuum-time=1s >/dev/null 2>&1 || true
-find /var/log -type f \( -name '*.gz' -o -name '*.1' \) -delete
-find /var/log -type f -exec truncate -s 0 {} +
+# A log can change or vanish while these run; a partial sweep is not a failed bake.
+find /var/log -type f \( -name '*.gz' -o -name '*.1' \) -delete 2>/dev/null || true
+find /var/log -type f -exec truncate -s 0 {} + 2>/dev/null || true
 cloud-init clean --logs --seed >/dev/null 2>&1 || true
 say "TC-BAKE-OK $RELEASE_ID"
 sync
