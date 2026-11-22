@@ -1,0 +1,39 @@
+import { createHash } from "node:crypto";
+import { whmcsApi, type WhmcsApi } from "./whmcs-api";
+
+// PRO-6. The bridge configuration, from /etc/tc/bridge.env (root:root 0600, read by systemd).
+// One fixed error, no value in it (R14, R16).
+
+export const BRIDGE_CONFIG_ERROR = "bridge: the configuration is not valid";
+
+export interface BridgeConfig {
+  readonly socketPath: string;
+  readonly secret: string;
+  readonly installId: string;
+  readonly api: WhmcsApi;
+}
+
+export function readBridgeConfig(env: Readonly<Record<string, string | undefined>>): BridgeConfig {
+  const fail = (): never => {
+    throw new Error(BRIDGE_CONFIG_ERROR);
+  };
+  const url = env["WHMCS_URL"] ?? "";
+  const identifier = env["WHMCS_API_IDENTIFIER"] ?? "";
+  const apiSecret = env["WHMCS_API_SECRET"] ?? "";
+  const secret = env["TC_BRIDGE_SECRET"] ?? "";
+  const socketPath = env["TC_BRIDGE_SOCKET"] ?? "/run/tc-bridge/bridge.sock";
+  if (!/^[A-Za-z0-9]{8,128}$/.test(identifier) || !/^[A-Za-z0-9]{8,128}$/.test(apiSecret))
+    return fail();
+  if (!/^[0-9a-f]{48,128}$/.test(secret)) return fail();
+  let host: string;
+  let api: WhmcsApi;
+  try {
+    host = new URL(url).host;
+    api = whmcsApi({ url, identifier, secret: apiSecret });
+  } catch {
+    return fail();
+  }
+  // A stable short id of this WHMCS install, part of every merchant id (credit.ts).
+  const installId = createHash("sha256").update(host.toLowerCase()).digest("hex").slice(0, 8);
+  return { socketPath, secret, installId, api };
+}

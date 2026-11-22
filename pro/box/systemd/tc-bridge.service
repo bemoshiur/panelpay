@@ -1,0 +1,43 @@
+[Unit]
+Description=TryAWS.now Pro: WHMCS bridge (credits paid WHMCS top-up invoices, PRO-6)
+After=network-online.target postgresql.service tc-firewall.service
+Wants=network-online.target
+Requires=postgresql.service tc-firewall.service
+# Off until the buyer set up the WHMCS bridge in the installer.
+ConditionPathExists=/etc/tc/bridge.env
+
+[Service]
+Type=simple
+User=tc-bridge
+# Group caddy: the socket below is created with it, so Caddy (and no other user) can connect.
+Group=caddy
+WorkingDirectory=/opt/tc/current/bridge
+EnvironmentFile=/etc/tc/common.env
+EnvironmentFile=/etc/tc/bridge.env
+Environment=NODE_ENV=production TC_BRIDGE_SOCKET=/run/tc-bridge/bridge.sock
+ExecStart=/usr/bin/node bridge.mjs
+Restart=on-failure
+RestartSec=5
+MemoryMax=300M
+RuntimeDirectory=tc-bridge
+RuntimeDirectoryMode=0750
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# The bridge needs no AWS credentials (security review H2).
+IPAddressDeny=169.254.169.254/32 fd00:ec2::254/128
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

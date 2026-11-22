@@ -106,3 +106,52 @@ Open:
 - IMDSv2 with hop limit 1 goes in the AMI launch settings (PRO-7).
 
 Next: PRO-6 (WHMCS bridge).
+
+## 2026-11-23 04:40 PRO-6 (track Pro, Claude)
+Decided (owner, 2026-11-23 02:55, asked before building because it touches sign-in and a wallet rule):
+- WHMCS clients sign in through the panel's own login page with their e-mail filled in. There is no new sign-in system.
+- Wallet top-ups go through WHMCS invoices. The panel credits one only after it has read the paid invoice from the WHMCS API itself. This is R6 applied to a second gateway, Pro edition only.
+
+Done:
+- `pro/whmcs-bridge` (`@tc/pro-whmcs-bridge`):
+  - `invoice.ts`: amounts are parsed as text into bigint minor units. A credit needs a paid invoice with nothing left to pay, top-up lines only (the marker), and a total of at least their sum. Tax stays with the reseller.
+  - `whmcs-api.ts`: GetInvoice and GetClientsDetails over https, with no redirects, a timeout, and parsing field by field.
+  - `credit.ts`: one transaction does all of this:
+    - finds exactly one active customer with a verified e-mail;
+    - inserts the payment (gateway "whmcs", merchant/idempotency key `WHMCS-<install>-<invoice>`);
+    - locks it;
+    - sends another currency to review and records a discrepancy;
+    - posts gateway_clearing -> customer_wallet with `ledgerKey.topup`;
+    - marks the payment credited.
+  - `server.ts`: one signed endpoint on a Unix socket: HMAC-SHA256 over `<ts>.<body>`, a 5-minute window, constant-time compare, a global per-minute limit. The signature decides no money.
+  - `main.ts`: the service, plus `recheck <invoice>`.
+- `packages/db`:
+  - `systemWhmcs.customerByVerifiedEmail` is a system read with no customer id, classified in tenancy.ts and type-checked against MethodsTakingCustomerId.
+  - The payments repo accepts gateway "whmcs" (allowlist).
+- `apps/web` login: `?email=` fills in a plain address, and anything else is dropped. It signs in nothing.
+- `pro/whmcs` (PHP, WHMCS addon):
+  - client area: "Open panel" and "Top up wallet", which creates the invoice;
+  - InvoicePaid hook: sends a signed notice, for top-up invoices only;
+  - admin page: re-send.
+- Box:
+  - tc-bridge.service: user tc-bridge, group caddy, socket /run/tc-bridge, IMDS denied, runs only when bridge.env exists;
+  - Caddy routes `/bridge/whmcs/*` of the panel host to the socket;
+  - nftables lets tc-bridge reach 5432;
+  - the installer asks the optional WHMCS questions, reads the API secret without echo, and writes bridge.env and bridge-secret.txt as root 0600, never printed.
+
+Proof:
+- `vitest run packages/db packages/eps pro` plus the web loopback and login tests: 223 files, 2975 passed, 1 skipped.
+- credit.test runs on real PostgreSQL:
+  - credited once, then unchanged;
+  - two concurrent calls give one credit;
+  - unverified, unknown or duplicate e-mails credit nothing;
+  - another currency goes to review;
+  - a later change of amount goes to review, never a second credit;
+  - logs carry no e-mail.
+- The PHP and TypeScript HMAC agree byte for byte (`php pro/whmcs/test/lib-test.php` prints ae9f8af1…, pinned in server.test).
+- A mutation test: removing the e-mail prefill makes the login test fail.
+- `nft -c` passes with the tc-bridge user, `systemd-analyze verify` is clean, and `php -l`, shellcheck, tsc and eslint are clean.
+
+VERIFY results: WHMCS API GetInvoice and GetClientsDetails field names (userid, status, balance, total, items.item[].description and amount; client.email and currency_code) come from WHMCS's own API documentation and are not yet checked against a live WHMCS. Do that against the first reseller's WHMCS before launch.
+
+Next: a money and security review of this PR, then PRO-7 (AMI build; the owner approves the build instance and its cost first).

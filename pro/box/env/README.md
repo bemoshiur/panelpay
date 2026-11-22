@@ -11,6 +11,7 @@ The installer (PRO-4) writes these files on the buyer's box. None is in the repo
 | worker.env  | root:root 0600 | tc-worker                                        |
 | caddy.env   | root:root 0600 | caddy                                            |
 | backup.env  | root:root 0600 | tc-backup                                        |
+| bridge.env  | root:root 0600 | tc-bridge (only when the WHMCS bridge is set up) |
 | migrate.env | root:root 0600 | tc-migrate (installer, updates)                  |
 | pg-ca.crt   | root:root 0644 | all (public certificate of the local PostgreSQL) |
 

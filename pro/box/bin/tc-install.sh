@@ -49,7 +49,12 @@ ask() {
     v="$(grep -E "^$key=" "$ETC/answers.env" | tail -1 | cut -d= -f2- || true)"
   fi
   if [[ -z "$v" && -z "$ANSWERS" ]]; then
-    read -r -p "$q${def:+ [$def]}: " v
+    if [[ "$key" == *SECRET* ]]; then
+      read -r -s -p "$q: " v # not echoed
+      printf '\n'
+    else
+      read -r -p "$q${def:+ [$def]}: " v
+    fi
   fi
   v="${v:-$def}"
   [[ "$v" =~ $re ]] || die "invalid value for $key"
@@ -67,12 +72,23 @@ ask COGNITO_CUSTOMER_CLIENT_ID "Cognito app client id for customers" '^[a-z0-9]{
 ask COGNITO_ADMIN_POOL_ID "Cognito user pool id for operators" '^[a-z]{2}(-[a-z]+)+-[0-9]_[A-Za-z0-9]{1,55}$'
 ask COGNITO_ADMIN_CLIENT_ID "Cognito app client id for operators" '^[a-z0-9]{1,128}$'
 ask TC_FIRST_ADMIN_SUB "Cognito sub of the first operator (empty to skip)" '^([0-9a-f-]{36})?$' ""
+# PRO-6, optional: the WHMCS bridge (wallet top-ups paid through the reseller's WHMCS). Empty: off.
+ask WHMCS_URL "WHMCS URL for wallet top-ups, https://... (empty to skip)" \
+  '^(https://[A-Za-z0-9.-]{1,253}(:[0-9]{2,5})?(/[A-Za-z0-9._~/-]{0,200})?)?$' ""
+if [[ -n "${A[WHMCS_URL]}" ]]; then
+  ask WHMCS_API_IDENTIFIER "WHMCS API identifier (an API role with GetInvoice and GetClientsDetails only)" '^[A-Za-z0-9]{8,128}$'
+  ask WHMCS_API_SECRET "WHMCS API secret" '^[A-Za-z0-9]{8,128}$'
+else
+  A[WHMCS_API_IDENTIFIER]=""
+  A[WHMCS_API_SECRET]=""
+fi
 
 # The answers are not secret; they are kept so a re-run asks nothing.
 mkdir -p "$ETC" && chmod 0751 "$ETC"
 {
   for k in TC_PANEL_HOST TC_ADMIN_HOST TC_ADMIN_ALLOW TC_ACME_EMAIL AWS_REGION COGNITO_CUSTOMER_POOL_ID \
-    COGNITO_CUSTOMER_CLIENT_ID COGNITO_ADMIN_POOL_ID COGNITO_ADMIN_CLIENT_ID TC_FIRST_ADMIN_SUB; do
+    COGNITO_CUSTOMER_CLIENT_ID COGNITO_ADMIN_POOL_ID COGNITO_ADMIN_CLIENT_ID TC_FIRST_ADMIN_SUB \
+    WHMCS_URL WHMCS_API_IDENTIFIER WHMCS_API_SECRET; do
     printf '%s=%s\n' "$k" "${A[$k]}"
   done
 } >"$ETC/.answers.tmp"
@@ -126,6 +142,8 @@ for u in tc-web tc-admin tc-worker; do
 done
 getent group caddy >/dev/null || groupadd --system caddy
 id caddy >/dev/null 2>&1 || useradd --system --gid caddy --home-dir /var/lib/tc-caddy --shell /usr/sbin/nologin caddy
+# PRO-6: the WHMCS bridge. Its primary group is caddy, so its socket is reachable by Caddy only.
+id tc-bridge >/dev/null 2>&1 || useradd --system --gid caddy --home-dir /nonexistent --shell /usr/sbin/nologin tc-bridge
 install -d -m 0700 -o root -g root /var/log/tc
 install -d -m 0700 -o caddy -g caddy /var/lib/tc-caddy
 mkdir -p /var/backups/tc && chown postgres:postgres /var/backups/tc && chmod 0700 /var/backups/tc
@@ -146,6 +164,8 @@ if [[ ! -f "$SECRETS" ]]; then
   } >"$SECRETS"
   chmod 0600 "$SECRETS"
 fi
+# Added by PRO-6: a box set up before keeps its secrets and gets the new one.
+grep -q '^BRIDGE=' "$SECRETS" || echo "BRIDGE=$(secret)" >>"$SECRETS"
 # Read, never sourced: KEY=hex lines only (security review L1, L2).
 while IFS='=' read -r k v; do
   [[ "$k" =~ ^[A-Z_]+$ && "$v" =~ ^[0-9a-f]{48}$ ]] || die "the secrets file is damaged"
@@ -231,6 +251,21 @@ EOF
 TC_BACKUP_S3_URI=
 TC_BACKUP_KEEP_DAYS=14
 EOF
+if [[ -n "${A[WHMCS_URL]}" ]]; then
+  write_env "$ETC/bridge.env" root root 0600 <<EOF
+DATABASE_URL=$(url web_rw "$WEB_RW")
+WHMCS_URL=${A[WHMCS_URL]}
+WHMCS_API_IDENTIFIER=${A[WHMCS_API_IDENTIFIER]}
+WHMCS_API_SECRET=${A[WHMCS_API_SECRET]}
+TC_BRIDGE_SECRET=$BRIDGE
+EOF
+  # The reseller pastes this into the WHMCS addon (Bridge secret). Root only; never printed.
+  write_env "$ETC/bridge-secret.txt" root root 0600 <<EOF
+$BRIDGE
+EOF
+else
+  rm -f "$ETC/bridge.env" "$ETC/bridge-secret.txt"
+fi
 write_env "$ETC/migrate.env" root root 0600 <<EOF
 TC_MASTER_URL=$(url tc_owner "$OWNER")
 TC_MIGRATIONS_DIR=$RELEASE/migrations
@@ -256,7 +291,7 @@ psql_su "-c \"revoke connect on database ticoncloud from public\""
 say "7/7 services"
 install -m 0644 "$RELEASE/box/caddy/Caddyfile" "$ETC/Caddyfile"
 install -m 0644 "$RELEASE/box/nftables/tc.nft" "$ETC/tc.nft"
-for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup; do
+for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup tc-bridge; do
   install -m 0644 "$RELEASE/box/systemd/$u.service" /etc/systemd/system/
 done
 install -m 0644 "$RELEASE/box/systemd/tc-backup.timer" /etc/systemd/system/
@@ -265,6 +300,13 @@ systemctl enable --now tc-firewall >/dev/null 2>&1
 systemctl restart tc-firewall
 systemctl enable --now tc-worker tc-web tc-admin tc-backup.timer >/dev/null 2>&1
 systemctl restart tc-worker tc-web tc-admin
+if [[ -f "$ETC/bridge.env" ]]; then
+  [[ -f "$RELEASE/bridge/bridge.mjs" ]] || die "the release has no WHMCS bridge"
+  systemctl enable tc-bridge >/dev/null 2>&1
+  systemctl restart tc-bridge
+else
+  systemctl disable --now tc-bridge >/dev/null 2>&1 || true
+fi
 systemd-run --quiet --wait --pipe --collect --property=EnvironmentFile="$ETC/caddy.env" --uid=caddy \
   --setenv=XDG_DATA_HOME=/var/lib/tc-caddy --setenv=XDG_CONFIG_HOME=/var/lib/tc-caddy \
   /usr/local/bin/caddy validate --config "$ETC/Caddyfile" --adapter caddyfile >/dev/null 2>&1 \
@@ -275,4 +317,8 @@ systemctl restart tc-caddy
 for u in postgresql tc-firewall tc-worker tc-web tc-admin tc-caddy; do
   systemctl is-active --quiet "$u" || die "$u is not running (journalctl -u $u)"
 done
+if [[ -f "$ETC/bridge.env" ]]; then
+  systemctl is-active --quiet tc-bridge || die "tc-bridge is not running (journalctl -u tc-bridge)"
+  say "WHMCS bridge on: put the secret from $ETC/bridge-secret.txt into the WHMCS addon (Bridge secret)."
+fi
 say "done: https://${A[TC_PANEL_HOST]} and https://${A[TC_ADMIN_HOST]}"

@@ -73,3 +73,10 @@ permission, so `"Resource": "*"`; security review L5):
 - **L1–L6** env files root:root 0600, nothing sourced by bash (systemd-run with EnvironmentFile), a strict
   email pattern, `{http.request.remote}` for IPv6, a root-only log directory, least-privilege licence
   permission, our own Caddy unit without `--environ`.
+
+## WHMCS bridge (PRO-6)
+
+Optional. With the three WHMCS answers, the installer starts `tc-bridge` (user `tc-bridge`, group
+`caddy`, socket `/run/tc-bridge/bridge.sock`). Caddy routes only `/bridge/whmcs/*` of the panel host to it.
+The bridge connects to PostgreSQL as `web_rw`, the role whose rights the EPS return also uses to credit a
+wallet; it needs no AWS credentials. The reseller side is `pro/whmcs/` (README there).

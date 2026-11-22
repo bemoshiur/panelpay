@@ -12,9 +12,12 @@ export function LoginForm({
   locale,
   next,
   reauth = false,
+  initialEmail = "",
 }: {
   locale: Locale;
   next: string;
+  /** PRO-6: the address the "Open panel" link of the WHMCS module fills in; already checked by the page. */
+  initialEmail?: string;
   /** WPU-X23: the sign-in again of a signed-in customer; posted so the action runs the full flow. */
   reauth?: boolean;
 }) {
@@ -50,7 +53,7 @@ export function LoginForm({
               required
               spellCheck={false}
               autoCapitalize="off"
-              defaultValue={values["email"]}
+              defaultValue={values["email"] ?? (initialEmail === "" ? undefined : initialEmail)}
               {...(error("email") !== undefined ? { error: error("email") as string } : {})}
             />
           </div>

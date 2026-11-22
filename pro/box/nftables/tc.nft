@@ -10,6 +10,6 @@ table inet tc_local {
 	chain output {
 		type filter hook output priority 0; policy accept;
 		tcp dport { 801, 802 } meta skuid != "caddy" reject with tcp reset
-		tcp dport 5432 meta skuid != { "root", "postgres", "tc-web", "tc-admin", "tc-worker" } reject with tcp reset
+		tcp dport 5432 meta skuid != { "root", "postgres", "tc-web", "tc-admin", "tc-worker", "tc-bridge" } reject with tcp reset
 	}
 }
