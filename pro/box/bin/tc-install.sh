@@ -28,6 +28,67 @@ die() {
 [[ "${ID:-}" == ubuntu && "${VERSION_ID:-}" == 24.04 ]] || die "Ubuntu 24.04 is required"
 [[ -d "$RELEASE/web" && -d "$RELEASE/admin" && -f "$RELEASE/worker/main.mjs" ]] || die "release not found in $RELEASE"
 
+# ---------------------------------------------------------------- packages
+say "packages"
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+# PostgreSQL 16 from Ubuntu's own archive (main). No third-party apt repository on the box.
+apt-get install -y -qq postgresql-16 nftables curl xz-utils openssl >/dev/null
+
+# pinned_download URL FILE SUMFILE ALGO: downloads FILE and checks it against the sum pinned in the
+# release (R17) before anything of it is used. Prints the path of the checked file.
+pinned_download() {
+  local url="$1" file="$2" sums="$3" algo="$4" dir expected
+  dir="$(mktemp -d)"
+  expected="$(grep -E "^[0-9a-f]{64,128}  $file\$" "$sums" | cut -d' ' -f1 || true)"
+  [[ -n "$expected" ]] || die "no pinned checksum for $file"
+  curl -fsSL --proto '=https' -o "$dir/$file" "$url"
+  echo "$expected  $dir/$file" | "${algo}sum" -c --quiet - || die "checksum mismatch for $file"
+  printf '%s' "$dir/$file"
+}
+arch="$(dpkg --print-architecture)"
+case "$arch" in amd64) narch=x64 ;; arm64) narch=arm64 ;; *) die "unsupported architecture" ;; esac
+if [[ "$(node --version 2>/dev/null || true)" != "v$NODE_VERSION" ]]; then
+  # Pinned from nodejs.org SHASUMS256.txt.
+  tarball="node-v$NODE_VERSION-linux-$narch.tar.xz"
+  got="$(pinned_download "https://nodejs.org/dist/v$NODE_VERSION/$tarball" "$tarball" "$RELEASE/box/node-sha256" sha256)"
+  tar -xJf "$got" -C /usr/local --strip-components=1 --no-same-owner
+  ln -sf /usr/local/bin/node /usr/bin/node
+  rm -rf "$(dirname "$got")"
+fi
+if [[ "$(/usr/local/bin/caddy version 2>/dev/null | cut -d' ' -f1)" != "v$CADDY_VERSION" ]]; then
+  # Security review M3: the one public-facing process is a current, pinned Caddy release (SHA-512 from the
+  # checksums file of the GitHub release), not the older package of Ubuntu's universe archive.
+  tarball="caddy_${CADDY_VERSION}_linux_$arch.tar.gz"
+  got="$(pinned_download "https://github.com/caddyserver/caddy/releases/download/v$CADDY_VERSION/$tarball" \
+    "$tarball" "$RELEASE/box/caddy-sha512" sha512)"
+  tar -xzf "$got" -C "$(dirname "$got")" caddy
+  install -m 0755 -o root -g root "$(dirname "$got")/caddy" /usr/local/bin/caddy
+  rm -rf "$(dirname "$got")"
+fi
+
+# ---------------------------------------------------------------- users
+say "users"
+getent group tc >/dev/null || groupadd --system tc
+for u in tc-web tc-admin tc-worker; do
+  id "$u" >/dev/null 2>&1 || useradd --system --gid tc --home-dir /nonexistent --shell /usr/sbin/nologin "$u"
+done
+getent group caddy >/dev/null || groupadd --system caddy
+id caddy >/dev/null 2>&1 || useradd --system --gid caddy --home-dir /var/lib/tc-caddy --shell /usr/sbin/nologin caddy
+# PRO-6: the WHMCS bridge, with its own group; the unit adds caddy's group only to hand Caddy its socket.
+getent group tc-bridge >/dev/null || groupadd --system tc-bridge
+id tc-bridge >/dev/null 2>&1 || useradd --system --gid tc-bridge --home-dir /nonexistent --shell /usr/sbin/nologin tc-bridge
+install -d -m 0700 -o root -g root /var/log/tc
+install -d -m 0700 -o caddy -g caddy /var/lib/tc-caddy
+mkdir -p /var/backups/tc && chown postgres:postgres /var/backups/tc && chmod 0700 /var/backups/tc
+
+# PRO-7: `--bake` (the AMI build) stops here: packages, Node, Caddy and users are in the image; every
+# secret, answer and database is made on the buyer's instance at its first run.
+if [[ "${1:-}" == "--bake" ]]; then
+  say "baked"
+  exit 0
+fi
+
 # ---------------------------------------------------------------- answers
 ANSWERS=""
 if [[ "${1:-}" == "--answers" ]]; then
@@ -94,60 +155,6 @@ mkdir -p "$ETC" && chmod 0751 "$ETC"
 } >"$ETC/.answers.tmp"
 chmod 0600 "$ETC/.answers.tmp"
 mv "$ETC/.answers.tmp" "$ETC/answers.env"
-
-# ---------------------------------------------------------------- packages
-say "1/7 packages"
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq
-# PostgreSQL 16 from Ubuntu's own archive (main). No third-party apt repository on the box.
-apt-get install -y -qq postgresql-16 nftables curl xz-utils openssl >/dev/null
-
-# pinned_download URL FILE SUMFILE ALGO: downloads FILE and checks it against the sum pinned in the
-# release (R17) before anything of it is used. Prints the path of the checked file.
-pinned_download() {
-  local url="$1" file="$2" sums="$3" algo="$4" dir expected
-  dir="$(mktemp -d)"
-  expected="$(grep -E "^[0-9a-f]{64,128}  $file\$" "$sums" | cut -d' ' -f1 || true)"
-  [[ -n "$expected" ]] || die "no pinned checksum for $file"
-  curl -fsSL --proto '=https' -o "$dir/$file" "$url"
-  echo "$expected  $dir/$file" | "${algo}sum" -c --quiet - || die "checksum mismatch for $file"
-  printf '%s' "$dir/$file"
-}
-arch="$(dpkg --print-architecture)"
-case "$arch" in amd64) narch=x64 ;; arm64) narch=arm64 ;; *) die "unsupported architecture" ;; esac
-if [[ "$(node --version 2>/dev/null || true)" != "v$NODE_VERSION" ]]; then
-  # Pinned from nodejs.org SHASUMS256.txt.
-  tarball="node-v$NODE_VERSION-linux-$narch.tar.xz"
-  got="$(pinned_download "https://nodejs.org/dist/v$NODE_VERSION/$tarball" "$tarball" "$RELEASE/box/node-sha256" sha256)"
-  tar -xJf "$got" -C /usr/local --strip-components=1 --no-same-owner
-  ln -sf /usr/local/bin/node /usr/bin/node
-  rm -rf "$(dirname "$got")"
-fi
-if [[ "$(/usr/local/bin/caddy version 2>/dev/null | cut -d' ' -f1)" != "v$CADDY_VERSION" ]]; then
-  # Security review M3: the one public-facing process is a current, pinned Caddy release (SHA-512 from the
-  # checksums file of the GitHub release), not the older package of Ubuntu's universe archive.
-  tarball="caddy_${CADDY_VERSION}_linux_$arch.tar.gz"
-  got="$(pinned_download "https://github.com/caddyserver/caddy/releases/download/v$CADDY_VERSION/$tarball" \
-    "$tarball" "$RELEASE/box/caddy-sha512" sha512)"
-  tar -xzf "$got" -C "$(dirname "$got")" caddy
-  install -m 0755 -o root -g root "$(dirname "$got")/caddy" /usr/local/bin/caddy
-  rm -rf "$(dirname "$got")"
-fi
-
-# ---------------------------------------------------------------- users
-say "2/7 users"
-getent group tc >/dev/null || groupadd --system tc
-for u in tc-web tc-admin tc-worker; do
-  id "$u" >/dev/null 2>&1 || useradd --system --gid tc --home-dir /nonexistent --shell /usr/sbin/nologin "$u"
-done
-getent group caddy >/dev/null || groupadd --system caddy
-id caddy >/dev/null 2>&1 || useradd --system --gid caddy --home-dir /var/lib/tc-caddy --shell /usr/sbin/nologin caddy
-# PRO-6: the WHMCS bridge, with its own group; the unit adds caddy's group only to hand Caddy its socket.
-getent group tc-bridge >/dev/null || groupadd --system tc-bridge
-id tc-bridge >/dev/null 2>&1 || useradd --system --gid tc-bridge --home-dir /nonexistent --shell /usr/sbin/nologin tc-bridge
-install -d -m 0700 -o root -g root /var/log/tc
-install -d -m 0700 -o caddy -g caddy /var/lib/tc-caddy
-mkdir -p /var/backups/tc && chown postgres:postgres /var/backups/tc && chmod 0700 /var/backups/tc
 
 # ---------------------------------------------------------------- secrets (generated once, kept)
 say "3/7 secrets"
