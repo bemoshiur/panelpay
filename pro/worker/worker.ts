@@ -1,4 +1,4 @@
-import { createLocalQueue, type LocalQueue, type QueueMessage } from "@tc/core";
+import { PROVISIONING_QUEUE, createLocalQueue, type LocalQueue, type QueueMessage } from "@tc/core";
 import { createJobRunner, type Clock, type Job, type JobRunner } from "./jobs";
 
 // PRO-1. The worker process of the single-EC2 edition (docs/pro/single-ec2-plan.md). One long-running process
@@ -8,9 +8,10 @@ import { createJobRunner, type Clock, type Job, type JobRunner } from "./jobs";
 
 export interface WorkerHandlers {
   /** The provisioner of functions/provisioner, bound to the local queue. Throws when its one record failed. */
-  readonly provision: (event: {
-    Records: { messageId: string; body: string }[];
-  }) => Promise<unknown>;
+  readonly provision: (
+    event: { Records: { messageId: string; body: string }[] },
+    context: { getRemainingTimeInMillis(): number },
+  ) => Promise<unknown>;
   readonly scheduler: () => Promise<unknown>;
   readonly notifier: () => Promise<unknown>;
   readonly paymentsSweeper: () => Promise<unknown>;
@@ -67,10 +68,16 @@ export function createWorker(options: {
   const ready: { handlers?: WorkerHandlers } = {};
   const queue = createLocalQueue({
     clock: options.clock,
-    handle: async (message) => {
+    // The context gives the provisioner the same lease guard it has on Lambda (functions/provisioner/index.ts).
+    timeoutSeconds: PROVISIONING_QUEUE.functionTimeoutSeconds,
+    handle: async (message, deadline) => {
       if (ready.handlers === undefined) throw new Error("worker: not ready");
-      await ready.handlers.provision(toSqsEvent(message));
+      await ready.handlers.provision(toSqsEvent(message), {
+        getRemainingTimeInMillis: () => Math.max(0, deadline - options.clock.now().getTime()),
+      });
     },
+    onDeadLetter: (m) =>
+      options.log({ event: "dead_letter", operationId: m.operationId, resourceId: m.resourceId }),
   });
   const handlers = options.build(queue);
   ready.handlers = handlers;

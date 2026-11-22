@@ -129,3 +129,73 @@ it("refuses an invalid message before it is stored", async () => {
   await expect(q.send(msg("not-a-uuid", R, 0))).rejects.toThrow(RangeError);
   expect(q.depth).toBe(0);
 });
+
+it("a slow run does not hold up another resource", async () => {
+  let release: () => void = () => {};
+  const done: string[] = [];
+  const q = createLocalQueue({
+    clock: start(),
+    handle: (m) =>
+      m.resourceId === R
+        ? new Promise<void>((res) => {
+            release = () => {
+              done.push("R");
+              res();
+            };
+          })
+        : Promise.resolve(void done.push("S")),
+  });
+  await q.send(msg(A, R, 0));
+  await q.send(msg(B, S, 0));
+  expect(q.pump()).toBe(2);
+  await new Promise((res) => setTimeout(res, 0));
+  expect(done).toEqual(["S"]);
+  expect(q.running).toBe(1);
+  release();
+  await q.drain();
+  expect(done).toEqual(["S", "R"]);
+  expect(q.depth).toBe(0);
+});
+
+it("a run past the timeout counts as failed, and its group waits until the run really ends", async () => {
+  const clock = start();
+  let release: () => void = () => {};
+  let calls = 0;
+  const q = createLocalQueue({
+    clock,
+    timeoutSeconds: 0.02,
+    retryDelaySeconds: 0,
+    handle: () => {
+      calls += 1;
+      return calls === 1 ? new Promise<void>((res) => (release = res)) : Promise.resolve();
+    },
+  });
+  await q.send(msg(A, R, 0));
+  q.pump();
+  await new Promise((res) => setTimeout(res, 40));
+  // Timed out and due again (retry delay 0), but the first run still holds the group.
+  expect(q.pump()).toBe(0);
+  expect(calls).toBe(1);
+  release();
+  const report = await q.drain();
+  expect(calls).toBe(2);
+  expect(report.processed).toBe(1);
+  expect(q.depth).toBe(0);
+});
+
+it("tells the operator about each dead letter with ids only", async () => {
+  const told: QueueMessage[] = [];
+  const clock = start();
+  const q = createLocalQueue({
+    clock,
+    maxReceiveCount: 1,
+    handle: async () => {
+      throw new Error("boom");
+    },
+    onDeadLetter: (m) => told.push(m),
+  });
+  await q.send(msg(A, R, 0));
+  await q.drain();
+  expect(told).toEqual([msg(A, R, 0)]);
+  expect(q.deadLetterCount).toBe(1);
+});

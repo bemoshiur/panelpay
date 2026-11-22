@@ -42,11 +42,21 @@ const R1_PATH_FORMS = [
   "../**/aws",
   "../**/aws/**",
   "**/functions/**",
+  // PRO-1: the single-EC2 worker runs the function handlers, so it is as far from the web tier as they are.
+  "**/pro/**",
   "**/node_modules/**",
 ];
 const R1 = {
   message: "R1: the web tier never provisions. Only functions/ may import @tc/aws.",
-  group: ["@tc/aws", "@tc/aws/*", "@tc/fn-*", "@tc/fn-*/*", ...R1_PATH_FORMS],
+  group: [
+    "@tc/aws",
+    "@tc/aws/*",
+    "@tc/fn-*",
+    "@tc/fn-*/*",
+    "@tc/pro-*",
+    "@tc/pro-*/*",
+    ...R1_PATH_FORMS,
+  ],
 };
 const SDK = {
   message: "Spec section 4: these AWS SDK packages are used only inside packages/aws.",
@@ -139,11 +149,14 @@ const SEED_POOL_DYNAMIC = {
 };
 // packages/core already bans the SDK clients and @tc/aws through PURE_CORE, so R1 adds the
 // function packages and the path forms.
-const R1_PATHS = { ...R1, group: ["@tc/fn-*", "@tc/fn-*/*", ...R1_PATH_FORMS] };
+const R1_PATHS = {
+  ...R1,
+  group: ["@tc/fn-*", "@tc/fn-*/*", "@tc/pro-*", "@tc/pro-*/*", ...R1_PATH_FORMS],
+};
 
 // R1 for dynamic imports: no-restricted-imports does not check import() (ESLint 10.14.0).
 const R1_DYNAMIC_SOURCE =
-  "/^@tc\\/aws(\\/|$)|^@tc\\/fn-|(^|\\/)packages\\/aws(\\/|$)|(^|\\/)functions\\/|^\\.\\.\\/(.*\\/)?aws(\\/|$)|(^|\\/)node_modules\\//i";
+  "/^@tc\\/aws(\\/|$)|^@tc\\/fn-|^@tc\\/pro-|(^|\\/)pro\\/|(^|\\/)packages\\/aws(\\/|$)|(^|\\/)functions\\/|^\\.\\.\\/(.*\\/)?aws(\\/|$)|(^|\\/)node_modules\\//i";
 const R1_DYNAMIC = {
   selector: `ImportExpression[source.value=${R1_DYNAMIC_SOURCE}]`,
   message: R1.message,
@@ -358,7 +371,15 @@ export default tseslint.config(
     // Code built from text cannot be checked by any import rule.
     // no-implied-eval sees a bare setTimeout("...") only when the config declares the timer globals
     // (WPU-B4: declared below, so the bare form is caught as well as globalThis. and window.).
-    files: ["apps/**", "packages/**", "functions/**", "pro/**", "scripts/**", "infra/**", "verify/**"],
+    files: [
+      "apps/**",
+      "packages/**",
+      "functions/**",
+      "pro/**",
+      "scripts/**",
+      "infra/**",
+      "verify/**",
+    ],
     languageOptions: {
       globals: { setTimeout: "readonly", setInterval: "readonly", setImmediate: "readonly" },
     },

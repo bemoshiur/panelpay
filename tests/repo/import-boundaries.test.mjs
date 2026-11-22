@@ -36,6 +36,11 @@ it.each([
   ["packages/core/pricing/x.ts", 'import "node:https";', "packages/core is pure logic:"],
   ["apps/web/x.ts", 'import "@tc/fn-provisioner";', "R1:"],
   ["apps/admin/x.ts", 'import "../../functions/reader/index";', "R1:"],
+  // PRO-1: the single-EC2 worker reaches @tc/aws through the function handlers.
+  ["apps/web/x.ts", 'import "@tc/pro-worker";', "R1:"],
+  ["apps/admin/x.ts", 'import "../../pro/worker/main";', "R1:"],
+  ["packages/db/x.ts", 'import "@tc/pro-worker";', "R1:"],
+  ["apps/web/x.ts", 'await import("@tc/pro-worker");', "R1:"],
   ["packages/db/x.ts", 'import "@tc/fn-reader";', "R1:"],
   ["packages/core/pricing/x.ts", 'import "../../aws/index";', "R1:"],
   ["apps/web/x.ts", 'await import("@tc/aws");', "R1:"],
