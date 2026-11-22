@@ -181,3 +181,25 @@ Open (low, not done here):
 - Reconciling EPS settlements against gateway_clearing must filter on payments.gateway, because WHMCS top-ups post to the same account.
 
 Next: PR for PRO-6, then PRO-7 (AMI build; the owner approves the build instance and its cost first).
+
+## 2026-11-23 04:45 PRO-7 AMI build (track Pro, Claude)
+Done: the release archive (`pro/ami/make-release.sh`), the bake user data (`pro/ami/bake-userdata.sh`), the build script (`pro/ami/build-ami.sh`) and `tc-install.sh --bake`. The owner approved the build instance and its cost ("ok lets do it").
+
+Built in account 739275468267 (user publicpulse), ap-southeast-1. The management account was not used.
+- Release: tc-pro-827212537a7a.tar.gz, 95,915,035 bytes, sha256 908d02df…13446.
+- Base: ami-09289bc217ad5e9e7 (Canonical 099720109477, ubuntu-noble-24.04-amd64-server-20261120).
+- AMI: **ami-0ab0ca982c5e45218** "tryawsnow-pro-827212537a7a", x86_64, ENA, private, ImdsSupport v2.0, one 16 GB gp3 snapshot (snap-05fb942a9513e40b7), not encrypted (Marketplace requires that).
+- Console: tc-bake download → updates → install → clean → TC-BAKE-OK 827212537a7a.
+
+Bugs found by the real build, fixed (commits 6d197c2, c3294e4):
+- `cloud-init status --wait` in user data waits on the stage that runs it, so the first build hung. Removed.
+- The /var/log sweep failed on a log that changed while it ran, so cloud-init clean never ran (build 2 reported TC-BAKE-FAILED at line 65; its image was deregistered and its snapshot deleted). Both log sweeps now tolerate this.
+- Added /etc/apt/apt.conf.d/50tc-lock-wait (DPkg::Lock::Timeout 600): first-boot unattended-upgrades no longer breaks apt in the bake or in the buyer's first tc-install.
+
+Cleanup (verified): 3 build instances terminated, security group and temporary bucket deleted, no loose volumes. Left: the AMI and its snapshot only.
+
+Cost: three t3.small runs of about 25 minutes in total (about 1 cent) and S3 for under an hour (negligible). Ongoing: the snapshot, billed on used blocks (a few GB, about $0.10–0.25 a month).
+
+VERIFY results: AWS Marketplace AMI rules checked in the bake (no keys, no history, cleared logs, fresh machine-id, IMDSv2, root volume not encrypted). Not yet run: the Marketplace AMI scan (done in PRO-8 when the AMI is shared with the seller account) and an end-to-end `sudo tc-install` on an instance launched from the AMI. Both need the owner's approval: the scan touches the seller account (the management account); the test launch costs a few cents.
+
+Next: PRO-8 (Marketplace listing: share the AMI with the seller account and run the scan; the owner decides on the management account first).
