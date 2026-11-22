@@ -5,9 +5,9 @@ configuration only; the installer (PRO-4) copies it into place and the AMI (PRO-
 Nothing here creates an AWS resource.
 
 ```
-internet ──443/80──> caddy ──127.0.0.1:3000──> tc-web    (customer panel)
-                          └─127.0.0.1:3001──> tc-admin  (operator app; IP allowlist in Caddy + app, TOTP)
-                     tc-web ──127.0.0.1:9700──> tc-worker (loopback invoke, PRO-2)
+internet ──443/80──> tc-caddy ──127.0.0.1:801──> tc-web    (customer panel)
+                             └─127.0.0.1:802──> tc-admin  (operator app; IP allowlist in Caddy + app, TOTP)
+                     tc-web ──/run/tc-invoke/invoke.sock──> tc-worker (invoke socket, PRO-2)
                      tc-worker: provisioning queue + jobs (PRO-1), AWS calls with the instance role
                      web, admin, worker ──127.0.0.1:5432──> postgresql 16 (own role each)
                      tc-backup.timer ──> pg_dump to /var/backups/tc (+ optional buyer S3)
@@ -51,17 +51,25 @@ The worker checks the AWS Marketplace licence at start and every 12 hours with `
 reads the status: `node /opt/tc/current/worker/licence-gate.mjs` exits 0 when an active licence was seen
 in the last 48 hours and 3 otherwise. AWS License Manager has no charge.
 
-The instance role needs, for this:
+The instance role needs, for this, only `license-manager:CheckoutLicense` (it has no resource-level
+permission, so `"Resource": "*"`; security review L5):
 
 ```json
-{
-  "Effect": "Allow",
-  "Action": [
-    "license-manager:CheckoutLicense",
-    "license-manager:CheckInLicense",
-    "license-manager:ListReceivedLicenses",
-    "license-manager:GetLicense"
-  ],
-  "Resource": "*"
-}
+{ "Effect": "Allow", "Action": "license-manager:CheckoutLicense", "Resource": "*" }
 ```
+
+## Security review of PRO-2 to PRO-5 (23 Nov 2026)
+
+- **H1** No password in the PostgreSQL log: `log_statement = 'none'`, `log_min_error_statement = 'panic'`,
+  and the installer sends only a SCRAM verifier for `tc_owner` (`bin/scram-verifier.mjs`).
+- **H2** R1 on one box: tc-web, tc-admin and tc-caddy cannot reach the instance metadata service
+  (`IPAddressDeny`), so only tc-worker holds the instance role's credentials. The AMI also requires
+  IMDSv2 with a hop limit of 1 (PRO-7).
+- **M1** Caddy has no admin API (`admin off`).
+- **M2** The invoke server is a Unix socket in the worker's runtime directory; web and admin listen on
+  801/802 (below 1024); `tc-firewall` (nftables, own table) lets only Caddy reach 801/802 and only the
+  platform users reach PostgreSQL over TCP.
+- **M3** Caddy is a pinned release binary (SHA-512 of the GitHub release), not Ubuntu universe's package.
+- **L1–L6** env files root:root 0600, nothing sourced by bash (systemd-run with EnvironmentFile), a strict
+  email pattern, `{http.request.remote}` for IPv6, a root-only log directory, least-privilege licence
+  permission, our own Caddy unit without `--environ`.

@@ -15,6 +15,7 @@ RELEASE="${TC_RELEASE_DIR:-/opt/tc/current}"
 ETC=/etc/tc
 PG_ETC=/etc/postgresql/16/main
 NODE_VERSION="$(tr -d '[:space:]' <"$RELEASE/box/node-version")"
+CADDY_VERSION="$(tr -d '[:space:]' <"$RELEASE/box/caddy-version")"
 
 say() { printf '%s\n' "$*"; }
 die() {
@@ -59,7 +60,7 @@ HOST_RE='^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$'
 ask TC_PANEL_HOST "Customer panel domain (e.g. panel.example.com)" "$HOST_RE"
 ask TC_ADMIN_HOST "Operator app domain (e.g. ops.example.com)" "$HOST_RE"
 ask TC_ADMIN_ALLOW "Operator IP allowlist, CIDRs separated by spaces" '^[0-9a-fA-F:./ ]{7,500}$'
-ask TC_ACME_EMAIL "Email for the TLS certificates (Let's Encrypt)" '^[^@[:space:]]+@[^@[:space:]]+\.[a-z]{2,}$'
+ask TC_ACME_EMAIL "Email for the TLS certificates (Let's Encrypt)" '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}$'
 ask AWS_REGION "AWS Region of this instance" '^[a-z]{2}(-[a-z]+)+-[0-9]$' "$(cloud-init query region 2>/dev/null || true)"
 ask COGNITO_CUSTOMER_POOL_ID "Cognito user pool id for customers" '^[a-z]{2}(-[a-z]+)+-[0-9]_[A-Za-z0-9]{1,55}$'
 ask COGNITO_CUSTOMER_CLIENT_ID "Cognito app client id for customers" '^[a-z0-9]{1,128}$'
@@ -82,21 +83,39 @@ mv "$ETC/.answers.tmp" "$ETC/answers.env"
 say "1/7 packages"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-# PostgreSQL 16 and Caddy from Ubuntu's own archive: no third-party apt repository on the box.
-apt-get install -y -qq postgresql-16 caddy curl xz-utils openssl >/dev/null
+# PostgreSQL 16 from Ubuntu's own archive (main). No third-party apt repository on the box.
+apt-get install -y -qq postgresql-16 nftables curl xz-utils openssl >/dev/null
+
+# pinned_download URL FILE SUMFILE ALGO: downloads FILE and checks it against the sum pinned in the
+# release (R17) before anything of it is used. Prints the path of the checked file.
+pinned_download() {
+  local url="$1" file="$2" sums="$3" algo="$4" dir expected
+  dir="$(mktemp -d)"
+  expected="$(grep -E "^[0-9a-f]{64,128}  $file\$" "$sums" | cut -d' ' -f1 || true)"
+  [[ -n "$expected" ]] || die "no pinned checksum for $file"
+  curl -fsSL --proto '=https' -o "$dir/$file" "$url"
+  echo "$expected  $dir/$file" | "${algo}sum" -c --quiet - || die "checksum mismatch for $file"
+  printf '%s' "$dir/$file"
+}
+arch="$(dpkg --print-architecture)"
+case "$arch" in amd64) narch=x64 ;; arm64) narch=arm64 ;; *) die "unsupported architecture" ;; esac
 if [[ "$(node --version 2>/dev/null || true)" != "v$NODE_VERSION" ]]; then
-  arch="$(dpkg --print-architecture)"
-  case "$arch" in amd64) narch=x64 ;; arm64) narch=arm64 ;; *) die "unsupported architecture" ;; esac
+  # Pinned from nodejs.org SHASUMS256.txt.
   tarball="node-v$NODE_VERSION-linux-$narch.tar.xz"
-  tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/$tarball" "https://nodejs.org/dist/v$NODE_VERSION/$tarball"
-  # The checksum is pinned in the release for this exact file (R17), from nodejs.org SHASUMS256.txt.
-  expected="$(grep -E "^[0-9a-f]{64}  $tarball\$" "$RELEASE/box/node-sha256" | cut -d' ' -f1 || true)"
-  [[ -n "$expected" ]] || die "no pinned checksum for $tarball"
-  echo "$expected  $tmp/$tarball" | sha256sum -c --quiet - || die "node checksum mismatch"
-  tar -xJf "$tmp/$tarball" -C /usr/local --strip-components=1 --no-same-owner
+  got="$(pinned_download "https://nodejs.org/dist/v$NODE_VERSION/$tarball" "$tarball" "$RELEASE/box/node-sha256" sha256)"
+  tar -xJf "$got" -C /usr/local --strip-components=1 --no-same-owner
   ln -sf /usr/local/bin/node /usr/bin/node
-  rm -rf "$tmp"
+  rm -rf "$(dirname "$got")"
+fi
+if [[ "$(/usr/local/bin/caddy version 2>/dev/null | cut -d' ' -f1)" != "v$CADDY_VERSION" ]]; then
+  # Security review M3: the one public-facing process is a current, pinned Caddy release (SHA-512 from the
+  # checksums file of the GitHub release), not the older package of Ubuntu's universe archive.
+  tarball="caddy_${CADDY_VERSION}_linux_$arch.tar.gz"
+  got="$(pinned_download "https://github.com/caddyserver/caddy/releases/download/v$CADDY_VERSION/$tarball" \
+    "$tarball" "$RELEASE/box/caddy-sha512" sha512)"
+  tar -xzf "$got" -C "$(dirname "$got")" caddy
+  install -m 0755 -o root -g root "$(dirname "$got")/caddy" /usr/local/bin/caddy
+  rm -rf "$(dirname "$got")"
 fi
 
 # ---------------------------------------------------------------- users
@@ -105,6 +124,10 @@ getent group tc >/dev/null || groupadd --system tc
 for u in tc-web tc-admin tc-worker; do
   id "$u" >/dev/null 2>&1 || useradd --system --gid tc --home-dir /nonexistent --shell /usr/sbin/nologin "$u"
 done
+getent group caddy >/dev/null || groupadd --system caddy
+id caddy >/dev/null 2>&1 || useradd --system --gid caddy --home-dir /var/lib/tc-caddy --shell /usr/sbin/nologin caddy
+install -d -m 0700 -o root -g root /var/log/tc
+install -d -m 0700 -o caddy -g caddy /var/lib/tc-caddy
 mkdir -p /var/backups/tc && chown postgres:postgres /var/backups/tc && chmod 0700 /var/backups/tc
 
 # ---------------------------------------------------------------- secrets (generated once, kept)
@@ -123,8 +146,11 @@ if [[ ! -f "$SECRETS" ]]; then
   } >"$SECRETS"
   chmod 0600 "$SECRETS"
 fi
-# shellcheck disable=SC1090
-. "$SECRETS"
+# Read, never sourced: KEY=hex lines only (security review L1, L2).
+while IFS='=' read -r k v; do
+  [[ "$k" =~ ^[A-Z_]+$ && "$v" =~ ^[0-9a-f]{48}$ ]] || die "the secrets file is damaged"
+  printf -v "$k" '%s' "$v"
+done <"$SECRETS"
 
 # ---------------------------------------------------------------- postgresql
 say "4/7 database"
@@ -145,8 +171,11 @@ psql_su() { su postgres -s /bin/bash -c "psql -v ON_ERROR_STOP=1 -qtA $*"; }
 if [[ "$(psql_su "-c \"select 1 from pg_roles where rolname='tc_owner'\"")" != 1 ]]; then
   psql_su "-c \"create role tc_owner login createrole\""
 fi
-# The password goes through stdin, never the command line (ps shows arguments).
-printf "alter role tc_owner password '%s';\n" "$OWNER" | su postgres -s /bin/bash -c "psql -v ON_ERROR_STOP=1 -qtA" >/dev/null
+# Security review H1: only the SCRAM verifier reaches the server (on stdin, never argv), so the clear-text
+# password is in no statement and no log line.
+VERIFIER="$(printf '%s' "$OWNER" | node "$RELEASE/box/bin/scram-verifier.mjs")" || die "verifier failed"
+[[ "$VERIFIER" =~ ^SCRAM-SHA-256\$4096:[A-Za-z0-9+/=]+\$[A-Za-z0-9+/=]+:[A-Za-z0-9+/=]+$ ]] || die "verifier failed"
+printf "alter role tc_owner password '%s';\n" "$VERIFIER" | su postgres -s /bin/bash -c "psql -v ON_ERROR_STOP=1 -qtA" >/dev/null
 if [[ "$(psql_su "-c \"select 1 from pg_database where datname='ticoncloud'\"")" != 1 ]]; then
   psql_su "-c \"create database ticoncloud owner tc_owner\""
 fi
@@ -165,19 +194,19 @@ write_env() { # file owner group mode, content on stdin
   mv "$tmp" "$f"
 }
 
-write_env "$ETC/common.env" root tc 0640 <<EOF
+write_env "$ETC/common.env" root root 0600 <<EOF
 TC_STAGE=pro
 AWS_REGION=${A[AWS_REGION]}
 EOF
-write_env "$ETC/web.env" root tc-web 0640 <<EOF
+write_env "$ETC/web.env" root root 0600 <<EOF
 DATABASE_URL=$(url web_rw "$WEB_RW")
-PRO_INVOKE_URL=http://127.0.0.1:9700
+PRO_INVOKE_SOCKET=/run/tc-invoke/invoke.sock
 PRO_INVOKE_TOKEN=$INVOKE
 APP_ORIGIN=https://${A[TC_PANEL_HOST]}
 COGNITO_CUSTOMER_POOL_ID=${A[COGNITO_CUSTOMER_POOL_ID]}
 COGNITO_CUSTOMER_CLIENT_ID=${A[COGNITO_CUSTOMER_CLIENT_ID]}
 EOF
-write_env "$ETC/admin.env" root tc-admin 0640 <<EOF
+write_env "$ETC/admin.env" root root 0600 <<EOF
 DATABASE_URL=$(url admin_rw "$ADMIN_RW")
 ADMIN_IP_ALLOWLIST=$(tr ' ' ',' <<<"${A[TC_ADMIN_ALLOW]}")
 COGNITO_ADMIN_POOL_ID=${A[COGNITO_ADMIN_POOL_ID]}
@@ -186,19 +215,19 @@ EOF
 # PRO-5: the AWS Marketplace product SKU is baked into the AMI (PRO-7); empty outside a Marketplace install.
 PRODUCT_SKU="$(tr -d '[:space:]' <"$RELEASE/box/product-sku" 2>/dev/null || true)"
 [[ -z "$PRODUCT_SKU" || "$PRODUCT_SKU" =~ ^[A-Za-z0-9-]{1,128}$ ]] || die "invalid product SKU in the release"
-write_env "$ETC/worker.env" root tc-worker 0640 <<EOF
+write_env "$ETC/worker.env" root root 0600 <<EOF
 DATABASE_URL=$(url worker_rw "$WORKER_RW")
-PRO_INVOKE_PORT=9700
+PRO_INVOKE_SOCKET=/run/tc-invoke/invoke.sock
 PRO_INVOKE_TOKEN=$INVOKE
 TC_PRODUCT_SKU=$PRODUCT_SKU
 EOF
-write_env "$ETC/caddy.env" root caddy 0640 <<EOF
+write_env "$ETC/caddy.env" root root 0600 <<EOF
 TC_ACME_EMAIL=${A[TC_ACME_EMAIL]}
 TC_PANEL_HOST=${A[TC_PANEL_HOST]}
 TC_ADMIN_HOST=${A[TC_ADMIN_HOST]}
 TC_ADMIN_ALLOW=${A[TC_ADMIN_ALLOW]}
 EOF
-[[ -f "$ETC/backup.env" ]] || write_env "$ETC/backup.env" root postgres 0640 <<EOF
+[[ -f "$ETC/backup.env" ]] || write_env "$ETC/backup.env" root root 0600 <<EOF
 TC_BACKUP_S3_URI=
 TC_BACKUP_KEEP_DAYS=14
 EOF
@@ -215,43 +244,35 @@ EOF
 
 # ---------------------------------------------------------------- migrate
 say "6/7 migrations"
-(
-  set -a
-  # shellcheck disable=SC1091
-  . "$ETC/migrate.env"
-  set +a
-  cd "$RELEASE/worker" && node migrate.mjs
-) >/var/log/tc-migrate.log 2>&1 || die "migrations failed, see /var/log/tc-migrate.log"
-chmod 0600 /var/log/tc-migrate.log
+# systemd reads the env file itself: nothing is sourced or evaluated by bash (security review L1, L2).
+install -m 0600 -o root -g root /dev/null /var/log/tc/migrate.log
+systemd-run --quiet --wait --pipe --collect --property=EnvironmentFile="$ETC/migrate.env" \
+  --working-directory="$RELEASE/worker" /usr/bin/node migrate.mjs >/var/log/tc/migrate.log 2>&1 \
+  || die "migrations failed, see /var/log/tc/migrate.log"
 psql_su "-d ticoncloud -c \"grant connect on database ticoncloud to web_rw, admin_rw, worker_rw, migrator, report_ro\""
 psql_su "-c \"revoke connect on database ticoncloud from public\""
 
 # ---------------------------------------------------------------- services
 say "7/7 services"
-install -m 0644 "$RELEASE/box/caddy/Caddyfile" /etc/caddy/Caddyfile
-mkdir -p /etc/systemd/system/caddy.service.d
-cat >/etc/systemd/system/caddy.service.d/tc.conf <<'EOF'
-[Service]
-EnvironmentFile=/etc/tc/caddy.env
-EOF
-for u in tc-web tc-admin tc-worker tc-backup; do
+install -m 0644 "$RELEASE/box/caddy/Caddyfile" "$ETC/Caddyfile"
+install -m 0644 "$RELEASE/box/nftables/tc.nft" "$ETC/tc.nft"
+for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup; do
   install -m 0644 "$RELEASE/box/systemd/$u.service" /etc/systemd/system/
 done
 install -m 0644 "$RELEASE/box/systemd/tc-backup.timer" /etc/systemd/system/
 systemctl daemon-reload
+systemctl enable --now tc-firewall >/dev/null 2>&1
+systemctl restart tc-firewall
 systemctl enable --now tc-worker tc-web tc-admin tc-backup.timer >/dev/null 2>&1
 systemctl restart tc-worker tc-web tc-admin
-(
-  set -a
-  # shellcheck disable=SC1091
-  . "$ETC/caddy.env"
-  set +a
-  caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1
-) || die "the Caddy configuration did not validate"
-systemctl enable caddy >/dev/null 2>&1
-systemctl restart caddy
+systemd-run --quiet --wait --pipe --collect --property=EnvironmentFile="$ETC/caddy.env" --uid=caddy \
+  --setenv=XDG_DATA_HOME=/var/lib/tc-caddy --setenv=XDG_CONFIG_HOME=/var/lib/tc-caddy \
+  /usr/local/bin/caddy validate --config "$ETC/Caddyfile" --adapter caddyfile >/dev/null 2>&1 \
+  || die "the Caddy configuration did not validate"
+systemctl enable tc-caddy >/dev/null 2>&1
+systemctl restart tc-caddy
 
-for u in postgresql tc-worker tc-web tc-admin caddy; do
+for u in postgresql tc-firewall tc-worker tc-web tc-admin tc-caddy; do
   systemctl is-active --quiet "$u" || die "$u is not running (journalctl -u $u)"
 done
 say "done: https://${A[TC_PANEL_HOST]} and https://${A[TC_ADMIN_HOST]}"

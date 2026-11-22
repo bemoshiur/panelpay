@@ -15,6 +15,8 @@ Status: plan, 23 Nov 2026. Owner decisions are in "Decisions". Nothing here chan
 - **No extra AWS bill for TiCON** (owner, 23 Nov 2026 02:05-02:20): nothing is created in TiCON's accounts
   without the owner's approval of that step and its cost. Each step that starts paid resources asks first.
 - R2 and R3 for Pro only (owner, 23 Nov 2026 02:20): PostgreSQL and the secrets live on the buyer's instance.
+- R1 on one box: the web, admin and Caddy units cannot reach the instance metadata service, so only the
+  worker holds AWS credentials (security review H2, pro/box/README.md).
 - Price confirmed as competitive: USD 199 for 36 months (owner, 23 Nov 2026 02:28).
 - After the Marketplace listing is live, the same product is added in Partner Central as a **partner
   solution**, so it shows on TiCON's AWS Partner Solutions Finder page (owner, 23 Nov 2026 02:28).

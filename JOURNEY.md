@@ -78,3 +78,31 @@ Done: pro/worker/licence.ts: CheckoutLicense check (PROVISIONAL, AWS Marketplace
 Proof: vitest run pro/worker -> 6 files, 46 passed; licence-gate.mjs with no status file prints "refused" and exits 3; tsc, eslint, shellcheck clean.
 VERIFY results: AWS Marketplace seller guide (ami-license-manager-integration, container-anywhere-license-manager-integration), read 2026-11-23: the key fingerprint for licences issued by AWS Marketplace is aws:294406891311:AWS/Marketplace:issuer-fingerprint; after a contract ends the buyer cannot launch new instances of the AMI, but running ones are not stopped. The tiered entitlement name and unit must be checked against the test licence once the product exists (PRO-8).
 Next: PRO-6 (WHMCS bridge).
+
+## 2026-11-23 04:00 PRO-5 review fixes (track Pro, Claude)
+Done: security-reviewer over pro-1-runtime..pro-5-licence; every finding fixed on this branch (they touch PRO-3/PRO-4 files too):
+- H1: PostgreSQL logs no statement text (log_statement none, log_min_error_statement panic); the installer sends tc_owner a SCRAM verifier (pro/box/bin/scram-verifier.mjs), never the clear password.
+- H2: tc-web, tc-admin and tc-caddy have IPAddressDeny for the instance metadata service, so only tc-worker holds the instance role (R1 on one box).
+- M1: Caddy `admin off`.
+- M2: the invoke server is a Unix socket in tc-worker's RuntimeDirectory (/run/tc-invoke, 0750, socket 0660); web and admin listen on 801/802 with CAP_NET_BIND_SERVICE; tc-firewall (nftables table inet tc_local) lets only `caddy` connect to 801/802 and only root, postgres and the three app users to 5432.
+- M3: Caddy 2.11.7 release binary with the SHA-512 of the GitHub release checksums file, instead of Ubuntu universe's caddy.
+- L1-L6:
+  - env files are root:root 0600, and bash sources nothing: migrate and caddy validate run through systemd-run with EnvironmentFile, and the secrets file is read line by line;
+  - stricter email pattern;
+  - `{http.request.remote}` for IPv6;
+  - /var/log/tc is root 0700;
+  - the licence permission is CheckoutLicense only;
+  - our own tc-caddy unit, without --environ.
+
+Proof:
+- vitest (pro/worker + the five web invoke files): 10 files, 85 passed. New layout tests cover each finding. A real Unix-socket round trip is tested on both the server and the client side.
+- The nftables file was loaded in the sandbox: root -> 802 refused, caddy -> 802 answered 200, tc-web -> 5432 connected, caddy -> 5432 refused; the table and the test users were then removed. `nft -c` refuses a user name that does not exist.
+- The SCRAM verifier was set on tc_owner: the right password logs in and a wrong one is refused.
+- With the new tc.conf, a successful and a failing ALTER ROLE ... PASSWORD left 0 occurrences of the password in the PostgreSQL log.
+- shellcheck, tsc and eslint are clean.
+
+Open:
+- functions/migrator ensureRoles still sends clear passwords for the five roles; with logging off they reach no log. Sending verifiers there too is a shared Lambda/Pro change for its own task.
+- IMDSv2 with hop limit 1 goes in the AMI launch settings (PRO-7).
+
+Next: PRO-6 (WHMCS bridge).

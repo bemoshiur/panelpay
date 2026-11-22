@@ -51,15 +51,14 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // PRO-2: the web tier's four invokes, on loopback only. Off unless both settings are present.
-  const invokePort = process.env["PRO_INVOKE_PORT"];
+  // PRO-2: the web tier's four invokes, on a Unix socket only. Off unless both settings are present.
+  const invokeSocket = process.env["PRO_INVOKE_SOCKET"];
   const invokeToken = process.env["PRO_INVOKE_TOKEN"];
   let invokeServer: ReturnType<typeof startInvokeServer> | undefined;
-  if (invokePort !== undefined && invokeToken !== undefined) {
+  if (invokeSocket !== undefined && invokeToken !== undefined) {
     try {
       invokeServer = startInvokeServer({
-        host: "127.0.0.1",
-        port: Number(invokePort),
+        socketPath: invokeSocket,
         handle: createInvokeHandler({
           token: invokeToken,
           region: process.env["AWS_REGION"] || "ap-south-1",

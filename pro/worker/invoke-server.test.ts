@@ -1,10 +1,9 @@
+import { mkdtempSync, statSync } from "node:fs";
+import { request } from "node:http";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import {
-  createInvokeHandler,
-  isLoopbackHost,
-  INVOKE_TOKEN_HEADER,
-  startInvokeServer,
-} from "./invoke-server";
+import { createInvokeHandler, INVOKE_TOKEN_HEADER, startInvokeServer } from "./invoke-server";
 
 const TOKEN = "t".repeat(48);
 
@@ -82,34 +81,41 @@ describe("createInvokeHandler", () => {
   });
 });
 
-describe("isLoopbackHost", () => {
-  it("accepts loopback addresses only", () => {
-    expect(isLoopbackHost("127.0.0.1")).toBe(true);
-    expect(isLoopbackHost("::1")).toBe(true);
-    expect(isLoopbackHost("0.0.0.0")).toBe(false);
-    expect(isLoopbackHost("localhost")).toBe(false);
-    expect(isLoopbackHost("10.0.0.5")).toBe(false);
-  });
-});
-
 describe("startInvokeServer", () => {
-  it("refuses a non-loopback host", () => {
+  it("refuses a socket path that is not an absolute .sock path", () => {
     const handle = async () => ({ status: 200, body: "{}" });
-    expect(() => startInvokeServer({ host: "0.0.0.0", port: 9701, handle })).toThrow();
+    expect(() => startInvokeServer({ socketPath: "invoke.sock", handle })).toThrow();
+    expect(() => startInvokeServer({ socketPath: "/run/../etc/x.sock", handle })).toThrow();
+    expect(() => startInvokeServer({ socketPath: "/run/tc-invoke/invoke", handle })).toThrow();
   });
 
-  it("answers over 127.0.0.1", async () => {
+  it("answers over the Unix socket, which is mode 0660", async () => {
     const { handle } = handlerWith(async () => ({ ok: true }));
-    const server = startInvokeServer({ host: "127.0.0.1", port: 0 + 19_731, handle });
+    const socketPath = join(mkdtempSync(join(tmpdir(), "tc-invoke-")), "invoke.sock");
+    const server = startInvokeServer({ socketPath, handle });
     await new Promise((r) => server.once("listening", r));
     try {
-      const res = await fetch("http://127.0.0.1:19731/invoke/reader", {
-        method: "POST",
-        headers: { [INVOKE_TOKEN_HEADER]: TOKEN },
-        body: "{}",
+      await new Promise((r) => setTimeout(r, 20));
+      expect(statSync(socketPath).mode & 0o777).toBe(0o660);
+      const body = await new Promise<{ status: number; text: string }>((resolve, reject) => {
+        const req = request(
+          {
+            socketPath,
+            path: "/invoke/reader",
+            method: "POST",
+            headers: { [INVOKE_TOKEN_HEADER]: TOKEN },
+          },
+          (res) => {
+            let text = "";
+            res.on("data", (c) => (text += c));
+            res.on("end", () => resolve({ status: res.statusCode ?? 0, text }));
+          },
+        );
+        req.on("error", reject);
+        req.end("{}");
       });
-      expect(res.status).toBe(200);
-      expect(await res.json()).toEqual({ ok: true });
+      expect(body.status).toBe(200);
+      expect(JSON.parse(body.text)).toEqual({ ok: true });
     } finally {
       await new Promise((r) => server.close(r));
     }

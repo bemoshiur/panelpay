@@ -4,8 +4,8 @@ import { CheckoutLicenseCommand, LicenseManagerClient } from "@aws-sdk/client-li
 import { createLicenceCheck, type CheckoutInput, type LicenceStatus } from "./licence";
 
 // PRO-5. The License Manager side of the licence check, on the buyer's instance with the instance role
-// (R3). License Manager has no charge. The instance role needs license-manager:CheckoutLicense,
-// CheckInLicense and ListReceivedLicenses (pro/box/README.md).
+// (R3). License Manager has no charge. The instance role needs license-manager:CheckoutLicense only
+// (pro/box/README.md).
 
 export const LICENCE_FILE = "/var/lib/tc/licence.json";
 
