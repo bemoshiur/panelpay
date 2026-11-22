@@ -16,7 +16,10 @@ fail() {
 trap 'fail $LINENO' ERR
 
 export DEBIAN_FRONTEND=noninteractive
-cloud-init status --wait >/dev/null 2>&1 || true
+# Wait for the dpkg lock (unattended-upgrades holds it at first boot) instead of failing. Kept in the image:
+# it also helps the buyer's first tc-install run.
+printf 'DPkg::Lock::Timeout "600";\n' >/etc/apt/apt.conf.d/50tc-lock-wait
+# Do not wait on cloud-init here: this script runs inside its final stage, so a wait never returns.
 say "download"
 curl -fsSL --proto '=https' --retry 3 -o /root/release.tgz "$RELEASE_URL"
 echo "$RELEASE_SHA256  /root/release.tgz" | sha256sum -c --quiet -
