@@ -1,5 +1,6 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { z } from "zod";
+import { loopbackInvokerFromEnv } from "./loopback-invoker.ts";
 import { TARGET_HEALTH_WORDS, TARGET_REASON_WORDS } from "./extras-view.ts";
 import type {
   DatabaseSeriesView,
@@ -257,6 +258,10 @@ export function readerPortFromEnv(
   env: Readonly<Record<string, string | undefined>>,
   build: (region: string, functionName: string) => ReaderInvoker = lambdaInvoker,
 ): ReaderPort | null {
+  // PRO-2: in the Pro edition the function is reached over loopback; a bad Pro setting is "not
+  // available", never the Lambda path (R16).
+  const loop = loopbackInvokerFromEnv(env, "reader");
+  if (loop !== undefined) return loop === null ? null : readerPortFromInvoker(loop);
   const name = env["READER_FUNCTION_NAME"];
   if (typeof name !== "string" || !READER_FUNCTION_PATTERN.test(name)) return null;
   const region = env["AWS_REGION"] || "ap-south-1";

@@ -468,9 +468,18 @@ importers:
       '@tc/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@tc/fn-access-details':
+        specifier: workspace:*
+        version: link:../../functions/access-details
       '@tc/fn-catalog-sync':
         specifier: workspace:*
         version: link:../../functions/catalog-sync
+      '@tc/fn-invoice-renderer':
+        specifier: workspace:*
+        version: link:../../functions/invoice-renderer
+      '@tc/fn-kyc-check':
+        specifier: workspace:*
+        version: link:../../functions/kyc-check
       '@tc/fn-notifier':
         specifier: workspace:*
         version: link:../../functions/notifier
@@ -480,6 +489,9 @@ importers:
       '@tc/fn-provisioner':
         specifier: workspace:*
         version: link:../../functions/provisioner
+      '@tc/fn-reader':
+        specifier: workspace:*
+        version: link:../../functions/reader
       '@tc/fn-reconciler':
         specifier: workspace:*
         version: link:../../functions/reconciler

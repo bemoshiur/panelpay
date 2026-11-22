@@ -11,10 +11,14 @@
   },
   "dependencies": {
     "@tc/core": "workspace:*",
+    "@tc/fn-access-details": "workspace:*",
     "@tc/fn-catalog-sync": "workspace:*",
+    "@tc/fn-invoice-renderer": "workspace:*",
+    "@tc/fn-kyc-check": "workspace:*",
     "@tc/fn-notifier": "workspace:*",
     "@tc/fn-payments-sweeper": "workspace:*",
     "@tc/fn-provisioner": "workspace:*",
+    "@tc/fn-reader": "workspace:*",
     "@tc/fn-reconciler": "workspace:*",
     "@tc/fn-scheduler": "workspace:*"
   }
