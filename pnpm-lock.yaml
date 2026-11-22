@@ -498,6 +498,10 @@ importers:
       '@tc/fn-scheduler':
         specifier: workspace:*
         version: link:../../functions/scheduler
+    devDependencies:
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
 
 packages:
 

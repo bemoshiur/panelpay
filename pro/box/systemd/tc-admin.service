@@ -1,0 +1,36 @@
+[Unit]
+Description=TryAWS.now Pro: operator app (Next.js)
+After=network-online.target postgresql.service tc-worker.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=tc-admin
+Group=tc
+WorkingDirectory=/opt/tc/current/admin
+EnvironmentFile=/etc/tc/common.env
+EnvironmentFile=/etc/tc/admin.env
+Environment=NODE_ENV=production HOSTNAME=127.0.0.1 PORT=3001
+ExecStart=/usr/bin/node apps/admin/server.js
+Restart=on-failure
+RestartSec=5
+MemoryMax=600M
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,45 @@
+# PRO-3. The only process on the box that listens on a public interface (80, 443). TLS from Let's Encrypt.
+# {$TC_PANEL_HOST}, {$TC_ADMIN_HOST} and {$TC_ADMIN_ALLOW} come from /etc/tc/caddy.env (PRO-4 writes it).
+#
+# The apps read the client address from the cloudfront-viewer-address header (they were built behind
+# CloudFront). Here Caddy SETS that header from the TCP peer on every request, so a value sent by the
+# client is overwritten and cannot be spoofed. Nothing else on the box sets it.
+{
+	email {$TC_ACME_EMAIL}
+	servers {
+		protocols h1 h2
+	}
+}
+
+(common) {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+	request_body {
+		max_size 12MB
+	}
+}
+
+{$TC_PANEL_HOST} {
+	import common
+	reverse_proxy 127.0.0.1:3000 {
+		header_up Cloudfront-Viewer-Address {remote_host}:{remote_port}
+		header_up -X-Forwarded-For
+	}
+}
+
+# The operator app (R10). First wall: the IP allowlist here (it replaces the WAF of the Lambda stack).
+# Second wall: adminGate in the app with ADMIN_IP_ALLOWLIST, then sign-in with TOTP.
+{$TC_ADMIN_HOST} {
+	import common
+	@outside not remote_ip {$TC_ADMIN_ALLOW}
+	respond @outside 403
+	reverse_proxy 127.0.0.1:3001 {
+		header_up Cloudfront-Viewer-Address {remote_host}:{remote_port}
+		header_up -X-Forwarded-For
+	}
+}

@@ -1,0 +1,36 @@
+[Unit]
+Description=TryAWS.now Pro: customer panel (Next.js)
+After=network-online.target postgresql.service tc-worker.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=tc-web
+Group=tc
+WorkingDirectory=/opt/tc/current/web
+EnvironmentFile=/etc/tc/common.env
+EnvironmentFile=/etc/tc/web.env
+Environment=NODE_ENV=production HOSTNAME=127.0.0.1 PORT=3000
+ExecStart=/usr/bin/node apps/web/server.js
+Restart=on-failure
+RestartSec=5
+MemoryMax=900M
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

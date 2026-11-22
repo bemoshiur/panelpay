@@ -1,0 +1,38 @@
+[Unit]
+Description=TryAWS.now Pro: worker (provisioning queue, jobs, loopback invoke server)
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=tc-worker
+Group=tc
+WorkingDirectory=/opt/tc/current/worker
+EnvironmentFile=/etc/tc/common.env
+EnvironmentFile=/etc/tc/worker.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node main.mjs
+Restart=on-failure
+RestartSec=5
+# The worker waits for runs in progress on SIGTERM (pro/worker/main.ts); a provisioning step is <= 60 s.
+TimeoutStopSec=90
+MemoryMax=900M
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
