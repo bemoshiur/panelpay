@@ -210,7 +210,8 @@ it("no file under apps/ or functions/ builds a Set-Cookie for the session by han
 
 // PRO-6 (security review M1): the system read that returns a customer id from an e-mail, with no tenant
 // scope. Only the WHMCS bridge of the Pro edition may name it; the web and admin tiers never do.
-const namesWhmcsLookup = (text) => /\bsystemWhmcs\b|\bcustomerByVerifiedEmail\b/.test(stripComments(text));
+const namesWhmcsLookup = (text) =>
+  /\bsystemWhmcs\b|\bcustomerByVerifiedEmail\b/.test(stripComments(text));
 
 it("systemWhmcs is named only in pro/whmcs-bridge, its own module, packages/db/index.ts and test files", () => {
   const all = [...sources(), ...walk("pro").filter((f) => SOURCE_FILE.test(f))];
@@ -221,9 +222,9 @@ it("systemWhmcs is named only in pro/whmcs-bridge, its own module, packages/db/i
     TEST_FILE.test(f);
   const offenders = all.filter((f) => !allowed(f) && namesWhmcsLookup(read(f)));
   expect(offenders).toEqual([]);
-  expect(all.filter((f) => f.startsWith("pro/whmcs-bridge/") && namesWhmcsLookup(read(f)))).toContain(
-    "pro/whmcs-bridge/credit.ts",
-  );
+  expect(
+    all.filter((f) => f.startsWith("pro/whmcs-bridge/") && namesWhmcsLookup(read(f))),
+  ).toContain("pro/whmcs-bridge/credit.ts");
   expect(namesWhmcsLookup('import { systemWhmcs } from "@tc/db";')).toBe(true);
   expect(namesWhmcsLookup("// systemWhmcs is for the bridge")).toBe(false);
 });

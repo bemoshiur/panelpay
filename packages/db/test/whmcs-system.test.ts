@@ -12,7 +12,9 @@ const asWeb = <T>(fn: (tx: Tx) => Promise<T>) => runTransaction(t.db, fn, { role
 // R8 at type level: no function of the module takes a customer id (as test/payments-system.test.ts).
 type SansTx<A extends unknown[]> = A extends [Tx, ...infer Rest] ? Rest : never;
 type WithoutTx = {
-  [K in keyof typeof systemWhmcs]: (...args: SansTx<Parameters<(typeof systemWhmcs)[K]>>) => unknown;
+  [K in keyof typeof systemWhmcs]: (
+    ...args: SansTx<Parameters<(typeof systemWhmcs)[K]>>
+  ) => unknown;
 };
 type AssertNever<T extends never> = T;
 export type WhmcsTakesNoCustomerId = AssertNever<MethodsTakingCustomerId<{ whmcs: WithoutTx }>>;
@@ -27,14 +29,20 @@ it("has exactly one function, and it takes no customer id", () => {
 
 it("finds the one active, verified customer by e-mail, case-insensitive, with the market currency", async () => {
   const id = await verified("Buyer.One@Example.test");
-  const got = await asWeb((tx) => systemWhmcs.customerByVerifiedEmail(tx, "buyer.one@example.TEST"));
+  const got = await asWeb((tx) =>
+    systemWhmcs.customerByVerifiedEmail(tx, "buyer.one@example.TEST"),
+  );
   expect(got).toEqual({ kind: "one", customerId: id, currency: "BDT" });
 });
 
 it("does not match an unverified, suspended or unknown customer (R16)", async () => {
   await newCustomer(t.pool, { email: "unverified@example.test" });
   await verified("suspended@example.test", { status: "suspended" });
-  for (const email of ["unverified@example.test", "suspended@example.test", "nobody@example.test"]) {
+  for (const email of [
+    "unverified@example.test",
+    "suspended@example.test",
+    "nobody@example.test",
+  ]) {
     expect(await asWeb((tx) => systemWhmcs.customerByVerifiedEmail(tx, email))).toEqual({
       kind: "none",
     });
@@ -44,7 +52,9 @@ it("does not match an unverified, suspended or unknown customer (R16)", async ()
 it("refuses to pick when two customers share the address", async () => {
   await verified("shared@example.test");
   await verified("SHARED@example.test");
-  expect(await asWeb((tx) => systemWhmcs.customerByVerifiedEmail(tx, "shared@example.test"))).toEqual({
+  expect(
+    await asWeb((tx) => systemWhmcs.customerByVerifiedEmail(tx, "shared@example.test")),
+  ).toEqual({
     kind: "many",
   });
 });
