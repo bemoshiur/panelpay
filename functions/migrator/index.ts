@@ -10,17 +10,26 @@ import { bootstrapFirstSuperadmin, createDatabase } from "@tc/db";
 import { seedPoolAccount } from "@tc/db/seed-pool";
 import { ensureSystemAccounts } from "@tc/core";
 import { readMigrationHashes, runMigrations } from "@tc/db/migrate";
-import { readMigratorConfig } from "./config";
+import { readMigratorConfig, type MigratorConfig } from "./config";
 import { seedLaunchAsOwner } from "./launch-seed";
 import { runMigrator, type MigratorReport, type MigratorDeps } from "./run";
 
 export { runMigrator } from "./run";
 export type { MigratorReport, MigratorDeps } from "./run";
-export { readMigratorConfig } from "./config";
+export {
+  readMigratorConfig,
+  DB_PASSWORD_SECRETS,
+  type MigratorConfig,
+  type RoleName,
+} from "./config";
 
-export const handler = async (event?: unknown): Promise<MigratorReport> => {
-  const deps: MigratorDeps = {
-    config: readMigratorConfig(process.env),
+/**
+ * PRO-4: the wiring of the migrator for a given configuration. The Lambda handler reads it from SST links;
+ * the Pro edition (pro/worker/migrate.ts) reads it from a root-only file on the box.
+ */
+export function migratorDeps(config: MigratorConfig): MigratorDeps {
+  return {
+    config,
     connect: (url) => {
       const { pool } = createDatabase(url, { max: 1 });
       // A broken idle connection must not crash the process; the next statement reports it.
@@ -92,5 +101,7 @@ export const handler = async (event?: unknown): Promise<MigratorReport> => {
     },
     log: (e) => console.log(JSON.stringify(e)),
   };
-  return runMigrator(deps, event);
-};
+}
+
+export const handler = async (event?: unknown): Promise<MigratorReport> =>
+  runMigrator(migratorDeps(readMigratorConfig(process.env)), event);

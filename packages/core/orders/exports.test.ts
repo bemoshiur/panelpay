@@ -82,6 +82,7 @@ const BEFORE = [
   "compensateFailedCreate",
   "correctedUsed",
   "createFifoQueue",
+  "createLocalQueue",
   "createManualClock",
   "createMemoryQueue",
   "decideClaim",

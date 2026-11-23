@@ -6,6 +6,7 @@ export * from "./steps";
 export * from "./claim-rules";
 export * from "./manual-clock";
 export * from "./queue";
+export * from "./local-queue";
 export * from "./queue-config";
 export * from "./enqueue";
 export * from "./transition";

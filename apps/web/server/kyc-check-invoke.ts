@@ -1,6 +1,7 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { kycKeyOwnedBy, type KycUploadCheck, type KycUploadState } from "@tc/core";
 import { z } from "zod";
+import { loopbackInvokerFromEnv } from "./loopback-invoker.ts";
 
 // WPU-Y3. The invoke port of the `kyc-check` function: did one KYC upload arrive, with which size and
 // content type. Like access-invoke.ts: the web tier imports no packages/aws (R1); its role may invoke the
@@ -107,6 +108,10 @@ export function kycCheckPortFromEnv(
   env: Readonly<Record<string, string | undefined>>,
   build: (region: string, functionName: string) => KycCheckInvoker = lambdaInvoker,
 ): KycUploadCheck | null {
+  // PRO-2: in the Pro edition the function is reached over loopback; a bad Pro setting is "not
+  // available", never the Lambda path (R16).
+  const loop = loopbackInvokerFromEnv(env, "kyc-check");
+  if (loop !== undefined) return loop === null ? null : kycCheckPortFromInvoker(loop);
   const name = env["KYC_CHECK_FUNCTION_NAME"];
   if (typeof name !== "string" || !KYC_CHECK_FUNCTION_PATTERN.test(name)) return null;
   const region = env["AWS_REGION"] || "ap-south-1";

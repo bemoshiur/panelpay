@@ -8,6 +8,7 @@ export default defineConfig({
       "apps/*",
       "packages/*",
       "functions/*",
+      "pro/*",
       {
         // tests/isolation: the local checks always run; the real-pool part skips itself (10.4).
         test: { name: "isolation", include: ["tests/isolation/**/*.test.ts"] },

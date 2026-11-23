@@ -1,0 +1,14 @@
+[Unit]
+Description=TryAWS.now Pro: local connection rules (who may connect to the app ports and PostgreSQL)
+Before=network-pre.target tc-web.service tc-admin.service tc-caddy.service tc-worker.service
+Wants=network-pre.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f /etc/tc/tc.nft
+ExecStop=/usr/sbin/nft delete table inet tc_local
+
+[Install]
+WantedBy=multi-user.target

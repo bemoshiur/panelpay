@@ -1,5 +1,6 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { z } from "zod";
+import { loopbackInvokerFromEnv } from "./loopback-invoker.ts";
 
 // WPU-N2. The invoke port of the `access-details` function: the Windows password, the database master
 // password, a bucket access key (create) and the list of a bucket's keys. Like reader-invoke.ts: the
@@ -224,6 +225,10 @@ export function accessPortFromEnv(
   env: Readonly<Record<string, string | undefined>>,
   build: (region: string, functionName: string) => AccessInvoker = lambdaInvoker,
 ): AccessPort | null {
+  // PRO-2: in the Pro edition the function is reached over loopback; a bad Pro setting is "not
+  // available", never the Lambda path (R16).
+  const loop = loopbackInvokerFromEnv(env, "access-details");
+  if (loop !== undefined) return loop === null ? null : accessPortFromInvoker(loop);
   const name = env["ACCESS_DETAILS_FUNCTION_NAME"];
   if (typeof name !== "string" || !ACCESS_FUNCTION_PATTERN.test(name)) return null;
   const region = env["AWS_REGION"] || "ap-south-1";

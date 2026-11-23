@@ -1,0 +1,60 @@
+# PRO-3. The only process on the box that listens on a public interface (80, 443). TLS from Let's Encrypt.
+# {$TC_PANEL_HOST}, {$TC_ADMIN_HOST} and {$TC_ADMIN_ALLOW} come from /etc/tc/caddy.env (PRO-4 writes it).
+#
+# The apps read the client address from the cloudfront-viewer-address header (they were built behind
+# CloudFront). Here Caddy SETS that header from the TCP peer on every request, so a value sent by the
+# client is overwritten and cannot be spoofed. Nothing else on the box sets it. {http.request.remote} is
+# "1.2.3.4:port" or "[v6]:port", the form both header parsers of the apps accept (review L3).
+# Ports 801/802 are below 1024, so no unprivileged process can take them, and the nftables rules of
+# tc-firewall let only the caddy user connect to them (review M2).
+{
+	# Security review M1: no admin API. Any local process could otherwise rewrite the proxy (allowlist,
+	# upstreams, the client address header). A config change is a restart of tc-caddy.
+	admin off
+	email {$TC_ACME_EMAIL}
+	servers {
+		protocols h1 h2
+	}
+}
+
+(common) {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+	request_body {
+		max_size 12MB
+	}
+}
+
+{$TC_PANEL_HOST} {
+	import common
+	# PRO-6: the signed call of the WHMCS addon (pro/whmcs) to the bridge. It decides no money: the
+	# bridge reads the invoice from the WHMCS API itself. Absent bridge: the socket does not exist (502).
+	handle /bridge/whmcs/* {
+		reverse_proxy unix//run/tc-bridge/bridge.sock {
+			header_up -X-Forwarded-For
+		}
+	}
+	handle {
+		reverse_proxy 127.0.0.1:801 {
+			header_up Cloudfront-Viewer-Address {http.request.remote}
+			header_up -X-Forwarded-For
+		}
+	}
+}
+
+# The operator app (R10). First wall: the IP allowlist here (it replaces the WAF of the Lambda stack).
+# Second wall: adminGate in the app with ADMIN_IP_ALLOWLIST, then sign-in with TOTP.
+{$TC_ADMIN_HOST} {
+	import common
+	@outside not remote_ip {$TC_ADMIN_ALLOW}
+	respond @outside 403
+	reverse_proxy 127.0.0.1:802 {
+		header_up Cloudfront-Viewer-Address {http.request.remote}
+		header_up -X-Forwarded-For
+	}
+}
