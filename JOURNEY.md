@@ -285,3 +285,28 @@ Next:
 - Run "Test add version" on ami-0d957421c89bab25a.
 - Switch the listing to AMI with CloudFormation (upload pro/cfn/tryawsnow-pro.yaml).
 - Pricing ($199 / 36 months), the EULA, and the usage instructions.
+
+## 2026-11-23 PRO-8 version 1.0.0 submitted, AMI with CloudFormation (track Pro, Claude)
+Owner: "ok" to the Marketplace steps.
+
+Submitted in Partner Central (seller account 542374379351): Add version 1.0.0 to prod-ill7oycvmsrme.
+- AMI ami-0d957421c89bab25a. Ubuntu 24.04, user ubuntu, scan port 22, ingestion role AWSMarketplaceAmiIngestionRole.
+- Delivery: **AMI with CloudFormation only**. Standalone was dropped: without the stack's roles and pools the AMI cannot run a panel.
+- Template: one stack, "One-click install: TryAWS.now Pro stack". AMI parameter ImageId, recommended t3.medium.
+- Usage instructions were checked against the repo: the WHMCS bridge goes through `sudo tc-install` and box/README.md; SSH only from OperatorCidr.
+- Status: "Update in progress" (scan and review). The product stays Draft. Step 3 (pricing, EULA) unlocks after this.
+
+Staging bucket `tryawsnow-pro-mp-assets-739275468267` (us-east-1, account 739275468267):
+- holds 1.0.0/tryawsnow-pro.yaml and 1.0.0/architecture.png;
+- public access is blocked; read is granted to assets.marketplace.amazonaws.com; TLS only; tagged Project=tryawsnow-pro;
+- cost under a cent. Delete it once Marketplace has copied the files.
+
+Architecture diagram: pro/cfn/architecture.svg and .png (1560x878, AWS icons), drawn by pro/cfn/build-diagram.py.
+
+Risks:
+- AWS asks that the template has launched in every enabled Region (34). No launch has been done (owner approval needed; a few cents per Region).
+- The portal says the diagram bucket "must be publicly accessible"; we used the service-principal grant. If the review rejects either point, fix and resubmit.
+
+Needs decision:
+- A test stack launch (cost).
+- The refund policy text for the offer.
