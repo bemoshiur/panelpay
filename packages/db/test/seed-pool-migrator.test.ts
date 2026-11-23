@@ -44,6 +44,12 @@ describe("poolAccountDecision (pure)", () => {
     if (plan.kind === "run") expect(() => planPoolSeed(plan.input)).not.toThrow();
   });
 
+  it("runs for the Pro edition (stage pro: the buyer's one account), without the production confirmation", () => {
+    const plan = poolAccountDecision({ stage: "pro", accountIds: ID, externalId: EXT });
+    expect(plan).toMatchObject({ kind: "run", input: { stage: "pro", confirmProduction: false } });
+    if (plan.kind === "run") expect(() => planPoolSeed(plan.input)).not.toThrow();
+  });
+
   it("trims the id list like readStageConfig", () => {
     const plan = poolAccountDecision({ stage: "staging", accountIds: ` ${ID} ,`, externalId: EXT });
     expect(plan.kind === "run" && plan.input.awsAccountId).toBe(ID);

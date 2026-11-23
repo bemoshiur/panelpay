@@ -132,7 +132,26 @@ ask COGNITO_CUSTOMER_POOL_ID "Cognito user pool id for customers" '^[a-z]{2}(-[a
 ask COGNITO_CUSTOMER_CLIENT_ID "Cognito app client id for customers" '^[a-z0-9]{1,128}$'
 ask COGNITO_ADMIN_POOL_ID "Cognito user pool id for operators" '^[a-z]{2}(-[a-z]+)+-[0-9]_[A-Za-z0-9]{1,55}$'
 ask COGNITO_ADMIN_CLIENT_ID "Cognito app client id for operators" '^[a-z0-9]{1,128}$'
-ask TC_FIRST_ADMIN_SUB "Cognito sub of the first operator (empty to skip)" '^([0-9a-f-]{36})?$' ""
+ask COGNITO_SIGNUP_CLIENT_ID "Cognito sign-up client id (customers)" '^[a-z0-9]{1,128}$'
+ask TC_FIRST_ADMIN_EMAIL "E-mail of the first operator in the operator pool (empty to skip)" \
+  '^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,})?$' ""
+ask TC_FIRST_ADMIN_SUB "Cognito sub of the first operator (empty: looked up from the e-mail)" '^([0-9a-f-]{36})?$' ""
+# PRO-8: the account, its Tc roles and the address the probe of a new server comes from. The
+# CloudFormation template of the listing (pro/cfn) fills these; by hand they come from IMDS.
+imds() { # imds PATH: one IMDSv2 read, empty on any failure
+  local t
+  t="$(curl -fsS -m 2 -X PUT -H 'X-aws-ec2-metadata-token-ttl-seconds: 60' http://169.254.169.254/latest/api/token 2>/dev/null)" || return 0
+  curl -fsS -m 2 -H "X-aws-ec2-metadata-token: $t" "http://169.254.169.254/latest/$1" 2>/dev/null || true
+}
+ask TC_ACCOUNT_ID "AWS account id of this instance" '^[0-9]{12}$' \
+  "$(imds dynamic/instance-identity/document | grep -oE '"accountId" *: *"[0-9]{12}"' | grep -oE '[0-9]{12}' || true)"
+ask TC_POOL_EXTERNAL_ID "ExternalId of the Tc roles (stack output ExternalId)" '^[A-Za-z0-9+=,.@:/_-]{16,1224}$'
+ask TC_PUBLIC_IP "Public IPv4 address of this instance (Elastic IP)" \
+  '^(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])){3}$' "$(imds meta-data/public-ipv4)"
+# VERIFY (PRO-8): the Lightsail VPC of each Region uses 172.26.0.0/16; check it in the Lightsail console
+# (VPC peering page) before relying on the Windows and probe rules that use it.
+ask TC_VPC_CIDR "CIDR of the Lightsail VPC" '^(10|172|192)\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/([0-9]|[12][0-9]|3[0-2])$' "172.26.0.0/16"
+ask TC_INVOICES_BUCKET "S3 bucket for invoice PDFs (empty: no PDFs)" '^([a-z0-9][a-z0-9.-]{1,61}[a-z0-9])?$' ""
 # PRO-6, optional: the WHMCS bridge (wallet top-ups paid through the reseller's WHMCS). Empty: off.
 ask WHMCS_URL "WHMCS URL for wallet top-ups, https://... (empty to skip)" \
   '^(https://[A-Za-z0-9.-]{1,253}(:[0-9]{2,5})?(/[A-Za-z0-9._~/-]{0,200})?)?$' ""
@@ -148,8 +167,9 @@ fi
 mkdir -p "$ETC" && chmod 0751 "$ETC"
 {
   for k in TC_PANEL_HOST TC_ADMIN_HOST TC_ADMIN_ALLOW TC_ACME_EMAIL AWS_REGION COGNITO_CUSTOMER_POOL_ID \
-    COGNITO_CUSTOMER_CLIENT_ID COGNITO_ADMIN_POOL_ID COGNITO_ADMIN_CLIENT_ID TC_FIRST_ADMIN_SUB \
-    WHMCS_URL WHMCS_API_IDENTIFIER WHMCS_API_SECRET; do
+    COGNITO_CUSTOMER_CLIENT_ID COGNITO_SIGNUP_CLIENT_ID COGNITO_ADMIN_POOL_ID COGNITO_ADMIN_CLIENT_ID \
+    TC_FIRST_ADMIN_EMAIL TC_FIRST_ADMIN_SUB TC_ACCOUNT_ID TC_POOL_EXTERNAL_ID TC_PUBLIC_IP TC_VPC_CIDR \
+    TC_INVOICES_BUCKET WHMCS_URL WHMCS_API_IDENTIFIER WHMCS_API_SECRET; do
     printf '%s=%s\n' "$k" "${A[$k]}"
   done
 } >"$ETC/.answers.tmp"
@@ -174,11 +194,75 @@ if [[ ! -f "$SECRETS" ]]; then
 fi
 # Added by PRO-6: a box set up before keeps its secrets and gets the new one.
 grep -q '^BRIDGE=' "$SECRETS" || echo "BRIDGE=$(secret)" >>"$SECRETS"
+# Added by PRO-8: the keys the web and admin apps read as SST links (apps/web/server/secrets.ts,
+# apps/admin/server/rate-subject.ts). Without them sign-in rate limits, OTP and order drafts say "not available".
+for k in AUTH_LIMIT OTP_HASH ORDER_DRAFT ADMIN_IP_LIMIT; do
+  grep -q "^$k=" "$SECRETS" || echo "$k=$(secret)" >>"$SECRETS"
+done
 # Read, never sourced: KEY=hex lines only (security review L1, L2).
 while IFS='=' read -r k v; do
   [[ "$k" =~ ^[A-Z_]+$ && "$v" =~ ^[0-9a-f]{48}$ ]] || die "the secrets file is damaged"
   printf -v "$k" '%s' "$v"
 done <"$SECRETS"
+
+# ---------------------------------------------------------------- cognito (PRO-8)
+# The two customer clients have secrets (infra/stacks/auth.ts, WPU-X12). They are read from Cognito with
+# the instance role (cognito-idp:DescribeUserPoolClient on the customer pool only, pro/cfn) and kept in a
+# root-only file; never asked on a terminal that might log, never printed (R3, R14). Without the AWS CLI
+# or the permission they are asked for, silently.
+say "3b/7 cognito"
+AWS_CLI="$(command -v aws || true)"
+[[ -z "$AWS_CLI" && -x /snap/bin/aws ]] && AWS_CLI=/snap/bin/aws
+COGNITO="$ETC/.cognito"
+client_secret() { # client_secret CLIENT_ID: the secret from Cognito, empty when it cannot be read
+  [[ -n "$AWS_CLI" ]] || return 0
+  "$AWS_CLI" cognito-idp describe-user-pool-client --region "${A[AWS_REGION]}" \
+    --user-pool-id "${A[COGNITO_CUSTOMER_POOL_ID]}" --client-id "$1" \
+    --query UserPoolClient.ClientSecret --output text 2>/dev/null || true
+}
+SECRET_RE='^[A-Za-z0-9_+]{24,128}$'
+declare -A C=()
+if [[ -f "$COGNITO" ]]; then
+  while IFS='=' read -r k v; do
+    [[ "$k" =~ ^[A-Z_]+$ && "$v" =~ $SECRET_RE ]] || die "the cognito file is damaged"
+    C[$k]="$v"
+  done <"$COGNITO"
+fi
+for pair in "CUSTOMER:${A[COGNITO_CUSTOMER_CLIENT_ID]}" "SIGNUP:${A[COGNITO_SIGNUP_CLIENT_ID]}"; do
+  name="${pair%%:*}"
+  id="${pair#*:}"
+  # A changed client id invalidates the kept secret of the old client.
+  if [[ "${C[${name}_ID]:-}" != "$id" ]]; then
+    C[${name}_SECRET]=""
+  fi
+  if [[ -z "${C[${name}_SECRET]:-}" ]]; then
+    v="$(client_secret "$id")"
+    if [[ ! "$v" =~ $SECRET_RE && -z "$ANSWERS" ]]; then
+      read -r -s -p "Client secret of Cognito app client ${name,,}: " v
+      printf '\n'
+    fi
+    [[ "$v" =~ $SECRET_RE ]] || die "the ${name,,} client secret could not be read from Cognito"
+    C[${name}_SECRET]="$v"
+  fi
+  C[${name}_ID]="$id"
+done
+{
+  printf 'CUSTOMER_ID=%s\nCUSTOMER_SECRET=%s\nSIGNUP_ID=%s\nSIGNUP_SECRET=%s\n' \
+    "${C[CUSTOMER_ID]}" "${C[CUSTOMER_SECRET]}" "${C[SIGNUP_ID]}" "${C[SIGNUP_SECRET]}"
+} >"$ETC/.cognito.tmp"
+chmod 0600 "$ETC/.cognito.tmp"
+mv "$ETC/.cognito.tmp" "$COGNITO"
+# The ids are [a-z0-9] and the secrets [A-Za-z0-9_+] (checked above): safe inside JSON and single quotes.
+CUSTOMER_LINK="{\"id\":\"${C[CUSTOMER_ID]}\",\"secret\":\"${C[CUSTOMER_SECRET]}\"}"
+SIGNUP_LINK="{\"id\":\"${C[SIGNUP_ID]}\",\"secret\":\"${C[SIGNUP_SECRET]}\"}"
+
+# The first operator's sub, from the operator pool (cognito-idp:AdminGetUser on that pool only).
+if [[ -z "${A[TC_FIRST_ADMIN_SUB]}" && -n "${A[TC_FIRST_ADMIN_EMAIL]}" && -n "$AWS_CLI" ]]; then
+  sub="$("$AWS_CLI" cognito-idp admin-get-user --region "${A[AWS_REGION]}" \
+    --user-pool-id "${A[COGNITO_ADMIN_POOL_ID]}" --username "${A[TC_FIRST_ADMIN_EMAIL]}" \
+    --query "UserAttributes[?Name=='sub'].Value | [0]" --output text 2>/dev/null || true)"
+  [[ "$sub" =~ ^[0-9a-f-]{36}$ ]] && A[TC_FIRST_ADMIN_SUB]="$sub"
+fi
 
 # ---------------------------------------------------------------- postgresql
 say "4/7 database"
@@ -233,12 +317,18 @@ PRO_INVOKE_TOKEN=$INVOKE
 APP_ORIGIN=https://${A[TC_PANEL_HOST]}
 COGNITO_CUSTOMER_POOL_ID=${A[COGNITO_CUSTOMER_POOL_ID]}
 COGNITO_CUSTOMER_CLIENT_ID=${A[COGNITO_CUSTOMER_CLIENT_ID]}
+SST_RESOURCE_CustomerAppClient='$CUSTOMER_LINK'
+SST_RESOURCE_CustomerSignUpClient='$SIGNUP_LINK'
+SST_RESOURCE_AuthLimitKey='{"value":"$AUTH_LIMIT"}'
+SST_RESOURCE_OtpHashKey='{"value":"$OTP_HASH"}'
+SST_RESOURCE_OrderDraftSecret='{"value":"$ORDER_DRAFT"}'
 EOF
 write_env "$ETC/admin.env" root root 0600 <<EOF
 DATABASE_URL=$(url admin_rw "$ADMIN_RW")
 ADMIN_IP_ALLOWLIST=$(tr ' ' ',' <<<"${A[TC_ADMIN_ALLOW]}")
 COGNITO_ADMIN_POOL_ID=${A[COGNITO_ADMIN_POOL_ID]}
 COGNITO_ADMIN_CLIENT_ID=${A[COGNITO_ADMIN_CLIENT_ID]}
+SST_RESOURCE_AdminIpLimitKey='{"value":"$ADMIN_IP_LIMIT"}'
 EOF
 # PRO-5: the AWS Marketplace product SKU is baked into the AMI (PRO-7); empty outside a Marketplace install.
 PRODUCT_SKU="$(tr -d '[:space:]' <"$RELEASE/box/product-sku" 2>/dev/null || true)"
@@ -248,6 +338,16 @@ DATABASE_URL=$(url worker_rw "$WORKER_RW")
 PRO_INVOKE_SOCKET=/run/tc-invoke/invoke.sock
 PRO_INVOKE_TOKEN=$INVOKE
 TC_PRODUCT_SKU=$PRODUCT_SKU
+TC_ENV=production
+TC_VPC_CIDR=${A[TC_VPC_CIDR]}
+TC_PROBE_SOURCES=${A[TC_PUBLIC_IP]}/32
+TC_DNS_ACCOUNT_ID=${A[TC_ACCOUNT_ID]}
+TC_DNS_EXTERNAL_ID=${A[TC_POOL_EXTERNAL_ID]}
+CATALOG_POOL_ACCOUNT_ID=${A[TC_ACCOUNT_ID]}
+CATALOG_REGIONS=ap-southeast-1,ap-south-1,us-east-1
+CATALOG_DNS_ACCOUNT_ID=${A[TC_ACCOUNT_ID]}
+CATALOG_DNS_EXTERNAL_ID=${A[TC_POOL_EXTERNAL_ID]}
+INVOICES_BUCKET=${A[TC_INVOICES_BUCKET]}
 EOF
 write_env "$ETC/caddy.env" root root 0600 <<EOF
 TC_ACME_EMAIL=${A[TC_ACME_EMAIL]}
@@ -284,6 +384,8 @@ TC_DB_PASSWORD_WORKER_RW=$WORKER_RW
 TC_DB_PASSWORD_MIGRATOR=$MIGRATOR
 TC_DB_PASSWORD_REPORT_RO=$REPORT_RO
 TC_FIRST_ADMIN_SUB=${A[TC_FIRST_ADMIN_SUB]}
+TC_POOL_ACCOUNT_IDS=${A[TC_ACCOUNT_ID]}
+TC_POOL_EXTERNAL_ID=${A[TC_POOL_EXTERNAL_ID]}
 EOF
 
 # ---------------------------------------------------------------- migrate

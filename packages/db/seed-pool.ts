@@ -49,7 +49,8 @@ export const DEFAULT_LIMITS: Readonly<Record<SeedQuotaCode, number>> = Object.fr
   distribution: 5,
 });
 
-const STAGES = ["local", "staging", "production"] as const;
+// "pro": the Pro edition (one EC2 instance in the buyer's account, pro/worker/migrate-config.ts).
+const STAGES = ["local", "staging", "production", "pro"] as const;
 const TIERS = ["new", "trusted"] as const;
 const ACCOUNT_ID = /^[0-9]{12}$/;
 const EXTERNAL_ID = /^[\w+=,.@:/-]{2,1224}$/;
@@ -120,7 +121,7 @@ function isQuotaCode(value: string): value is SeedQuotaCode {
 
 export function planPoolSeed(input: SeedPoolInput): PoolSeedPlan {
   if (typeof input.stage !== "string" || !(STAGES as readonly string[]).includes(input.stage)) {
-    refuse("the stage must be local, staging or production.");
+    refuse("the stage must be local, staging, production or pro.");
   }
   if (input.stage === "production" && input.confirmProduction !== true) {
     refuse("production needs the explicit confirmation flag; nothing was written.");
@@ -345,8 +346,12 @@ export const MIGRATOR_POOL_TIER = "new";
 
 /** The AllowedPattern of the ExternalId parameter of infra/org/pool-roles.yaml (stricter than EXTERNAL_ID). */
 const POOL_ROLES_EXTERNAL_ID = /^[A-Za-z0-9+=,.@:/_-]{16,1224}$/;
-/** The two stages a deploy hands the migrator in TC_STAGE (infra/lib/stage.ts, tcStage). */
-const DEPLOY_STAGES = ["staging", "production"] as const;
+/**
+ * The stages that register a pool account: the two a deploy hands the migrator in TC_STAGE
+ * (infra/lib/stage.ts, tcStage), and "pro", the stage of the Pro edition's migrator
+ * (pro/worker/migrate-config.ts), whose one pool account is the buyer's own account.
+ */
+const DEPLOY_STAGES = ["staging", "production", "pro"] as const;
 
 export type PoolAccountDecision =
   | "inserted"
