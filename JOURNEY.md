@@ -333,3 +333,21 @@ Finding: BlessBit Multicast (prod-7wxlkru2v4efc) is Limited, not Public. Step 4 
 - the entitlement integration;
 - a $0 private test offer.
 AWS reviews these before a visibility change to Public.
+
+## 2026-11-23 14:35 PRO-8 template test launch passed (track Pro, Claude)
+Owner: "হ্যাঁ, চালু করে টেস্ট চালাও".
+
+How it ran:
+- The owner's console in the management account is root, which cannot switch roles. The test therefore ran as a SERVICE_MANAGED StackSet from 542374379351. Trusted access was already on (an existing service-managed stack set uses it); no org setting changed.
+- Targets: OU r-56af with an Intersection filter of account 420802202031 only, us-east-1 only, automatic deployment off.
+- Template: a test variant of 1.0.0/tryawsnow-pro.yaml. The only change is its own VPC, public subnet, IGW and route in place of the VpcId/SubnetId parameters, because the new account's VPC IDs are not visible from the management account. cfn-lint clean.
+- Parameters: EnableDomains=yes (so the DNS roles were created too), DedicatedAccount=yes, OperatorCidr 203.0.113.7/32, placeholder domains pro-test-*.tryaws.now (no DNS records), OperatorEmail aws+tryawsnow-pro-test@ticonsys.com.
+
+Result: **CREATE SUCCEEDED** (14:25:51 to 14:29:43). Every resource was created, including the Tc and DNS roles, both Cognito pools, the first operator, the bucket, the EIP and the instance from ami-0d957421c89bab25a.
+- Not verified: the first-boot installer. There is no access to the test account's console or instance from here.
+
+Cleanup:
+- DELETE SUCCEEDED 14:33:40, then the stack set was deleted.
+- Left in 420802202031 by the template's Retain policy: two Cognito user pools (deletion protection on) and the empty invoices bucket. Both are free.
+- Test template removed from the staging bucket; test read grants removed from its policy.
+- Cost: about 8 minutes of t3.medium plus EIP, well under a cent.
