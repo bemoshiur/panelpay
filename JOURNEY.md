@@ -351,3 +351,19 @@ Cleanup:
 - Left in 420802202031 by the template's Retain policy: two Cognito user pools (deletion protection on) and the empty invoices bucket. Both are free.
 - Test template removed from the staging bucket; test read grants removed from its policy.
 - Cost: about 8 minutes of t3.medium plus EIP, well under a cent.
+
+## 2026-11-23 15:15 PRO-8 version 1.0.0 failed, template made public (track Pro, Claude)
+- Partner Central request 96ac7dyurapxaq5ut7gmygkf8 "Add version 1.0.0" **Failed** at 14:05: INVALID_TEMPLATE_URL, "Can't access template ... Ensure the template is publicly accessible." The service-principal grant is not enough; the template URL itself must be public.
+- Fix: bucket policy statement PublicDiagramOnly renamed PublicListingAssets and now also allows public GetObject on 1.0.0/tryawsnow-pro.yaml (no secrets; the same file is in the public repo). Checked: HTTP 200, 34,441 bytes. Cost: negligible.
+- Resubmission started in the console (version 1.0.0, AMI with CloudFormation only, ami-0d957421c89bab25a, Ubuntu 24.04, user ubuntu, port 22). Interrupted: another Chrome extension's autofill popup took over the tab. To finish: template URL https://tryawsnow-pro-mp-assets-739275468267.s3.amazonaws.com/1.0.0/tryawsnow-pro.yaml, diagram 1.0.0/architecture.png, AMI parameter ImageId, recommended t3.medium, usage instructions pointing to docs/pro-edition.md.
+
+## 2026-11-23 15:30 PRO-8 version 1.0.0 resubmitted (track Pro, Claude)
+Owner: "ok koro ja kora dorkar kichu additional bill jate na ase".
+- Resubmitted Add version 1.0.0 at 15:20: AMI with CloudFormation only, ami-0d957421c89bab25a, Ubuntu 24.04, user ubuntu, port 22, AWSMarketplaceAmiIngestionRole, t3.medium, template and diagram from the public S3 URLs, AMI parameter ImageId. Usage instructions were checked against the template (outputs PublicIp/AdminUrl) and docs/pro-edition.md (WHMCS path /opt/tc/current/whmcs/modules/addons/tryawsnow/).
+- Status "Preparing" after 8 min; it passed the point where the first attempt failed (template URL check).
+
+## 2026-11-23 16:15 PRO-8 version 1.0.0 second failure and third submission (track Pro, Claude)
+- Second attempt (15:20) failed at 16:07: INVALID_IMAGE_TYPE "Architecture diagram must be PNG or JPEG". Cause: S3 object 1.0.0/architecture.png had Content-Type binary/octet-stream. Fixed in place (CopyObject, image/png; template set to application/x-yaml). Both still public (200).
+- Third submission at ~16:15 with the same values. Follow-up check scheduled in 60 min.
+- Listing images: 8 JPGs (780x439) in s3://tryawsnow-pro-mp-assets-739275468267/listing-images/ (public read for that prefix). Saving them is blocked while a product request is in progress ("This product is being updated by another request"); add them after.
+- Upload rule for next time: always set ContentType when putting listing files in S3.
