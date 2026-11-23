@@ -1,5 +1,6 @@
 import { InvokeCommand, LambdaClient } from "@aws-sdk/client-lambda";
 import { z } from "zod";
+import { loopbackInvokerFromEnv } from "./loopback-invoker.ts";
 
 // WPU-N1. The invoke port of the `invoice-renderer` function for "Download PDF". The web tier builds the
 // invoice HTML (renderInvoiceHtml of @tc/core, from the stored snapshots) and hands it over with the
@@ -128,6 +129,10 @@ export function rendererPortFromEnv(
   env: Readonly<Record<string, string | undefined>>,
   build: (region: string, functionName: string) => RendererInvoker = lambdaInvoker,
 ): RendererPort | null {
+  // PRO-2: in the Pro edition the function is reached over loopback; a bad Pro setting is "not
+  // available", never the Lambda path (R16).
+  const loop = loopbackInvokerFromEnv(env, "invoice-renderer");
+  if (loop !== undefined) return loop === null ? null : rendererPortFromInvoker(loop);
   const name = env["INVOICE_RENDERER_FUNCTION_NAME"];
   if (typeof name !== "string" || !RENDERER_FUNCTION_PATTERN.test(name)) return null;
   const region = env["AWS_REGION"] || "ap-south-1";

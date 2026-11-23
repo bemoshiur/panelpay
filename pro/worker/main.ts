@@ -1,9 +1,15 @@
+import { handler as accessDetailsHandler } from "@tc/fn-access-details";
 import { handler as catalogSyncHandler } from "@tc/fn-catalog-sync";
+import { handler as invoiceRendererHandler } from "@tc/fn-invoice-renderer";
+import { handler as kycCheckHandler } from "@tc/fn-kyc-check";
 import { handler as notifierHandler } from "@tc/fn-notifier";
 import { handler as paymentsSweeperHandler } from "@tc/fn-payments-sweeper";
 import { buildDeps, createHandler as createProvisionerHandler } from "@tc/fn-provisioner";
 import { ledgerCheckHandler, reconcilerHandler } from "@tc/fn-reconciler";
+import { handler as readerHandler } from "@tc/fn-reader";
 import { buildSchedulerHandler } from "@tc/fn-scheduler";
+import { createInvokeHandler, startInvokeServer } from "./invoke-server";
+import { licenceCheckFromEnv } from "./licence-aws";
 import { createWorker } from "./worker";
 
 // PRO-1. Entry of the systemd unit tc-worker (PRO-3). Reads the same environment as the Lambdas, minus
@@ -36,6 +42,7 @@ async function main(): Promise<void> {
         catalogSync: () => catalogSyncHandler(),
         reconciler: () => reconcilerHandler(),
         ledgerCheck: () => ledgerCheckHandler(),
+        licence: licenceCheckFromEnv(process.env, log),
       }),
     });
   } catch {
@@ -44,7 +51,37 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  log({ event: "worker_started" });
+  // PRO-2: the web tier's four invokes, on a Unix socket only. Off unless both settings are present.
+  const invokeSocket = process.env["PRO_INVOKE_SOCKET"];
+  const invokeToken = process.env["PRO_INVOKE_TOKEN"];
+  let invokeServer: ReturnType<typeof startInvokeServer> | undefined;
+  if (invokeSocket !== undefined && invokeToken !== undefined) {
+    try {
+      invokeServer = startInvokeServer({
+        socketPath: invokeSocket,
+        handle: createInvokeHandler({
+          token: invokeToken,
+          region: process.env["AWS_REGION"] || "ap-south-1",
+          log,
+          functions: {
+            reader: readerHandler,
+            "access-details": accessDetailsHandler,
+            "kyc-check": kycCheckHandler,
+            "invoice-renderer": invoiceRendererHandler,
+          },
+        }),
+      });
+      invokeServer.on("error", () => {
+        log({ event: "worker_crashed", stage: "invoke_server" });
+        process.exit(1);
+      });
+    } catch {
+      log({ event: "worker_crashed", stage: "invoke_server" });
+      process.exit(1);
+    }
+  }
+
+  log({ event: "worker_started", invokeServer: invokeServer !== undefined });
   while (!stopping) {
     // Neither call waits for a run: a long reconciler or a slow provisioning step never delays the rest.
     void worker.jobs.tick();
@@ -53,6 +90,7 @@ async function main(): Promise<void> {
   }
   // Let the runs in progress finish; anything still queued is found again by the sweep after restart (3.4).
   while (worker.queue.running > 0) await new Promise((res) => setTimeout(res, TICK_MS));
+  invokeServer?.close();
   log({ event: "worker_stopped" });
 }
 

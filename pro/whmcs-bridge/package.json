@@ -1,0 +1,21 @@
+{
+  "name": "@tc/pro-whmcs-bridge",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node build.mjs && node bundle-deps.mjs"
+  },
+  "dependencies": {
+    "@tc/core": "workspace:*",
+    "@tc/db": "workspace:*",
+    "uuid": "^14.0.3"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

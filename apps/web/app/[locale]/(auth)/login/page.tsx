@@ -41,6 +41,7 @@ export default async function LoginPage({ params, searchParams }: Props) {
         banner={banner}
         available={page.available}
         reauth={reauth}
+        email={query["email"]}
       />
     </AuthPageFrame>
   );
