@@ -182,10 +182,11 @@ export function buildTemplate() {
                 })),
               },
               {
-                // CheckoutLicense has no resource-level permission (security review L5 of PRO-5).
+                // CheckoutLicense and CheckInLicense have no resource-level permission (security review
+                // L5 of PRO-5). PRO-9: the worker checks the unit back in right after the checkout.
                 Sid: "MarketplaceLicence",
                 Effect: "Allow",
-                Action: "license-manager:CheckoutLicense",
+                Action: ["license-manager:CheckoutLicense", "license-manager:CheckInLicense"],
                 Resource: "*",
               },
               {

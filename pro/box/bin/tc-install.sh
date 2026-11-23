@@ -82,6 +82,14 @@ install -d -m 0700 -o root -g root /var/log/tc
 install -d -m 0700 -o caddy -g caddy /var/lib/tc-caddy
 mkdir -p /var/backups/tc && chown postgres:postgres /var/backups/tc && chmod 0700 /var/backups/tc
 
+# PRO-9: `--rotate` gives every secret this installer generated a new value (database passwords, the
+# invoke token, the WHMCS bridge secret, the app keys) and applies them; everything else runs as usual.
+ROTATE=0
+if [[ "${1:-}" == "--rotate" ]]; then
+  ROTATE=1
+  shift
+fi
+
 # PRO-7: `--bake` (the AMI build) stops here: packages, Node, Caddy and users are in the image; every
 # secret, answer and database is made on the buyer's instance at its first run.
 if [[ "${1:-}" == "--bake" ]]; then
@@ -130,7 +138,7 @@ ask TC_ADMIN_ALLOW "Operator IP allowlist, CIDRs separated by spaces" '^[0-9a-fA
 for cidr in ${A[TC_ADMIN_ALLOW]}; do
   [[ "$cidr" =~ /([0-7])$ ]] && die "the operator allowlist must not be wider than /8"
 done
-ask TC_ACME_EMAIL"Email for the TLS certificates (Let's Encrypt)" '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}$'
+ask TC_ACME_EMAIL "Email for the TLS certificates (Let's Encrypt)" '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}$'
 ask AWS_REGION "AWS Region of this instance" '^[a-z]{2}(-[a-z]+)+-[0-9]$' "$(cloud-init query region 2>/dev/null || true)"
 ask COGNITO_CUSTOMER_POOL_ID "Cognito user pool id for customers" '^[a-z]{2}(-[a-z]+)+-[0-9]_[A-Za-z0-9]{1,55}$'
 ask COGNITO_CUSTOMER_CLIENT_ID "Cognito app client id for customers" '^[a-z0-9]{1,128}$'
@@ -184,6 +192,10 @@ mv "$ETC/.answers.tmp" "$ETC/answers.env"
 say "3/7 secrets"
 secret() { openssl rand -hex 24; } # 48 characters of [0-9a-f]: no pipe, no shell quoting issue
 SECRETS="$ETC/.secrets"
+# --rotate: the old values stay root-only in .secrets.old until this run has applied the new ones.
+if [[ "$ROTATE" == 1 && -f "$SECRETS" ]]; then
+  mv "$SECRETS" "$SECRETS.old"
+fi
 if [[ ! -f "$SECRETS" ]]; then
   {
     echo "OWNER=$(secret)"
@@ -292,6 +304,18 @@ fi
 VERIFIER="$(printf '%s' "$OWNER" | node "$RELEASE/box/bin/scram-verifier.mjs")" || die "verifier failed"
 [[ "$VERIFIER" =~ ^SCRAM-SHA-256\$4096:[A-Za-z0-9+/=]+\$[A-Za-z0-9+/=]+:[A-Za-z0-9+/=]+$ ]] || die "verifier failed"
 printf "alter role tc_owner password '%s';\n" "$VERIFIER" | su postgres -s /bin/bash -c "psql -v ON_ERROR_STOP=1 -qtA" >/dev/null
+# --rotate: the five app roles get their new passwords the same way (the migrator leaves a role that
+# can already log in alone, functions/migrator/roles.ts). The names are fixed here, never input.
+if [[ "$ROTATE" == 1 ]]; then
+  for pair in "web_rw:$WEB_RW" "admin_rw:$ADMIN_RW" "worker_rw:$WORKER_RW" "migrator:$MIGRATOR" \
+    "report_ro:$REPORT_RO"; do
+    role="${pair%%:*}"
+    [[ "$(psql_su "-c \"select 1 from pg_roles where rolname='$role'\"")" == 1 ]] || continue
+    v="$(printf '%s' "${pair#*:}" | node "$RELEASE/box/bin/scram-verifier.mjs")" || die "verifier failed"
+    [[ "$v" =~ ^SCRAM-SHA-256\$4096:[A-Za-z0-9+/=]+\$[A-Za-z0-9+/=]+:[A-Za-z0-9+/=]+$ ]] || die "verifier failed"
+    printf "alter role %s password '%s';\n" "$role" "$v" | su postgres -s /bin/bash -c "psql -v ON_ERROR_STOP=1 -qtA" >/dev/null
+  done
+fi
 if [[ "$(psql_su "-c \"select 1 from pg_database where datname='ticoncloud'\"")" != 1 ]]; then
   psql_su "-c \"create database ticoncloud owner tc_owner\""
 fi
@@ -435,5 +459,9 @@ done
 if [[ -f "$ETC/bridge.env" ]]; then
   systemctl is-active --quiet tc-bridge || die "tc-bridge is not running (journalctl -u tc-bridge)"
   say "WHMCS bridge on: put the secret from $ETC/bridge-secret.txt into the WHMCS addon (Bridge secret)."
+fi
+if [[ "$ROTATE" == 1 ]]; then
+  rm -f "$SECRETS.old"
+  say "secrets rotated; if the WHMCS bridge is on, put the new secret from $ETC/bridge-secret.txt into the WHMCS addon."
 fi
 say "done: https://${A[TC_PANEL_HOST]} and https://${A[TC_ADMIN_HOST]}"

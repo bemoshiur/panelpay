@@ -31,7 +31,7 @@ One stack ([pro/cfn/tryawsnow-pro.yaml](../pro/cfn/tryawsnow-pro.yaml), generate
   public subnet you choose, with an **Elastic IP**.
 - **A security group**: 443 and 80 open to everyone, SSH 22 only from the operator CIDR you enter.
 - **An instance role** (EC2 only). It can assume the Lightsail access roles below, check your AWS Marketplace
-  licence (`license-manager:CheckoutLicense`), read the two Cognito app-client secrets once at install, and write
+  licence (`license-manager:CheckoutLicense` and `CheckInLicense`), read the two Cognito app-client secrets once at install, and write
   invoice PDFs to the invoices bucket. **No access keys are created or requested.**
 - **Four Lightsail access roles** (`TcProvisioner`, `TcReader`, `TcAccessDetails`, `TcBillingReader`) with a
   permission boundary. They trust only the instance role plus an ExternalId unique to the stack.
@@ -109,6 +109,25 @@ and instance type.
   to Amazon SES.
 - The role names are fixed, so install **one stack per AWS account**.
 - First-boot log: `/var/log/tc-firstboot.log`.
+
+## Rotating credentials
+
+The installer generates every secret of the instance itself: the five database passwords, the owner
+password, the local invoke token, the WHMCS bridge secret and the app keys. They live in root-only files
+under `/etc/tc` and are never printed. To give all of them new values:
+
+1. Connect to the instance with SSH from your operator range and run
+   `sudo tc-install --rotate`. It keeps your answers, generates new secrets, sets the new database
+   passwords, rewrites the configuration and restarts the services. One-time codes that were
+   already sent stop working.
+2. If the WHMCS addon is on, open **Addons > TryAWS.now Panel** in WHMCS and paste the new bridge secret
+   from `/etc/tc/bridge-secret.txt`.
+3. To change the WHMCS API credential, create a new one in WHMCS, delete `WHMCS_API_IDENTIFIER` and
+   `WHMCS_API_SECRET` from `/etc/tc/answers.env`, and run `sudo tc-install` to be asked for them again.
+
+There are no AWS access keys to rotate: the instance uses its instance role. The two Cognito app-client
+secrets belong to your user pools; after you rotate them in Amazon Cognito, delete `/etc/tc/.cognito`
+and run `sudo tc-install` to read them again. Rotate after any suspected exposure and at least once a year.
 
 ## Security
 

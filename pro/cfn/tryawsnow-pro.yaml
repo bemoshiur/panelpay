@@ -644,7 +644,9 @@ Resources:
                   - Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/TcDnsReader
               - Sid: MarketplaceLicence
                 Effect: Allow
-                Action: license-manager:CheckoutLicense
+                Action:
+                  - license-manager:CheckoutLicense
+                  - license-manager:CheckInLicense
                 Resource: "*"
               - Sid: InstallerReadsTheClientSecretsOfThisStack
                 Effect: Allow
