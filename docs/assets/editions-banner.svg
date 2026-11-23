@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="t d">
+  <title id="t">TryAWS.now: open-source edition and Pro edition on AWS Marketplace</title>
+  <desc id="d">Two editions of TryAWS.now. Open source: free under Apache-2.0, self-hosted. Pro: one-click CloudFormation install on Amazon EC2, coming soon to AWS Marketplace, 199 US dollars for 36 months.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1b3d"/>
+      <stop offset="0.55" stop-color="#1b2a5e"/>
+      <stop offset="1" stop-color="#3a1f5c"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff7a18"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2ee6c5"/>
+      <stop offset="1" stop-color="#1fa2ff"/>
+    </linearGradient>
+    <linearGradient id="pink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6fd8"/>
+      <stop offset="1" stop-color="#ff9a3c"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="360" rx="24" fill="url(#bg)"/>
+  <circle cx="1130" cy="40" r="140" fill="#ff7a18" opacity="0.18" filter="url(#glow)"/>
+  <circle cx="120" cy="330" r="150" fill="#1fa2ff" opacity="0.18" filter="url(#glow)"/>
+  <g stroke="#ffffff" stroke-opacity="0.05">
+    <path d="M0 90 H1280 M0 180 H1280 M0 270 H1280"/>
+    <path d="M160 0 V360 M320 0 V360 M480 0 V360 M640 0 V360 M800 0 V360 M960 0 V360 M1120 0 V360"/>
+  </g>
+
+  <!-- title -->
+  <text x="56" y="76" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="44" font-weight="800" fill="#ffffff">TryAWS<tspan fill="url(#orange)">.now</tspan></text>
+  <text x="56" y="110" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" fill="#c9d3f5">Prepaid Amazon Lightsail reseller panel · wallet, billing, automatic provisioning · WHMCS addon</text>
+  <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700">
+    <rect x="964" y="46" width="260" height="32" rx="16" fill="url(#orange)"/>
+    <text x="1094" y="67" text-anchor="middle" fill="#1a1030">BUILT FOR AWS · 100% AWS-NATIVE</text>
+  </g>
+
+  <!-- card: open source -->
+  <g transform="translate(56,142)">
+    <rect width="560" height="180" rx="18" fill="#ffffff" fill-opacity="0.07" stroke="url(#teal)" stroke-width="2"/>
+    <rect x="22" y="22" width="56" height="56" rx="14" fill="url(#teal)"/>
+    <path d="M40 40 l-10 10 10 10 M60 40 l10 10 -10 10 M54 36 l-8 28" stroke="#0f1b3d" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="96" y="46" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#ffffff">Open source</text>
+    <text x="96" y="72" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#2ee6c5" font-weight="700">FREE · Apache-2.0 · self-hosted</text>
+    <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#dfe6ff">
+      <text x="24" y="114">✓  Full source on GitHub, fork and brand it</text>
+      <text x="24" y="138">✓  Deploy to your AWS Organization with SST</text>
+      <text x="24" y="162">✓  Community support through GitHub issues</text>
+    </g>
+  </g>
+
+  <!-- card: pro -->
+  <g transform="translate(664,142)">
+    <rect width="560" height="180" rx="18" fill="#ffffff" fill-opacity="0.09" stroke="url(#pink)" stroke-width="2"/>
+    <rect x="22" y="22" width="56" height="56" rx="14" fill="url(#pink)"/>
+    <path d="M36 58 a12 12 0 0 1 4-23 a16 16 0 0 1 30 4 a10 10 0 0 1 0 19 z" fill="#ffffff"/>
+    <path d="M52 44 l-6 10 h7 l-4 9 10-13 h-7 l4-6 z" fill="#ff7a18"/>
+    <text x="96" y="46" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#ffffff">Pro on AWS Marketplace</text>
+    <text x="96" y="72" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#ffb347" font-weight="700">$199 · 36 months · coming soon</text>
+    <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" fill="#dfe6ff">
+      <text x="24" y="114">✓  One-click AWS CloudFormation install on Amazon EC2</text>
+      <text x="24" y="138">✓  Ready AMI, IAM roles, Amazon Cognito, Amazon S3</text>
+      <text x="24" y="162">✓  Billed through your AWS account · vendor support</text>
+    </g>
+  </g>
+
+  <text x="640" y="346" text-anchor="middle" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#8f9bc7">by TiCON System Limited · AWS, Amazon EC2, Amazon Lightsail, Amazon Cognito and AWS Marketplace are trademarks of Amazon.com, Inc. or its affiliates.</text>
+</svg>
