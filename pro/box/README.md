@@ -46,16 +46,22 @@ Still to verify on a real box (PRO-7): `caddy validate` on this Caddyfile, and t
 ## Licence (PRO-5)
 
 The worker checks the AWS Marketplace licence at start and every 12 hours with `CheckoutLicense`
-(`PROVISIONAL`, key fingerprint `aws:294406891311:AWS/Marketplace:issuer-fingerprint`) and writes
+(`PROVISIONAL`, key fingerprint `aws:294406891311:AWS/Marketplace:issuer-fingerprint`, product SKU from
+`box/product-sku`, entitlement `pro` as one `Count` unit, then `CheckInLicense` at once) and writes
 `/var/lib/tc/licence.json`. An ended contract never stops the installed version (EULA). Only `tc-update`
 reads the status: `node /opt/tc/current/worker/licence-gate.mjs` exits 0 when an active licence was seen
 in the last 48 hours and 3 otherwise. AWS License Manager has no charge.
 
-The instance role needs, for this, only `license-manager:CheckoutLicense` (it has no resource-level
-permission, so `"Resource": "*"`; security review L5):
+The instance role needs, for this, only `license-manager:CheckoutLicense` and
+`license-manager:CheckInLicense` (they have no resource-level permission, so `"Resource": "*"`; security
+review L5):
 
 ```json
-{ "Effect": "Allow", "Action": "license-manager:CheckoutLicense", "Resource": "*" }
+{
+  "Effect": "Allow",
+  "Action": ["license-manager:CheckoutLicense", "license-manager:CheckInLicense"],
+  "Resource": "*"
+}
 ```
 
 ## Security review of PRO-2 to PRO-5 (23 Nov 2026)

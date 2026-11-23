@@ -247,9 +247,12 @@ describe("installer", () => {
       for (const name of secrets) expect(line).not.toContain(`$${name}`);
     }
     // H1: psql receives only the SCRAM verifier, never a clear-text password.
+    // PRO-9: --rotate sends the five app roles their verifiers ("$v") the same way.
     const toPsql = sh.split("\n").filter((l) => l.includes("| su postgres"));
-    expect(toPsql).toHaveLength(1);
+    expect(toPsql).toHaveLength(2);
     expect(toPsql[0]).toContain('"$VERIFIER"');
+    expect(toPsql[1]).toContain('"$role" "$v"');
+    expect(sh).toContain('printf \'%s\' "${pair#*:}" | node "$RELEASE/box/bin/scram-verifier.mjs"');
     expect(sh).toContain('printf \'%s\' "$OWNER" | node "$RELEASE/box/bin/scram-verifier.mjs"');
   });
 

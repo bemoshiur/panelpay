@@ -54,7 +54,7 @@ describe("pro/cfn/tryawsnow-pro.yaml", () => {
     const st = R.InstanceRole.Properties.Policies[0].PolicyDocument.Statement;
     expect(st.map((s) => s.Action)).toEqual([
       "sts:AssumeRole",
-      "license-manager:CheckoutLicense",
+      ["license-manager:CheckoutLicense", "license-manager:CheckInLicense"],
       "cognito-idp:DescribeUserPoolClient",
       "cognito-idp:AdminGetUser",
       "s3:PutObject",
@@ -202,5 +202,49 @@ describe("tc-install, PRO-8", () => {
   it("never prints a Cognito client secret", () => {
     expect(sh).not.toMatch(/(say|echo|printf)[^\n]*(CUSTOMER|SIGNUP)_SECRET[^\n]*>&?[12]?\s*$/m);
     expect(sh).toMatch(/read -r -s -p "Client secret/);
+  });
+});
+
+// PRO-9 (version 1.0.1).
+describe("tc-install, PRO-9", () => {
+  const sh = read("pro/box/bin/tc-install.sh");
+
+  it("passes every question to ask as KEY, question, pattern (a missing space aborted 1.0.0 under set -u)", () => {
+    const calls = sh.split("\n").filter((l) => /^\s*ask\b/.test(l) && !/^\s*ask\(\)/.test(l));
+    expect(calls.length).toBeGreaterThan(15);
+    for (const l of calls) expect(l, l).toMatch(/^\s*ask [A-Z_]+ ["']/);
+  });
+
+  it("parses under bash -n", () => {
+    execFileSync("bash", ["-n", "pro/box/bin/tc-install.sh"], {
+      cwd: new URL("../..", import.meta.url),
+    });
+  });
+
+  it("ships the AWS Marketplace product id that License Manager expects as ProductSKU", () => {
+    const sku = read("pro/box/product-sku").trim();
+    expect(sku).toBe("prod-ill7oycvmsrme");
+    expect(sku).toMatch(/^[A-Za-z0-9-]{1,128}$/);
+  });
+
+  it("rotates every generated secret on --rotate and gives the five app roles their new passwords", () => {
+    expect(sh).toMatch(/"--rotate"/);
+    expect(sh).toMatch(/ROTATE=1/);
+    for (const role of ["web_rw", "admin_rw", "worker_rw", "migrator", "report_ro"]) {
+      expect(sh, role).toContain(role);
+    }
+    // Same rule as tc_owner (security review H1): only a SCRAM verifier, on stdin.
+    expect(sh).toMatch(/alter role %s password '%s'/);
+  });
+});
+
+describe("the instance role's licence permissions (PRO-9)", () => {
+  it("can check out and check in the AWS Marketplace licence, and nothing else of License Manager", () => {
+    const docs = JSON.stringify(R.InstanceRole.Properties.Policies);
+    const actions = [...docs.matchAll(/license-manager:[A-Za-z]+/g)].map((m) => m[0]).sort();
+    expect([...new Set(actions)]).toEqual([
+      "license-manager:CheckInLicense",
+      "license-manager:CheckoutLicense",
+    ]);
   });
 });

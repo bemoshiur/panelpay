@@ -367,3 +367,24 @@ Owner: "ok koro ja kora dorkar kichu additional bill jate na ase".
 - Third submission at ~16:15 with the same values. Follow-up check scheduled in 60 min.
 - Listing images: 8 JPGs (780x439) in s3://tryawsnow-pro-mp-assets-739275468267/listing-images/ (public read for that prefix). Saving them is blocked while a product request is in progress ("This product is being updated by another request"); add them after.
 - Upload rule for next time: always set ContentType when putting listing files in S3.
+
+## 2026-11-23 18:10 PRO-9 version 1.0.1 prepared: installer fix, working licence check, credential rotation (track Pro, Claude)
+Owner: "1.0.1-এর প্রস্তুতি নাও ... লাইসেন্স ম্যানেজার চালু করো, সব কিছু তুমি করো". Publish of 1.0.0 was submitted at 17:33 and is in AWS review.
+
+Found in the 1.0.0 release (built from 5299671):
+- tc-install.sh line 133 `ask TC_ACME_EMAIL"Email ...` (missing space). Under `set -u` the call aborts with "$3: unbound variable", so the first-boot install of 1.0.0 stops at the answers step. Reproduced with bash. The stack test of 14:25 did not reach the installer, so this was not seen.
+- The release had no `box/product-sku`, so the worker never called License Manager.
+- The entitlement form was wrong. Measured in 739275468267 against the $0 test agreement agmt-6w0f5fjbbooi3s2d5tbmcsqek (licence l-fe85a58c125c43ec8891f970123466fd): ProductSKU is the product id `prod-ill7oycvmsrme`; entitlement "pro" is Unit Count, MaxCount 1. Unit None -> NoEntitlementsAllowedException; Unit Count Value 1 -> allowed; CheckInLicense -> ok.
+- No credential rotation procedure (AWS Marketplace AMI usage-instruction requirement).
+
+Done (branch pro-1.0.1-licence-rotate):
+- Typo fixed; repo test that every `ask` call is `ask KEY "question"`; `bash -n` test.
+- `pro/box/product-sku` = prod-ill7oycvmsrme (copied into the release by make-release.sh).
+- licence-aws.ts: Count/1 checkout, immediate CheckInLicense, fallback to Unit None, no retry on throttling/access errors; 5 unit tests. Instance role: + license-manager:CheckInLicense.
+- `tc-install --rotate`: new values for every generated secret, SCRAM verifiers for the five app roles on stdin (same rule as tc_owner, H1), old file kept root-only until the run succeeds. docs/pro-edition.md "Rotating credentials".
+- AWS: License Manager service-linked role created in 739275468267 (free) to read the test licence.
+- Tests: pro-cfn 24/24, pro/worker 66/66, tsc clean, prettier/eslint clean on changed files. `pnpm verify --quick` did not finish in 10 minutes here.
+
+Not yet verified: `--rotate` against a real PostgreSQL (planned on the 1.0.1 test instance).
+
+Needs decision (owner): bake the 1.0.1 AMI (one t3.small for 15-30 min, about 1-2 cents, plus copy to us-east-1) and one end-to-end launch of the stack in the test account (about 15 minutes of t3.medium + EIP, under 5 cents), then delete the 1.0.0 seller AMI snapshot once 1.0.1 is ingested.
