@@ -25,6 +25,9 @@ export const PAYMENT_DISCREPANCY_KEYS = [
   "expectedMinor",
   "gotMinor",
   "state",
+  // PRO-6: "whmcs invoice <n>: <reason>" for a paid WHMCS top-up the bridge refused. "note" is one of
+  // the keys the reconciliation screen shows (repositories/admin/reconciliation.ts DETAIL_KEYS).
+  "note",
 ] as const;
 
 const isStatus = (value: unknown): boolean =>

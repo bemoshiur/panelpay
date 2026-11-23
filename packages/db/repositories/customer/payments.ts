@@ -26,8 +26,12 @@ export interface NewPayment {
   idempotencyKey: string;
   amountMinor: bigint;
   currency: string;
-  gateway: "eps";
+  // PRO-6: "whmcs" is a paid WHMCS invoice of the Pro edition, credited after the same server-to-server
+  // check of the amount (pro/whmcs-bridge). The column has no check list; this is the allowlist.
+  gateway: (typeof PAYMENT_GATEWAYS)[number];
 }
+
+export const PAYMENT_GATEWAYS = ["eps", "whmcs"] as const;
 
 // R8: the customer is the one of the scope; no method takes a customer id. Written by web_rw only
 // with the columns of its grants (no SELECT of verify_payload, no write of the amount or the owner
@@ -104,7 +108,7 @@ const validInsert = (input: NewPayment): boolean =>
   input.amountMinor <= MAX_INT8 &&
   typeof input.currency === "string" &&
   CURRENCY.test(input.currency) &&
-  input.gateway === "eps";
+  (PAYMENT_GATEWAYS as readonly string[]).includes(input.gateway);
 
 export function paymentsRepo(scope: TenantScope): PaymentsRepo {
   const { tx, customerId } = scope;

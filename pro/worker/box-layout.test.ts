@@ -9,8 +9,10 @@ import { describe, expect, it } from "vitest";
 const box = (p: string) => fileURLToPath(new URL(`../box/${p}`, import.meta.url));
 const read = (p: string) => readFileSync(box(p), "utf8");
 const units = readdirSync(box("systemd")).filter((f) => f.endsWith(".service"));
-// tc-firewall loads nftables rules, which needs root; every other unit runs as its own user.
-const unprivileged = units.filter((u) => u !== "tc-firewall.service");
+// tc-firewall loads nftables rules and tc-backup-s3 uses the instance role (PRO-8 review M1), so both
+// run as root; every other unit runs as its own user.
+const rootUnits = ["tc-backup-s3.service", "tc-firewall.service"];
+const unprivileged = units.filter((u) => !rootUnits.includes(u));
 
 function directive(unit: string, key: string): string[] {
   return unit
@@ -20,10 +22,12 @@ function directive(unit: string, key: string): string[] {
 }
 
 describe("systemd units", () => {
-  it("has the web, admin, worker, caddy, firewall and backup units", () => {
+  it("has the web, admin, worker, caddy, firewall, backup and WHMCS bridge units", () => {
     expect(units.sort()).toEqual([
       "tc-admin.service",
+      "tc-backup-s3.service",
       "tc-backup.service",
+      "tc-bridge.service",
       "tc-caddy.service",
       "tc-firewall.service",
       "tc-web.service",
@@ -72,7 +76,7 @@ describe("systemd units", () => {
   });
 
   it("the internet-facing units cannot reach the instance metadata service (H2, R1)", () => {
-    for (const name of ["tc-web", "tc-admin", "tc-caddy"]) {
+    for (const name of ["tc-web", "tc-admin", "tc-caddy", "tc-bridge"]) {
       expect(directive(read(`systemd/${name}.service`), "IPAddressDeny")).toEqual([
         "169.254.169.254/32 fd00:ec2::254/128",
       ]);
@@ -98,10 +102,25 @@ describe("systemd units", () => {
 describe("Caddy", () => {
   const caddy = read("caddy/Caddyfile");
   const blocks = caddy.split(/reverse_proxy /).slice(1);
+  const appBlocks = blocks.filter((b) => b.startsWith("127.0.0.1:"));
 
-  it("proxies only to loopback upstreams", () => {
-    expect(blocks.length).toBe(2);
-    for (const b of blocks) expect(b).toMatch(/^127\.0\.0\.1:(801|802) \{/);
+  it("proxies only to the two loopback apps and the WHMCS bridge socket", () => {
+    expect(blocks.length).toBe(3);
+    expect(appBlocks.length).toBe(2);
+    for (const b of appBlocks) expect(b).toMatch(/^127\.0\.0\.1:(801|802) \{/);
+    expect(blocks.filter((b) => b.startsWith("unix//run/tc-bridge/bridge.sock {"))).toHaveLength(1);
+  });
+
+  it("routes only /bridge/whmcs/* of the panel host to the bridge (PRO-6)", () => {
+    const panel = caddy.slice(
+      caddy.indexOf("{$TC_PANEL_HOST} {"),
+      caddy.indexOf("{$TC_ADMIN_HOST} {"),
+    );
+    expect(panel).toMatch(
+      /handle \/bridge\/whmcs\/\* \{\s+reverse_proxy unix\/\/run\/tc-bridge\/bridge\.sock/,
+    );
+    const admin = caddy.slice(caddy.indexOf("{$TC_ADMIN_HOST} {"));
+    expect(admin).not.toContain("tc-bridge");
   });
 
   it("has no admin API (M1)", () => {
@@ -110,8 +129,8 @@ describe("Caddy", () => {
   });
 
   it("sets the client address header from the TCP peer in every proxy (not spoofable)", () => {
-    for (const b of blocks) {
-      const body = b.slice(0, b.indexOf("\n\t}"));
+    for (const b of appBlocks) {
+      const body = b.slice(0, b.search(/\n\t*\}\n/));
       // {http.request.remote}: "1.2.3.4:port" or "[v6]:port", which both app parsers accept (L3).
       expect(body).toContain("header_up Cloudfront-Viewer-Address {http.request.remote}");
     }
@@ -206,6 +225,7 @@ describe("installer", () => {
     expect(calls.map((c) => c[1]).sort()).toEqual([
       "admin.env",
       "backup.env",
+      "bridge.env",
       "caddy.env",
       "common.env",
       "migrate.env",
@@ -239,9 +259,26 @@ describe("installer", () => {
     expect(sh).toContain('--property=EnvironmentFile="$ETC/migrate.env"');
   });
 
+  it("keeps the instance role to root and the worker (PRO-8 review M1, H2)", () => {
+    const nft = read("nftables/tc.nft");
+    expect(nft).toMatch(
+      /ip daddr 169\.254\.169\.254 meta skuid != \{ "root", "tc-worker" \} reject/,
+    );
+    expect(nft).toMatch(/ip6 daddr fd00:ec2::254 meta skuid != \{ "root", "tc-worker" \} reject/);
+    const backup = read("systemd/tc-backup.service");
+    expect(backup).toContain("OnSuccess=tc-backup-s3.service");
+    expect(backup).toContain("IPAddressDeny=169.254.169.254/32 fd00:ec2::254/128");
+    expect(read("bin/tc-backup.sh")).not.toMatch(/aws s3/);
+    const s3 = read("systemd/tc-backup-s3.service");
+    expect(s3).toContain("ReadOnlyPaths=/var/backups/tc");
+    expect(s3).toContain("NoNewPrivileges=true");
+  });
+
   it("installs the firewall rules and our Caddy unit", () => {
     expect(sh).toContain('install -m 0644 "$RELEASE/box/nftables/tc.nft" "$ETC/tc.nft"');
-    expect(sh).toMatch(/for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup; do/);
+    expect(sh).toMatch(
+      /for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup tc-backup-s3 tc-bridge; do/,
+    );
     expect(sh).not.toMatch(/apt-get install[^\n]* caddy/);
   });
 
@@ -276,12 +313,38 @@ describe("firewall (M2)", () => {
   it("lets only Caddy connect to the app ports, and only platform users to PostgreSQL", () => {
     expect(nft).toMatch(/tcp dport \{ 801, 802 \} meta skuid != "caddy" reject/);
     expect(nft).toMatch(
-      /tcp dport 5432 meta skuid != \{ "root", "postgres", "tc-web", "tc-admin", "tc-worker" \} reject/,
+      /tcp dport 5432 meta skuid != \{ "root", "postgres", "tc-web", "tc-admin", "tc-worker", "tc-bridge" \} reject/,
     );
   });
 
   it("uses its own table only, never flushing the buyer's rules", () => {
     expect(nft).not.toMatch(/flush ruleset/);
     expect(nft).toMatch(/^table inet tc_local \{$/m);
+  });
+});
+
+describe("WHMCS bridge (PRO-6)", () => {
+  const u = read("systemd/tc-bridge.service");
+
+  it("runs only when set up, as its own user and group, with caddy's group only for the socket (L6)", () => {
+    expect(directive(u, "ConditionPathExists")).toEqual(["/etc/tc/bridge.env"]);
+    expect(directive(u, "User")).toEqual(["tc-bridge"]);
+    expect(directive(u, "Group")).toEqual(["tc-bridge"]);
+    expect(directive(u, "SupplementaryGroups")).toEqual(["caddy"]);
+    expect(directive(u, "RuntimeDirectory")).toEqual(["tc-bridge"]);
+    expect(directive(u, "RuntimeDirectoryMode")).toEqual(["0755"]);
+    expect(read("bin/tc-install.sh")).toContain(
+      "TC_BRIDGE_SOCKET_GID=$(getent group caddy | cut -d: -f3)",
+    );
+  });
+
+  it("the installer never prints the bridge secret and asks for the WHMCS API secret without echo", () => {
+    const sh = read("bin/tc-install.sh");
+    expect(sh).toContain('read -r -s -p "$q: " v');
+    for (const line of sh.split("\n")) {
+      if (/^\s*(say|echo|printf)\b/.test(line) && !line.includes('>>"$SECRETS"')) {
+        expect(line).not.toContain("$BRIDGE");
+      }
+    }
   });
 });

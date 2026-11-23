@@ -32,9 +32,18 @@
 
 {$TC_PANEL_HOST} {
 	import common
-	reverse_proxy 127.0.0.1:801 {
-		header_up Cloudfront-Viewer-Address {http.request.remote}
-		header_up -X-Forwarded-For
+	# PRO-6: the signed call of the WHMCS addon (pro/whmcs) to the bridge. It decides no money: the
+	# bridge reads the invoice from the WHMCS API itself. Absent bridge: the socket does not exist (502).
+	handle /bridge/whmcs/* {
+		reverse_proxy unix//run/tc-bridge/bridge.sock {
+			header_up -X-Forwarded-For
+		}
+	}
+	handle {
+		reverse_proxy 127.0.0.1:801 {
+			header_up Cloudfront-Viewer-Address {http.request.remote}
+			header_up -X-Forwarded-For
+		}
 	}
 }
 
