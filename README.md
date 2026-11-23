@@ -12,6 +12,9 @@ in their own currency from a prepaid wallet. Built with TypeScript, Next.js, Pos
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![AWS](https://img.shields.io/badge/AWS-Lightsail%20%C2%B7%20Route%2053%20%C2%B7%20Lambda-ff9900)
 ![Status](https://img.shields.io/badge/status-pre--launch-orange)
+[![AWS Marketplace: Pro edition coming soon](https://img.shields.io/badge/AWS%20Marketplace-Pro%20edition%20coming%20soon-ff9900)](#choose-your-edition)
+
+<a href="#choose-your-edition"><img src="docs/assets/editions-banner.svg" alt="TryAWS.now editions: free open-source edition under Apache-2.0, and the Pro edition with a one-click AWS CloudFormation install, coming soon to AWS Marketplace" width="100%"></a>
 
 [Website](https://tryaws.now) · [Documentation](docs/index.md) · [Architecture explained](docs/architecture-explained.md) ·
 [For hosting resellers](docs/for-hosting-resellers.md) · [FAQ](docs/faq.md) · [Contributing](CONTRIBUTING.md)
@@ -37,6 +40,22 @@ design works for any region where customers cannot or do not want to pay AWS in 
 > been torn down. It has not taken real customer money in production. Treat it as a serious starting point and
 > reference implementation, and read [docs/spec/15-security-gate-before-launch.md](docs/spec/15-security-gate-before-launch.md)
 > before you accept payments.
+
+## Choose your edition
+
+|         | **Open source** (this repository)                                             | **TryAWS.now Pro** on AWS Marketplace                                                                                |
+| ------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Price   | Free, [Apache-2.0](LICENSE)                                                   | $199 for a 36-month contract, billed through your AWS account                                                        |
+| Runs on | Your AWS Organization: Lambda, RDS, SQS and more, deployed with SST           | One Amazon EC2 instance in your own AWS account                                                                      |
+| Install | Clone, configure and deploy yourself ([Quick start](#quick-start-developers)) | One AWS CloudFormation stack: ready AMI, IAM roles, Amazon Cognito user pools, Amazon S3 invoices bucket, Elastic IP |
+| WHMCS   | Addon in [pro/whmcs](pro/whmcs)                                               | Addon included on the AMI                                                                                            |
+| Updates | `git pull`                                                                    | Packaged updates while the contract is active; the installed version keeps running after it ends                     |
+| Support | [GitHub issues](https://github.com/bemoshiur/tryaws.now/issues)               | Vendor support by TiCON System Limited (business@ticonsys.com)                                                       |
+| Status  | Source available now                                                          | **Coming soon:** version 1.0.0 is in AWS Marketplace review. The link will appear here when the listing is public.   |
+
+Both editions are built from the same code. The Pro edition packages it for a single EC2 instance and installs
+it in minutes, so you do not need to run a multi-account AWS setup yourself. Pro architecture, template and
+installer: [pro/cfn](pro/cfn) and [pro/box/README.md](pro/box/README.md).
 
 ## Who is it for?
 
