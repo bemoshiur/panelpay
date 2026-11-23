@@ -9,8 +9,10 @@ import { describe, expect, it } from "vitest";
 const box = (p: string) => fileURLToPath(new URL(`../box/${p}`, import.meta.url));
 const read = (p: string) => readFileSync(box(p), "utf8");
 const units = readdirSync(box("systemd")).filter((f) => f.endsWith(".service"));
-// tc-firewall loads nftables rules, which needs root; every other unit runs as its own user.
-const unprivileged = units.filter((u) => u !== "tc-firewall.service");
+// tc-firewall loads nftables rules and tc-backup-s3 uses the instance role (PRO-8 review M1), so both
+// run as root; every other unit runs as its own user.
+const rootUnits = ["tc-backup-s3.service", "tc-firewall.service"];
+const unprivileged = units.filter((u) => !rootUnits.includes(u));
 
 function directive(unit: string, key: string): string[] {
   return unit
@@ -23,6 +25,7 @@ describe("systemd units", () => {
   it("has the web, admin, worker, caddy, firewall, backup and WHMCS bridge units", () => {
     expect(units.sort()).toEqual([
       "tc-admin.service",
+      "tc-backup-s3.service",
       "tc-backup.service",
       "tc-bridge.service",
       "tc-caddy.service",
@@ -256,10 +259,25 @@ describe("installer", () => {
     expect(sh).toContain('--property=EnvironmentFile="$ETC/migrate.env"');
   });
 
+  it("keeps the instance role to root and the worker (PRO-8 review M1, H2)", () => {
+    const nft = read("nftables/tc.nft");
+    expect(nft).toMatch(
+      /ip daddr 169\.254\.169\.254 meta skuid != \{ "root", "tc-worker" \} reject/,
+    );
+    expect(nft).toMatch(/ip6 daddr fd00:ec2::254 meta skuid != \{ "root", "tc-worker" \} reject/);
+    const backup = read("systemd/tc-backup.service");
+    expect(backup).toContain("OnSuccess=tc-backup-s3.service");
+    expect(backup).toContain("IPAddressDeny=169.254.169.254/32 fd00:ec2::254/128");
+    expect(read("bin/tc-backup.sh")).not.toMatch(/aws s3/);
+    const s3 = read("systemd/tc-backup-s3.service");
+    expect(s3).toContain("ReadOnlyPaths=/var/backups/tc");
+    expect(s3).toContain("NoNewPrivileges=true");
+  });
+
   it("installs the firewall rules and our Caddy unit", () => {
     expect(sh).toContain('install -m 0644 "$RELEASE/box/nftables/tc.nft" "$ETC/tc.nft"');
     expect(sh).toMatch(
-      /for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup tc-bridge; do/,
+      /for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup tc-backup-s3 tc-bridge; do/,
     );
     expect(sh).not.toMatch(/apt-get install[^\n]* caddy/);
   });

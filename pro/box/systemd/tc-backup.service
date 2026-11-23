@@ -2,6 +2,7 @@
 Description=TryAWS.now Pro: nightly database backup
 After=postgresql.service
 Requires=postgresql.service
+OnSuccess=tc-backup-s3.service
 
 [Service]
 Type=oneshot
@@ -17,3 +18,5 @@ ProtectSystem=strict
 ProtectHome=true
 ReadWritePaths=/var/backups/tc
 UMask=0077
+# Security review M1 of PRO-8: postgres never reaches the instance role.
+IPAddressDeny=169.254.169.254/32 fd00:ec2::254/128
