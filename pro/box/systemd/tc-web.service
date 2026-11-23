@@ -1,0 +1,42 @@
+[Unit]
+Description=TryAWS.now Pro: customer panel (Next.js)
+After=network-online.target postgresql.service tc-firewall.service tc-worker.service
+Wants=network-online.target
+Requires=postgresql.service tc-firewall.service
+
+[Service]
+Type=simple
+User=tc-web
+Group=tc
+WorkingDirectory=/opt/tc/current/web
+EnvironmentFile=/etc/tc/common.env
+EnvironmentFile=/etc/tc/web.env
+Environment=NODE_ENV=production HOSTNAME=127.0.0.1 PORT=801
+ExecStart=/usr/bin/node apps/web/server.js
+Restart=on-failure
+RestartSec=5
+MemoryMax=900M
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# Security review H2: no instance-role credentials for the internet-facing tiers (R1 on one box).
+IPAddressDeny=169.254.169.254/32 fd00:ec2::254/128
+# Ports 801/802 (below 1024: no other local user can take them while the app restarts).
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+SystemCallArchitectures=native
+UMask=0077
+# Next.js writes its cache under .next/cache; the rest of the release stays read-only.
+ReadWritePaths=-/opt/tc/current/web/apps/web/.next/cache
+
+[Install]
+WantedBy=multi-user.target

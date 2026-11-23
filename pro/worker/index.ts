@@ -3,7 +3,6 @@ export { createWorker, toSqsEvent, workerJobs, type Worker, type WorkerHandlers 
 export {
   createInvokeHandler,
   INVOKE_TOKEN_HEADER,
-  isLoopbackHost,
   startInvokeServer,
   type InvokeFunction,
 } from "./invoke-server";

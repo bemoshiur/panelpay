@@ -1,0 +1,16 @@
+[Unit]
+Description=TryAWS.now Pro: copy of the newest backup to the buyer's S3 (optional)
+# Started by tc-backup.service on success. Root: the only backup step that may use the instance role.
+ConditionPathExists=/etc/tc/backup.env
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/tc/backup.env
+ExecStart=/opt/tc/current/box/bin/tc-backup-s3.sh
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/backups/tc
+UMask=0077

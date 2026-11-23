@@ -463,8 +463,27 @@ importers:
         specifier: 8.5.32
         version: 8.5.32
 
+  pro/whmcs-bridge:
+    dependencies:
+      '@tc/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@tc/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      uuid:
+        specifier: ^14.0.3
+        version: 14.0.3
+    devDependencies:
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
+
   pro/worker:
     dependencies:
+      '@aws-sdk/client-license-manager':
+        specifier: 3.1166.0
+        version: 3.1166.0
       '@tc/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -480,6 +499,9 @@ importers:
       '@tc/fn-kyc-check':
         specifier: workspace:*
         version: link:../../functions/kyc-check
+      '@tc/fn-migrator':
+        specifier: workspace:*
+        version: link:../../functions/migrator
       '@tc/fn-notifier':
         specifier: workspace:*
         version: link:../../functions/notifier
@@ -498,6 +520,10 @@ importers:
       '@tc/fn-scheduler':
         specifier: workspace:*
         version: link:../../functions/scheduler
+    devDependencies:
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
 
 packages:
 
@@ -511,6 +537,10 @@ packages:
 
   '@aws-sdk/client-lambda@3.1166.0':
     resolution: {integrity: sha512-dJmEol6/0IMZCL7o/BnVK+rRfcMf6xdAvr/WW1a3IqVz5wYc+udMcZ4nTzg+E31Jz9NHXoRkm3nZVLumqwAj/g==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/client-license-manager@3.1166.0':
+    resolution: {integrity: sha512-Y8RS5jYu880jYr6vXXRowZfUTCbJGUVAFXzB6mlEbNVVWZ5BGLLKsmqWdDgnnVrOSG2zvvA6LLaxDqIITlmeYw==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/client-lightsail@3.1166.0':
@@ -3586,6 +3616,17 @@ snapshots:
       tslib: 2.9.1
 
   '@aws-sdk/client-lambda@3.1166.0':
+    dependencies:
+      '@aws-sdk/core': 3.981.0
+      '@aws-sdk/credential-provider-node': 3.972.96
+      '@aws-sdk/types': 3.975.1
+      '@smithy/core': 3.40.0
+      '@smithy/fetch-http-handler': 5.8.1
+      '@smithy/node-http-handler': 4.14.2
+      '@smithy/types': 4.20.0
+      tslib: 2.9.1
+
+  '@aws-sdk/client-license-manager@3.1166.0':
     dependencies:
       '@aws-sdk/core': 3.981.0
       '@aws-sdk/credential-provider-node': 3.972.96
