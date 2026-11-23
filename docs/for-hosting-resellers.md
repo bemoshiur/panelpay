@@ -39,8 +39,12 @@ documentation for the current facts. TryAWS.now is not affiliated with WHMCS Lim
 ## Using it next to WHMCS
 
 A common path is to run both: keep WHMCS for your existing products and use TryAWS.now for the AWS-backed
-line. A WHMCS bridge (single sign-on, balance sync, or a product module that calls the TryAWS.now API) is **not
-included**. If you want to build one, open an issue, and see [CONTRIBUTING.md](../CONTRIBUTING.md).
+line. The [WHMCS addon](../pro/whmcs/README.md) opens the panel with the client's e-mail filled in and lets
+clients pay wallet top-ups through WHMCS invoices, which the panel verifies server to server before crediting. It
+is not full single sign-on and does not sync balances back into WHMCS.
+
+The quickest way to run both is **[TryAWS.now Pro](pro-edition.md)**: one CloudFormation stack in your AWS
+account, with the addon on the AMI (coming soon on AWS Marketplace).
 
 ## Before you resell AWS
 

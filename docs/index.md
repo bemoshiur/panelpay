@@ -9,9 +9,15 @@ provisioning. Start here.
 - [Architecture explained](architecture-explained.md): how it works on AWS, in plain language.
 - [FAQ](faq.md): quick answers.
 
+## I want the one-click Pro edition
+
+- **[TryAWS.now Pro install guide](pro-edition.md)**: one CloudFormation stack on one EC2 instance, WHMCS addon,
+  coming soon on AWS Marketplace.
+
 ## I sell hosting and use WHMCS
 
 - [For hosting resellers](for-hosting-resellers.md): fit, comparison, what to check before you resell AWS.
+- [WHMCS addon](../pro/whmcs/README.md): login with e-mail prefilled, wallet top-ups through WHMCS invoices.
 
 ## I want to build or contribute
 

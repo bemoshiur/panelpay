@@ -14,9 +14,9 @@ in their own currency from a prepaid wallet. Built with TypeScript, Next.js, Pos
 ![Status](https://img.shields.io/badge/status-pre--launch-orange)
 [![AWS Marketplace: Pro edition coming soon](https://img.shields.io/badge/AWS%20Marketplace-Pro%20edition%20coming%20soon-ff9900)](#choose-your-edition)
 
-<a href="#choose-your-edition"><img src="docs/assets/editions-banner.svg" alt="TryAWS.now editions: free open-source edition under Apache-2.0, and the Pro edition with a one-click AWS CloudFormation install, coming soon to AWS Marketplace" width="100%"></a>
+<a href="docs/pro-edition.md"><img src="docs/assets/editions-banner.svg" alt="TryAWS.now editions: free open-source edition under Apache-2.0, and the Pro edition with a one-click AWS CloudFormation install, coming soon to AWS Marketplace" width="100%"></a>
 
-[Website](https://tryaws.now) · [Documentation](docs/index.md) · [Architecture explained](docs/architecture-explained.md) ·
+[Website](https://tryaws.now) · **[Pro install guide](docs/pro-edition.md)** · [Documentation](docs/index.md) · [Architecture explained](docs/architecture-explained.md) ·
 [For hosting resellers](docs/for-hosting-resellers.md) · [FAQ](docs/faq.md) · [Contributing](CONTRIBUTING.md)
 
 **Created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [Connect on LinkedIn](https://www.linkedin.com/in/in-moshiur)**
@@ -54,8 +54,11 @@ design works for any region where customers cannot or do not want to pay AWS in 
 | Status  | Source available now                                                          | **Coming soon:** version 1.0.0 is in AWS Marketplace review. The link will appear here when the listing is public.   |
 
 Both editions are built from the same code. The Pro edition packages it for a single EC2 instance and installs
-it in minutes, so you do not need to run a multi-account AWS setup yourself. Pro architecture, template and
-installer: [pro/cfn](pro/cfn) and [pro/box/README.md](pro/box/README.md).
+it in minutes, so you do not need to run a multi-account AWS setup yourself.
+
+> **📘 Read the [TryAWS.now Pro install guide](docs/pro-edition.md)**: what the stack creates, parameters,
+> after-launch steps, WHMCS, costs and limits. Template and installer: [pro/cfn](pro/cfn) and
+> [pro/box/README.md](pro/box/README.md).
 
 ## Who is it for?
 
