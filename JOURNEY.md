@@ -388,3 +388,19 @@ Done (branch pro-1.0.1-licence-rotate):
 Not yet verified: `--rotate` against a real PostgreSQL (planned on the 1.0.1 test instance).
 
 Needs decision (owner): bake the 1.0.1 AMI (one t3.small for 15-30 min, about 1-2 cents, plus copy to us-east-1) and one end-to-end launch of the stack in the test account (about 15 minutes of t3.medium + EIP, under 5 cents), then delete the 1.0.0 seller AMI snapshot once 1.0.1 is ingested.
+
+## 2026-11-23 18:50 PRO-9 1.0.1 AMI built and tested end to end (track Pro, Claude)
+Owner approval: "হ্যাঁ, বানাও ও টেস্ট করো".
+- Release tc-pro-c0162d4bc0d9.tar.gz (95,923,576 bytes, sha256 e8e65ea0…3aff0) from main c0162d4 (PR #23). Contains box/product-sku = prod-ill7oycvmsrme and the fixed installer.
+- Bake in 739275468267 ap-southeast-1 (steps of pro/ami/build-ami.sh run through the AWS API): t3.small i-04f1dd280a33e27b1, console "TC-BAKE-OK c0162d4bc0d9", image ami-01345ef453ee9faa3 (IMDSv2).
+- End-to-end test on that image (t3.small, fake but well-formed answers and Cognito file, no AWS identity):
+  - `tc-install --answers` rc=0, steps 3/7 to 7/7;
+  - `tc-install --rotate` rc=0, secrets changed, .secrets.old removed;
+  - psql login with each of the five new role passwords: 5/5;
+  - postgresql, tc-firewall, tc-worker, tc-web, tc-admin, tc-caddy all active;
+  - licence.json written ("unknown": no instance role on the test instance, as expected).
+  The first test run stopped at "the cognito file is damaged": the fixture's client ids were shorter than 24 characters; real Cognito ids are 26. Fixture fixed, product unchanged.
+- Copied to us-east-1 as ami-0cb44abea7e723a37 (IMDSv2), shared with 542374379351, copied in the seller account as **ami-07eb0a9e8cbb79446**.
+- Cleanup: build and test instances terminated, security group and build bucket deleted, ap-southeast-1 image deregistered and its snapshot deleted. Left: the us-east-1 copy in 739 (delete after the seller copy is available) and the seller AMIs.
+- 1.0.1 template at https://tryawsnow-pro-mp-assets-739275468267.s3.amazonaws.com/1.0.1/tryawsnow-pro.yaml (public read added to the bucket policy).
+- Cost: about 35 minutes of t3.small in total, a few cents.

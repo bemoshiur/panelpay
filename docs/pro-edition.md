@@ -119,7 +119,7 @@ under `/etc/tc` and are never printed. To give all of them new values:
 1. Connect to the instance with SSH from your operator range and run
    `sudo tc-install --rotate`. It keeps your answers, generates new secrets, sets the new database
    passwords, rewrites the configuration and restarts the services. One-time codes that were
-   already sent stop working.
+   already sent stop working. If the run stops, run `sudo tc-install --rotate` again.
 2. If the WHMCS addon is on, open **Addons > TryAWS.now Panel** in WHMCS and paste the new bridge secret
    from `/etc/tc/bridge-secret.txt`.
 3. To change the WHMCS API credential, create a new one in WHMCS, delete `WHMCS_API_IDENTIFIER` and
