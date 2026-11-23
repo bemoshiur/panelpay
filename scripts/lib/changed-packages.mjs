@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const WORKSPACE_FOLDERS = ["apps", "packages", "functions"];
+const WORKSPACE_FOLDERS = ["apps", "packages", "functions", "pro"];
 
 // Folder -> package name for every workspace package, for example "packages/core" -> "@tc/core".
 export function readWorkspacePackages(root) {

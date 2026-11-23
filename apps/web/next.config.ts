@@ -41,6 +41,9 @@ export const AUTH_NOINDEX_SOURCES: readonly string[] = AUTH_PATHS.flatMap((path)
 ]);
 
 const nextConfig: NextConfig = {
+  // PRO-3: the Pro edition (one EC2) runs the standalone server under systemd. The Lambda build leaves
+  // `output` unset, as before.
+  ...(process.env["TC_BUILD_TARGET"] === "pro" ? { output: "standalone" as const } : {}),
   async headers() {
     return [
       ...PANEL_NOINDEX_SOURCES.map((source) => ({

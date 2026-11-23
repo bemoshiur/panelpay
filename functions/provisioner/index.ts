@@ -7,6 +7,7 @@ import {
   lifecycleHooks,
   parseMessageBody,
   type LogEvent,
+  type OperationQueue,
   type QueueMessage,
   type TcEnv,
 } from "@tc/core";
@@ -107,10 +108,14 @@ export interface ProvisionerConfig {
 }
 
 // Fail closed (R16): the message names the variable and never its value (R3, R14).
-export function readConfig(env: Record<string, string | undefined>): ProvisionerConfig {
+// PRO-1: the single-EC2 edition brings its own queue, so it does not need PROVISIONING_QUEUE_URL.
+export function readConfig(
+  env: Record<string, string | undefined>,
+  options: { readonly needsQueueUrl?: boolean } = {},
+): ProvisionerConfig {
   const bad = (name: string): Error => new Error(`provisioner: ${name} is missing or invalid`);
-  const queueUrl = env.PROVISIONING_QUEUE_URL;
-  if (typeof queueUrl !== "string" || !QUEUE_URL_PATTERN.test(queueUrl)) {
+  const queueUrl = env.PROVISIONING_QUEUE_URL ?? "";
+  if ((options.needsQueueUrl ?? true) && !QUEUE_URL_PATTERN.test(queueUrl)) {
     throw bad("PROVISIONING_QUEUE_URL");
   }
   const region = env.AWS_REGION;
@@ -122,8 +127,8 @@ export function readConfig(env: Record<string, string | undefined>): Provisioner
   return { queueUrl, region, env: tcEnv as TcEnv };
 }
 
-function buildDeps(): StepDeps {
-  const config = readConfig(process.env);
+export function buildDeps(options: { readonly queue?: OperationQueue } = {}): StepDeps {
+  const config = readConfig(process.env, { needsQueueUrl: options.queue === undefined });
   const clock = { now: () => new Date() };
   const access = createAwsAccess({ caller: "provisioner" });
   const log = (e: LogEvent) => console.log(JSON.stringify(e));
@@ -132,7 +137,9 @@ function buildDeps(): StepDeps {
   return {
     runTx: withTx,
     clock,
-    queue: createFifoQueue(createSqsSend(createSqsClient(config.region), config.queueUrl)),
+    queue:
+      options.queue ??
+      createFifoQueue(createSqsSend(createSqsClient(config.region), config.queueUrl)),
     // The registry is empty until WP4-T5, and the guard and the other hooks come with WP5-T4 and
     // WP5-T5: until then every operation ends in needs_attention (R16). The failed hook of a create
     // is the automatic reversal of WP4-T4; a rejected create runs it too (reject.ts).

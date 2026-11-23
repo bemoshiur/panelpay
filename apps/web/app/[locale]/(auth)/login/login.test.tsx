@@ -62,6 +62,18 @@ describe("the login form (16.9)", () => {
     expect(html).toContain("Sign in");
   });
 
+  it("PRO-6: fills in a plain e-mail from the query and drops anything else", () => {
+    expect(render("en", { email: "buyer@example.com" })).toContain('value="buyer@example.com"');
+    for (const bad of [
+      '"><script>@x.com',
+      "a b@example.com",
+      ["a@example.com"],
+      "x".repeat(300) + "@e.com",
+    ]) {
+      expect(render("en", { email: bad })).not.toMatch(/name="email"[^>]*value=/);
+    }
+  });
+
   it("re-checks next before it reaches the form", () => {
     expect(render("en", { next: "//evil.com" })).not.toContain('name="next"');
     expect(render("en", { next: "/wallet" })).toContain('name="next" value="/wallet"');

@@ -2,4 +2,5 @@ packages:
   - "apps/*"
   - "packages/*"
   - "functions/*"
+  - "pro/*"
 useNodeVersion: 24.22.2

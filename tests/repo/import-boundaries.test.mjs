@@ -36,6 +36,11 @@ it.each([
   ["packages/core/pricing/x.ts", 'import "node:https";', "packages/core is pure logic:"],
   ["apps/web/x.ts", 'import "@tc/fn-provisioner";', "R1:"],
   ["apps/admin/x.ts", 'import "../../functions/reader/index";', "R1:"],
+  // PRO-1: the single-EC2 worker reaches @tc/aws through the function handlers.
+  ["apps/web/x.ts", 'import "@tc/pro-worker";', "R1:"],
+  ["apps/admin/x.ts", 'import "../../pro/worker/main";', "R1:"],
+  ["packages/db/x.ts", 'import "@tc/pro-worker";', "R1:"],
+  ["apps/web/x.ts", 'await import("@tc/pro-worker");', "R1:"],
   ["packages/db/x.ts", 'import "@tc/fn-reader";', "R1:"],
   ["packages/core/pricing/x.ts", 'import "../../aws/index";', "R1:"],
   ["apps/web/x.ts", 'await import("@tc/aws");', "R1:"],
@@ -295,10 +300,11 @@ it.each([
   expect(await errors(filePath, code)).toEqual([]);
 });
 
-// W40a: every workspace folder except packages/aws and functions/* gets the R1 error for @tc/aws.
+// W40a: every workspace folder except packages/aws, functions/* and pro/* gets the R1 error for @tc/aws.
 // packages/core is pure logic and names @tc/aws in its own rule, so it gets that message.
 const SCOPE_FOLDERS = Object.keys(readWorkspacePackages(".")).filter(
-  (dir) => dir !== "packages/aws" && !dir.startsWith("functions/"),
+  // PRO-1: pro/* is the single-EC2 worker, a backend that runs the functions/ handlers (docs/pro/single-ec2-plan.md).
+  (dir) => dir !== "packages/aws" && !dir.startsWith("functions/") && !dir.startsWith("pro/"),
 );
 it("the workspace has apps and packages to test the scope with", () => {
   expect(SCOPE_FOLDERS).toEqual(expect.arrayContaining(["apps/web", "apps/admin", "packages/db"]));

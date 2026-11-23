@@ -350,7 +350,7 @@ it.each(ROLES)(
   },
 );
 
-it("recordDiscrepancy refuses a key outside the five, a non-scalar value and a bad paymentId, and writes nothing", async () => {
+it("recordDiscrepancy refuses a key outside the allowed six, a non-scalar value and a bad paymentId, and writes nothing", async () => {
   const before = Number((await t.pool.query("select count(*) as n from discrepancies")).rows[0].n);
   const bad: Record<string, unknown>[] = [
     { paymentId: uuidv7(), reason: "x", email: "a@example.test" },
