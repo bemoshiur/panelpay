@@ -463,6 +463,7 @@ export type { LimitDecision, LimitRule, LimitSubjectKind } from "./repositories/
 export type { CustomerLimit, RateLimitsRepo } from "./repositories/customer/rate-limits";
 export type { NewPayment, PaymentRow, PaymentsRepo } from "./repositories/customer/payments";
 export { systemPayments, PAYMENT_DISCREPANCY_KEYS } from "./repositories/system/payments";
+export { systemWhmcs, type WhmcsCustomerMatch } from "./repositories/system/whmcs";
 export type { OutcomeFields, SystemPayments } from "./repositories/system/payments";
 export {
   applyCatalogScope,

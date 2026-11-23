@@ -12,7 +12,17 @@ Status: plan, 23 Nov 2026. Owner decisions are in "Decisions". Nothing here chan
   EULA grants a perpetual right to keep running the version installed during the contract. Only updates and
   support stop when the contract ends. The licence check is ours, so it honours that rule.
 - Target buyers: WHMCS customers and hosting resellers who want to sell AWS Lightsail under their brand.
-- No extra AWS bill for TiCON beyond cents of build time. Each step that starts paid resources asks first.
+- **No extra AWS bill for TiCON** (owner, 23 Nov 2026 02:05-02:20): nothing is created in TiCON's accounts
+  without the owner's approval of that step and its cost. Each step that starts paid resources asks first.
+- R2 and R3 for Pro only (owner, 23 Nov 2026 02:20): PostgreSQL and the secrets live on the buyer's instance.
+- R1 on one box: the web, admin and Caddy units cannot reach the instance metadata service, so only the
+  worker holds AWS credentials (security review H2, pro/box/README.md).
+- Price confirmed as competitive: USD 199 for 36 months (owner, 23 Nov 2026 02:28).
+- WHMCS (owner, 23 Nov 2026 02:55): sign-in through the panel's own login page with the e-mail filled in
+  (no new sign-in system); wallet top-ups through WHMCS invoices that the panel credits only after it read
+  the paid invoice from the WHMCS API itself (the R6 rule applied to WHMCS, Pro edition only).
+- After the Marketplace listing is live, the same product is added in Partner Central as a **partner
+  solution**, so it shows on TiCON's AWS Partner Solutions Finder page (owner, 23 Nov 2026 02:28).
 
 ## What changes for one EC2
 
@@ -49,7 +59,9 @@ managed pieces that would be risky to rewrite.
 7. **PRO-7 AMI build.** Packer template, hardened Ubuntu, no secrets in the image, AWS Marketplace AMI scan.
    Asks before starting the build instance.
 8. **PRO-8 Listing.** AMI product in Partner Central (seller account 542374379351): 36-month contract USD 199,
-   EULA, usage instructions, support contact.
+   EULA, usage instructions, support contact. Once AWS publishes it, add it in Partner Central as a partner
+   solution linked to the Marketplace listing (Solutions Finder). Listing a product costs nothing; AWS takes
+   its listing fee from each sale.
 9. **PRO-9 Outreach.** WHMCS reseller lead list and Gmail drafts (sign-off "S M Moshiur Rahman", signature,
    clickable cal.com link), sent by the owner.
 

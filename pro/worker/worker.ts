@@ -18,6 +18,8 @@ export interface WorkerHandlers {
   readonly catalogSync: () => Promise<unknown>;
   readonly reconciler: () => Promise<unknown>;
   readonly ledgerCheck: () => Promise<unknown>;
+  /** PRO-5: the AWS Marketplace licence check (licence.ts). */
+  readonly licence: () => Promise<unknown>;
 }
 
 export interface Worker {
@@ -34,6 +36,7 @@ export function workerJobs(h: Omit<WorkerHandlers, "provision">): Job[] {
     { name: "reconciler", every: 3600, run: h.reconciler },
     { name: "catalog-sync", every: 86_400, run: h.catalogSync },
     { name: "ledger-check", dailyAtUtc: { hour: 20, minute: 0 }, run: h.ledgerCheck },
+    { name: "licence", every: 43_200, run: h.licence },
   ];
 }
 

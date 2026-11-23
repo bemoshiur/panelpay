@@ -25,6 +25,7 @@ const packages = {
   "functions/kyc-check": "@tc/fn-kyc-check",
   "functions/notifier": "@tc/fn-notifier",
   "functions/cognito-messages": "@tc/fn-cognito-messages",
+  "pro/whmcs-bridge": "@tc/pro-whmcs-bridge",
   "pro/worker": "@tc/pro-worker",
 };
 
