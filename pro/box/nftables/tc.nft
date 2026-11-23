@@ -3,6 +3,8 @@
 # - the panel (801) and the operator app (802) only from Caddy, so no local user can skip Caddy, its
 #   admin allowlist and the client address header it sets;
 # - PostgreSQL (5432) over TCP only from the platform users (root runs the installer's migrations).
+# - the instance metadata service (the instance role) only from root and tc-worker (security review M1 of
+#   PRO-8); the units of web, admin, caddy, bridge and backup also deny it with IPAddressDeny.
 # The table is ours alone and replaced as a whole, so it never touches rules of the buyer's own.
 table inet tc_local
 delete table inet tc_local
@@ -11,5 +13,7 @@ table inet tc_local {
 		type filter hook output priority 0; policy accept;
 		tcp dport { 801, 802 } meta skuid != "caddy" reject with tcp reset
 		tcp dport 5432 meta skuid != { "root", "postgres", "tc-web", "tc-admin", "tc-worker", "tc-bridge" } reject with tcp reset
+		ip daddr 169.254.169.254 meta skuid != { "root", "tc-worker" } reject
+		ip6 daddr fd00:ec2::254 meta skuid != { "root", "tc-worker" } reject
 	}
 }
