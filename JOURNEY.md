@@ -310,3 +310,26 @@ Risks:
 Needs decision:
 - A test stack launch (cost).
 - The refund policy text for the offer.
+
+## 2026-11-23 PRO-8 diagram public, test account, refund decision (track Pro, Claude)
+Owner decisions:
+- Make the diagram public.
+- Run one test stack.
+- Refund policy: "Full refund if requested within 24 hours of purchase".
+
+Done:
+- Staging bucket: BlockPublicAcls and IgnorePublicAcls stay on. The bucket policy makes only 1.0.0/architecture.png public (checked: 200); the template stays private (403). Account 420802202031 may read the template.
+- New member account **420802202031** "tryawsnow-pro-test" (aws+tryawsnow-pro-test@ticonsys.com, OrganizationAccountAccessRole), created in the TiCON organization. Free; nothing runs in it.
+- ami-0d957421c89bab25a shared with 420802202031.
+
+Not done: the test stack.
+- 739275468267 already holds the SaaS Tc roles with the same names, so the template cannot run there.
+- The management console session is the root user, and root cannot switch roles ("Invalid information in one or more fields").
+- The Mac CLI is publicpulse@739275468267, which the member role does not trust.
+- Needs the owner to sign in to the test account (root password reset on its e-mail) or another identity that can assume the role. No resource was created by the failed attempt.
+
+Finding: BlessBit Multicast (prod-7wxlkru2v4efc) is Limited, not Public. Step 4 of the listing is not started:
+- the buyer-onboarding landing page (ResolveCustomer);
+- the entitlement integration;
+- a $0 private test offer.
+AWS reviews these before a visibility change to Public.
