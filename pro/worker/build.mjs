@@ -7,7 +7,11 @@ import { fileURLToPath, URL } from "node:url";
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
 
 await build({
-  entryPoints: { main: here("./main.ts"), migrate: here("./migrate.ts") },
+  entryPoints: {
+    main: here("./main.ts"),
+    migrate: here("./migrate.ts"),
+    "licence-gate": here("./licence-gate.ts"),
+  },
   outdir: here("./dist"),
   outExtension: { ".js": ".mjs" },
   bundle: true,

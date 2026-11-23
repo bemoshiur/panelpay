@@ -103,6 +103,11 @@ export const TENANT_TABLES: Readonly<Record<string, string>> = Object.freeze({
 // wallets and ledger_accounts and reads customers by cognito_sub (the replay case). It is the second
 // exception to customerRepos, not reachable from it, no function of it takes a customer id, and only
 // packages/auth calls it (tests/repo/auth-boundaries.test.mjs).
+//
+// The system module repositories/system/whmcs.ts (PRO-6, Pro edition only) reads the tenant table
+// `customers` (with `markets`) by the verified e-mail of a WHMCS client, with no customer id, to find
+// whose wallet a paid WHMCS invoice credits. Not reachable from customerRepos, no function of it takes
+// a customer id (test/whmcs-system.test.ts), and only pro/whmcs-bridge calls it.
 export const NON_TENANT_TABLES: readonly string[] = Object.freeze([
   "markets",
   "fx_rates",

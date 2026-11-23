@@ -1,6 +1,6 @@
 [Unit]
-Description=TryAWS.now Pro: worker (provisioning queue, jobs, loopback invoke server)
-After=network-online.target postgresql.service
+Description=TryAWS.now Pro: worker (provisioning queue, jobs, invoke socket)
+After=network-online.target postgresql.service tc-firewall.service
 Wants=network-online.target
 Requires=postgresql.service
 
@@ -33,6 +33,12 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 CapabilityBoundingSet=
 SystemCallArchitectures=native
 UMask=0077
+# PRO-5: /var/lib/tc/licence.json (the licence status; the update gate reads it).
+StateDirectory=tc
+StateDirectoryMode=0755
+# The invoke socket (PRO-2): created by the worker only; the web tier (group tc) may connect.
+RuntimeDirectory=tc-invoke
+RuntimeDirectoryMode=0750
 
 [Install]
 WantedBy=multi-user.target

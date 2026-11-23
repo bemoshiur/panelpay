@@ -1,10 +1,11 @@
 import { timingSafeEqual } from "node:crypto";
+import { chmodSync } from "node:fs";
 import { createServer, type Server } from "node:http";
 
 // PRO-2. On the single EC2 of the Pro edition, the web tier calls the four read/check functions over the
 // loopback interface instead of lambda:InvokeFunction. This server stands in for the Lambda invoke API:
 //
-// - It listens on 127.0.0.1 or ::1 only (isLoopbackHost); nothing off the box can reach it.
+// - It listens on a Unix socket in the worker's own runtime directory; nothing off the box can reach it.
 // - Every call carries a shared token (root-only env file, PRO-3) compared in constant time.
 // - Only the named functions exist; the provisioner and the jobs are never reachable here (R1).
 // - The tier is fixed by this server to "web": the handler gets an ARN with the "web" alias, as Lambda
@@ -82,19 +83,20 @@ export function createInvokeHandler(options: {
   };
 }
 
-export function isLoopbackHost(host: string): boolean {
-  return host === "127.0.0.1" || host === "::1";
-}
-
-/** Starts the HTTP listener. Refuses any host that is not a loopback address (R16). */
+/**
+ * Starts the HTTP listener on a Unix socket (security review M2): only the worker can create it, in its
+ * own RuntimeDirectory (/run/tc-invoke, 0750, group tc), so no other local user can take it over while
+ * the worker restarts, and nothing off the box can reach it. Mode 0660 after listen.
+ */
 export function startInvokeServer(options: {
-  readonly host: string;
-  readonly port: number;
+  readonly socketPath: string;
   readonly handle: (req: InvokeRequest) => Promise<InvokeResponse>;
 }): Server {
-  if (!isLoopbackHost(options.host)) throw new Error("invoke server must bind to loopback");
-  if (!Number.isInteger(options.port) || options.port < 1024 || options.port > 65535) {
-    throw new Error("invoke port out of range");
+  if (
+    !/^\/[A-Za-z0-9._/-]{1,100}\.sock$/.test(options.socketPath) ||
+    options.socketPath.includes("..")
+  ) {
+    throw new Error("invoke socket path is not valid");
   }
   const server = createServer((req, res) => {
     const chunks: Buffer[] = [];
@@ -129,6 +131,8 @@ export function startInvokeServer(options: {
   });
   server.requestTimeout = 30_000;
   server.headersTimeout = 10_000;
-  server.listen(options.port, options.host);
+  server.listen(options.socketPath, () => {
+    chmodSync(options.socketPath, 0o660);
+  });
   return server;
 }
