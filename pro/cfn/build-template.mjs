@@ -88,7 +88,7 @@ const TC_ROLES = [
 
 const HOST = "^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$";
 const CIDR =
-  "^(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])){3}/([0-9]|[12][0-9]|3[0-2])$";
+  "^(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9])){3}/([89]|[12][0-9]|3[0-2])$"; // never wider than /8 (review L3)
 const PASSWORD_POLICY = {
   MinimumLength: 12,
   RequireLowercase: true,
@@ -109,6 +109,7 @@ const USER_DATA = [
   "#!/bin/bash",
   "# TryAWS.now Pro first boot (pro/cfn/build-template.mjs). No secret in this script.",
   "set -euo pipefail",
+  "umask 077 # the first-boot log and the answers are root-only (review L2)",
   "install -d -m 0700 /root/tc",
   "cat >/root/tc/answers.env <<'TCEOF'",
   "TC_PANEL_HOST=${PanelDomain}",
@@ -145,7 +146,11 @@ export function buildTemplate() {
   };
   for (const [name, source, boundary] of TC_ROLES) {
     resources[name] = copyRole(source, name, boundary);
+    // Security review H1: Route 53 has no tag condition for hosted zones, so the DNS roles could change
+    // every zone of the account. They exist only when the buyer turns domains on (R12: off by default).
+    if (source === dns) resources[name].Condition = "DomainsEnabled";
   }
+  resources.DnsBoundary.Condition = "DomainsEnabled";
 
   resources.InstanceRole = {
     Type: "AWS::IAM::Role",
@@ -398,7 +403,10 @@ export function buildTemplate() {
     Type: "AWS::EC2::Instance",
     // The Tc roles are named in the instance role's policy by ARN (no reference), so wait for them
     // explicitly: the worker assumes them from the first minute.
-    DependsOn: [...TC_ROLES.map(([name]) => name), "FirstOperator"],
+    DependsOn: [
+      ...TC_ROLES.filter(([, source]) => source === pool).map(([name]) => name),
+      "FirstOperator",
+    ],
     Properties: {
       ImageId: { Ref: "ImageId" },
       InstanceType: { Ref: "InstanceType" },
@@ -410,7 +418,11 @@ export function buildTemplate() {
       SecurityGroupIds: [{ "Fn::GetAtt": ["SecurityGroup", "GroupId"] }],
       IamInstanceProfile: { Ref: "InstanceProfile" },
       KeyName: { "Fn::If": ["HasKeyName", { Ref: "KeyName" }, { Ref: "AWS::NoValue" }] },
-      Tags: [{ Key: "Name", Value: "tryawsnow-pro" }],
+      Tags: [
+        { Key: "Name", Value: "tryawsnow-pro" },
+        // The buyer's confirmation (security review H1), kept where an auditor can see it.
+        { Key: "tryawsnow:dedicated-account", Value: { Ref: "DedicatedAccount" } },
+      ],
       UserData: {
         "Fn::Base64": {
           "Fn::Sub": [USER_DATA, { ExternalId: EXTERNAL_ID }],
@@ -429,8 +441,8 @@ export function buildTemplate() {
   return {
     AWSTemplateFormatVersion: "2010-09-09",
     Description:
-      "TryAWS.now Pro by TiCON System Limited: one EC2 instance, its IAM roles and two Cognito user pools in " +
-      "your account. Built by pro/cfn/build-template.mjs; do not edit by hand.",
+      "TryAWS.now Pro by TiCON System Limited: one EC2 instance, its IAM roles and two Cognito user pools. " +
+      "Use an AWS account dedicated to TryAWS.now. Built by pro/cfn/build-template.mjs; do not edit by hand.",
     Metadata: {
       "AWS::CloudFormation::Interface": {
         ParameterGroups: [
@@ -485,6 +497,21 @@ export function buildTemplate() {
         Description:
           "Your office IP as a CIDR (e.g. 203.0.113.7/32): SSH and the operator app allow only this.",
       },
+      DedicatedAccount: {
+        Type: "String",
+        AllowedValues: ["yes"],
+        Description:
+          "Install in an AWS account (or AWS Organizations member account) used only for TryAWS.now: the " +
+          "platform's roles can change every Lightsail resource of this account in its Regions. Type yes to confirm.",
+      },
+      EnableDomains: {
+        Type: "String",
+        Default: "no",
+        AllowedValues: ["no", "yes"],
+        Description:
+          "yes: also create the Route 53 roles for selling domains and DNS zones (they can change every " +
+          "hosted zone of this account; keep your own domains in another account).",
+      },
       KeyName: {
         Type: "String",
         Default: "",
@@ -492,7 +519,10 @@ export function buildTemplate() {
           "Optional EC2 key pair for SSH. Empty: no key (use EC2 Instance Connect or none).",
       },
     },
-    Conditions: { HasKeyName: { "Fn::Not": [{ "Fn::Equals": [{ Ref: "KeyName" }, ""] }] } },
+    Conditions: {
+      HasKeyName: { "Fn::Not": [{ "Fn::Equals": [{ Ref: "KeyName" }, ""] }] },
+      DomainsEnabled: { "Fn::Equals": [{ Ref: "EnableDomains" }, "yes"] },
+    },
     Resources: resources,
     Outputs: {
       PublicIp: {

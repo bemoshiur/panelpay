@@ -126,7 +126,11 @@ HOST_RE='^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$'
 ask TC_PANEL_HOST "Customer panel domain (e.g. panel.example.com)" "$HOST_RE"
 ask TC_ADMIN_HOST "Operator app domain (e.g. ops.example.com)" "$HOST_RE"
 ask TC_ADMIN_ALLOW "Operator IP allowlist, CIDRs separated by spaces" '^[0-9a-fA-F:./ ]{7,500}$'
-ask TC_ACME_EMAIL "Email for the TLS certificates (Let's Encrypt)" '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}$'
+# PRO-8 review L3: the allowlist is the operator app's second wall (R10); never wider than /8 (IPv4).
+for cidr in ${A[TC_ADMIN_ALLOW]}; do
+  [[ "$cidr" =~ /([0-7])$ ]] && die "the operator allowlist must not be wider than /8"
+done
+ask TC_ACME_EMAIL"Email for the TLS certificates (Let's Encrypt)" '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}$'
 ask AWS_REGION "AWS Region of this instance" '^[a-z]{2}(-[a-z]+)+-[0-9]$' "$(cloud-init query region 2>/dev/null || true)"
 ask COGNITO_CUSTOMER_POOL_ID "Cognito user pool id for customers" '^[a-z]{2}(-[a-z]+)+-[0-9]_[A-Za-z0-9]{1,55}$'
 ask COGNITO_CUSTOMER_CLIENT_ID "Cognito app client id for customers" '^[a-z0-9]{1,128}$'
@@ -402,7 +406,7 @@ psql_su "-c \"revoke connect on database ticoncloud from public\""
 say "7/7 services"
 install -m 0644 "$RELEASE/box/caddy/Caddyfile" "$ETC/Caddyfile"
 install -m 0644 "$RELEASE/box/nftables/tc.nft" "$ETC/tc.nft"
-for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup tc-bridge; do
+for u in tc-firewall tc-web tc-admin tc-worker tc-caddy tc-backup tc-backup-s3 tc-bridge; do
   install -m 0644 "$RELEASE/box/systemd/$u.service" /etc/systemd/system/
 done
 install -m 0644 "$RELEASE/box/systemd/tc-backup.timer" /etc/systemd/system/

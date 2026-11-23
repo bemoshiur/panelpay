@@ -235,3 +235,38 @@ Open:
 
 ## 2026-11-23 05:30 PRO-8 AMI scan result (track Pro, Claude)
 "Test add version 1.0.0" of prod-ill7oycvmsrme **Succeeded** (started 04:42, finished 05:10 GMT+6). ami-0e2d9ec91e9f6ebb7 passes the AWS Marketplace self-service scan. A test adds no version and changes no live listing. Next: owner decision on the Pro prerequisites (roles and Cognito, see the PRO-8 part 1 entry), then pricing ($199 for 36 months), the EULA and the real version.
+
+## 2026-11-23 PRO-8 one-click template and security review (track Pro, Claude)
+Owner decision (12:58): option (a), "AMI with CloudFormation". Branch pro-8-marketplace. No AWS call, no paid resource, nothing deployed.
+
+Shipped:
+- `pro/cfn/build-template.mjs` generates `pro/cfn/tryawsnow-pro.yaml`. It copies the Tc roles and boundaries from infra/org/pool-roles.yaml and dns-account.yaml unchanged and trusts them only to the stack's instance role plus ExternalId (the stack-id UUID). The template also makes the instance role (AssumeRole on the six Tc ARNs, CheckoutLicense, two Cognito reads, PutObject on the invoices bucket), the customer and operator pools with three clients and the first operator, the invoices bucket (retained), the security group, the EIP and the IMDSv2 instance. The ImageId parameter is `AWS::EC2::Image::Id` (Marketplace substitution). cfn-lint is clean, and `--check` keeps the YAML in step with the generator.
+- tc-install now: reads the client secrets with the instance role into /etc/tc/.cognito (0600); looks up the first operator's sub; writes the SST_RESOURCE_* links the web and admin apps read; and writes the worker's TC_ENV, pool, DNS and catalog settings.
+- seed-pool accepts stage `pro` (test first: it failed with the old refusal text, then passed).
+
+Bugs fixed:
+- Pro could not run end to end: no Tc roles, Cognito pools or pool row; worker TC_ENV missing; seed-pool rejected `pro`; SST links missing.
+- YAML 1.1 output, so `"ON"` stays a string and no aliases are written.
+
+Security review (security-reviewer) and fixes:
+- H1: the DNS roles are made only with EnableDomains=yes (default no), and the buyer must confirm a dedicated account (DedicatedAccount=yes, tagged on the instance).
+- H2: nftables rejects metadata traffic from every user except root and tc-worker. The README is corrected.
+- M1: the S3 backup copy moved to tc-backup-s3 (root, OnSuccess). tc-backup is denied metadata.
+- L1: residual risk, the client-secret reads. A repo test pins them to the installer only.
+- L2: umask 077 in the user data.
+- L3: the operator CIDR can be no wider than /8 (template pattern and installer).
+- L4: the shared 50-a-day Cognito e-mail quota is documented.
+
+Tests:
+- pro-cfn 19, box-layout updated; vitest 3939 passed.
+- The only failure is workspace-layout's .nvmrc check (the sandbox has Node 22 and the pin is 24). It is pre-existing and unrelated.
+- shellcheck: only the pre-existing SC1091 info. nft -c ok. prettier and eslint clean.
+
+Follow-ups:
+- VERIFY live: a tag-based condition on the destructive Lightsail actions (H1).
+- A global daily sign-up cap and an optional SES parameter (L4).
+- A test stack launch in a sandbox account.
+
+Needs decision:
+- A new AMI must be baked with this installer (about 1 cent) and copied to the seller account us-east-1 (a few cents). It replaces ami-0e2d9ec91e9f6ebb7. This needs owner approval.
+- Refund rules for the $199 contract are still open.

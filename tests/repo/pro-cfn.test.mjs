@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { URL } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -104,6 +105,30 @@ describe("pro/cfn/tryawsnow-pro.yaml", () => {
     for (const k of keys) expect(sh, k).toMatch(new RegExp(`\\bask ${k}\\b`));
   });
 
+  it("creates the Route 53 roles only when the buyer enables domains (security review H1, R12)", () => {
+    expect(t.Parameters.EnableDomains.Default).toBe("no");
+    expect(t.Parameters.DedicatedAccount.AllowedValues).toEqual(["yes"]);
+    for (const n of ["TcDnsProvisioner", "TcDnsReader", "DnsBoundary"]) {
+      expect(R[n].Condition, n).toBe("DomainsEnabled");
+    }
+    for (const n of ["TcProvisioner", "TcReader", "TcAccessDetails", "TcBillingReader"]) {
+      expect(R[n].Condition, n).toBeUndefined();
+    }
+  });
+
+  it("refuses an operator CIDR wider than /8 (security review L3)", () => {
+    const re = new RegExp(t.Parameters.OperatorCidr.AllowedPattern);
+    for (const ok of ["203.0.113.7/32", "10.0.0.0/8"]) expect(re.test(ok), ok).toBe(true);
+    for (const bad of ["0.0.0.0/0", "10.0.0.0/7", "203.0.113.7"])
+      expect(re.test(bad), bad).toBe(false);
+  });
+
+  it("writes the first-boot files root-only (security review L2)", () => {
+    const sub = R.Instance.Properties.UserData["Fn::Base64"]["Fn::Sub"][0];
+    expect(sub.indexOf("umask 077")).toBeGreaterThan(-1);
+    expect(sub.indexOf("umask 077")).toBeLessThan(sub.indexOf("answers.env"));
+  });
+
   it("keeps user pools and the invoice bucket when the stack is deleted", () => {
     for (const n of ["CustomerPool", "AdminPool", "InvoicesBucket"]) {
       expect(R[n].DeletionPolicy, n).toBe("Retain");
@@ -112,6 +137,35 @@ describe("pro/cfn/tryawsnow-pro.yaml", () => {
 
   it("quotes ON so that CloudFormation's YAML 1.1 parser does not read a boolean", () => {
     expect(committed).toContain('MfaConfiguration: "ON"');
+  });
+});
+
+describe("the instance role's Cognito reads (security review L1)", () => {
+  it("are used by the installer only, never by the worker, web, admin or functions code", () => {
+    const hits = execFileSync(
+      "git",
+      [
+        "grep",
+        "-l",
+        "-E",
+        "DescribeUserPoolClient|AdminGetUser|describe-user-pool-client|admin-get-user",
+        "--",
+        "apps",
+        "functions",
+        "packages",
+        "pro",
+      ],
+      { cwd: new URL("../..", import.meta.url), encoding: "utf8" },
+    )
+      .split("\n")
+      .filter(Boolean)
+      .sort();
+    expect(hits).toEqual([
+      "pro/box/README.md",
+      "pro/box/bin/tc-install.sh",
+      "pro/cfn/build-template.mjs",
+      "pro/cfn/tryawsnow-pro.yaml",
+    ]);
   });
 });
 
@@ -139,6 +193,10 @@ describe("tc-install, PRO-8", () => {
     ]) {
       expect(sh).toContain(line);
     }
+  });
+
+  it("refuses an operator allowlist entry wider than /8 (security review L3)", () => {
+    expect(sh).toContain("the operator allowlist must not be wider than /8");
   });
 
   it("never prints a Cognito client secret", () => {
