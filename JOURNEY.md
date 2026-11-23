@@ -270,3 +270,18 @@ Follow-ups:
 Needs decision:
 - A new AMI must be baked with this installer (about 1 cent) and copied to the seller account us-east-1 (a few cents). It replaces ami-0e2d9ec91e9f6ebb7. This needs owner approval.
 - Refund rules for the $199 contract are still open.
+
+## 2026-11-23 PRO-8 AMI rebuilt with the one-click installer (track Pro, Claude)
+Owner approval: "হ্যাঁ, বানাও ও কপি করো".
+- Release tc-pro-529967131d56.tar.gz (95,932,934 bytes, sha256 1b6e3553…974042). Built in 739275468267, ap-southeast-1, from base ami-09289bc217ad5e9e7. One t3.small run; the console showed TC-BAKE-OK 529967131d56 on the first try.
+- The image was copied to us-east-1 and shared with 542374379351. In the seller account it was copied as **ami-0d957421c89bab25a** (Available, not encrypted, private).
+- Cleanup, verified:
+  - build instance terminated; security group and temporary bucket deleted;
+  - both interim images in 739275468267 deregistered and their snapshots deleted (0 PRO images, 0 loose volumes in either Region);
+  - the old seller AMI ami-0e2d9ec91e9f6ebb7 deregistered with its snapshot.
+- Storage now: one snapshot in the seller account.
+
+Next:
+- Run "Test add version" on ami-0d957421c89bab25a.
+- Switch the listing to AMI with CloudFormation (upload pro/cfn/tryawsnow-pro.yaml).
+- Pricing ($199 / 36 months), the EULA, and the usage instructions.
