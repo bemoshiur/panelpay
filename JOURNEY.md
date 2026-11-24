@@ -421,3 +421,11 @@ Owner approval: "হ্যাঁ, বানাও ও টেস্ট করো"
 - Evidence: npx vitest run apps/web/brand.test.ts apps/web/messages packages/notify/test/otp-text.test.ts
   tests/repo/brand.test.mjs tests/repo/tag-ruleset.test.mjs tests/repo/golive.test.mjs tests/repo/infra-ci-oidc.test.mjs
   all pass. Full run: remaining failures need PostgreSQL (not in this sandbox) or Node 24 (.nvmrc), same as main.
+
+## 2026-11-24 16:15 BRAND-2 follow-up: template policy name, Marketplace assets, repository renamed
+
+- The CloudFormation template still named its inline policy `TryAwsNowPro` (a casing the bulk replace missed). It is now `PanelPayPro` (pro/cfn/build-template.mjs, regenerated pro/cfn/panelpay-pro.yaml).
+- GitHub repository renamed in its settings page: bemoshiur/tryaws.now is now bemoshiur/panelpay (GitHub redirects the old URL). Owner: rerun scripts/golive/ci-roles.sh so the CI OIDC trust names the new repository.
+- Marketplace listing assets regenerated with the PanelPay brand and pink theme and put in a new neutral bucket `ticon-mp-assets-739275468267` (us-east-1, prefixes panelpay-pro/ and blessbit/). The old bucket stays until the BlessBit listing and the restricted TryAWS-era versions no longer reference it.
+- Kept on purpose: the domain tryaws.now, the SST app name `tryaws-now` and every resource name derived from it (renaming would replace the deployed staging stack).
+- Evidence: `npx vitest run tests/repo` 1247 passed, 1 failed (workspace-layout Node 24 pin, environment, same on main).
