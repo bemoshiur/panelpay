@@ -51,10 +51,18 @@ describe("placeholder brand files", () => {
       expect(visible, name).toBe("PanelPay");
       expect(text, name).toMatch(/<text\b[^>]*font-family="[^"]*, sans-serif"/);
     }
-    expect(read(SOURCE, "symbol.svg").toString("utf8")).toContain('<path d="M15 19h34M15 32h34M15 45h17"');
-    expect(read(SOURCE, "symbol.svg").toString("utf8")).toContain('<circle cx="46" cy="45" r="6.8"');
-    expect(read(SOURCE, "logo.svg").toString("utf8")).toContain('<path d="M8 17.5h16M8 24.5h16M8 31.5h8"');
-    expect(read(SOURCE, "logo.svg").toString("utf8")).toContain('<circle cx="23" cy="31.5" r="3.4"');
+    expect(read(SOURCE, "symbol.svg").toString("utf8")).toContain(
+      '<path d="M15 19h34M15 32h34M15 45h17"',
+    );
+    expect(read(SOURCE, "symbol.svg").toString("utf8")).toContain(
+      '<circle cx="46" cy="45" r="6.8"',
+    );
+    expect(read(SOURCE, "logo.svg").toString("utf8")).toContain(
+      '<path d="M8 17.5h16M8 24.5h16M8 31.5h8"',
+    );
+    expect(read(SOURCE, "logo.svg").toString("utf8")).toContain(
+      '<circle cx="23" cy="31.5" r="3.4"',
+    );
   });
 
   it("hold no script, style, link, external URL or foreignObject", () => {

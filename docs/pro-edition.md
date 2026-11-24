@@ -15,7 +15,7 @@ account**, installed by **one AWS CloudFormation stack**. It is sold on AWS Mark
 | Install       | You build, configure and deploy                                  | One CloudFormation stack, about 15 minutes                                                       |
 | WHMCS         | Addon in [pro/whmcs](../pro/whmcs)                               | Same addon, shipped on the AMI                                                                   |
 | Updates       | `git pull`                                                       | Packaged updates while the contract is active; the installed version keeps running after it ends |
-| Support       | [GitHub issues](https://github.com/bemoshiur/panelpay/issues)  | Vendor support: business@ticonsys.com                                                            |
+| Support       | [GitHub issues](https://github.com/bemoshiur/panelpay/issues)    | Vendor support: business@ticonsys.com                                                            |
 | Refunds       | Not applicable                                                   | Full refund if requested within 24 hours of purchase                                             |
 
 Both editions are built from the same code.
@@ -69,7 +69,7 @@ or invoices by accident.
 | `InstanceType`      | `t3.medium` recommended; `t3.small` minimum                                           |
 | `RootVolumeGiB`     | 30 GiB default                                                                        |
 | `VpcId`, `SubnetId` | The VPC and its public subnet                                                         |
-| `DedicatedAccount`  | `yes` (confirms the account is used only for PanelPay)                              |
+| `DedicatedAccount`  | `yes` (confirms the account is used only for PanelPay)                                |
 | `EnableDomains`     | `yes` only if you will sell DNS zones and domains                                     |
 
 3. Acknowledge that the stack creates named IAM roles, and create the stack. It takes about 5 minutes. The

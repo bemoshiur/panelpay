@@ -43,14 +43,14 @@ design works for any region where customers cannot or do not want to pay AWS in 
 
 ## Choose your edition
 
-|         | **Open source** (this repository)                                             | **PanelPay Pro** on AWS Marketplace                                                                                |
+|         | **Open source** (this repository)                                             | **PanelPay Pro** on AWS Marketplace                                                                                  |
 | ------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | Price   | Free, [Apache-2.0](LICENSE)                                                   | $199 for a 36-month contract, billed through your AWS account                                                        |
 | Runs on | Your AWS Organization: Lambda, RDS, SQS and more, deployed with SST           | One Amazon EC2 instance in your own AWS account                                                                      |
 | Install | Clone, configure and deploy yourself ([Quick start](#quick-start-developers)) | One AWS CloudFormation stack: ready AMI, IAM roles, Amazon Cognito user pools, Amazon S3 invoices bucket, Elastic IP |
 | WHMCS   | Addon in [pro/whmcs](pro/whmcs)                                               | Addon included on the AMI                                                                                            |
 | Updates | `git pull`                                                                    | Packaged updates while the contract is active; the installed version keeps running after it ends                     |
-| Support | [GitHub issues](https://github.com/bemoshiur/panelpay/issues)               | Vendor support by TiCON System Limited (business@ticonsys.com)                                                       |
+| Support | [GitHub issues](https://github.com/bemoshiur/panelpay/issues)                 | Vendor support by TiCON System Limited (business@ticonsys.com)                                                       |
 | Status  | Source available now                                                          | **Coming soon:** version 1.0.0 is in AWS Marketplace review. The link will appear here when the listing is public.   |
 
 Both editions are built from the same code. The Pro edition packages it for a single EC2 instance and installs

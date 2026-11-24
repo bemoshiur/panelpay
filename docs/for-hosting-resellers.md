@@ -6,7 +6,7 @@ general-purpose billing system.
 
 ## What PanelPay is, and is not
 
-|                                                                  | PanelPay                                                                            | WHMCS (for comparison)                                                          |
+|                                                                  | PanelPay                                                                              | WHMCS (for comparison)                                                          |
 | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | What it is                                                       | A purpose-built panel, wallet, ledger and provisioner for **reselling AWS Lightsail** | A general-purpose billing and client-management platform for hosting businesses |
 | Licence                                                          | Open source, Apache-2.0                                                               | Commercial                                                                      |

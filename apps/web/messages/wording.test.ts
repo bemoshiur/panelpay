@@ -96,10 +96,7 @@ describe("wording check (WP9-T5)", () => {
       for (const [bn, en] of [
         ["PanelPay", "PanelPay"],
         ["PanelPay অ্যাডমিন", "PanelPay Admin"],
-        [
-          "বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।",
-          "PanelPay sells, bills and supports the service.",
-        ],
+        ["বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।", "PanelPay sells, bills and supports the service."],
         ["PanelPay-এর নিয়ম", "The rules of PanelPay."],
         [
           "এই শর্তাবলিতে “PanelPay” বলতে কোম্পানিকে বোঝায়।",
