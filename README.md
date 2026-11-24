@@ -2,9 +2,9 @@
 
 # PanelPay
 
-### Open-source AWS Lightsail reseller panel: prepaid wallet, billing and automatic provisioning
+### Open-source Amazon Lightsail reseller panel: prepaid wallet, billing and automatic provisioning
 
-Sell AWS Lightsail servers, databases, storage, CDN, DNS and domains under your own brand, to customers who pay
+Sell Amazon Lightsail servers, databases, storage, CDN, DNS and domains under your own brand, to customers who pay
 in their own currency from a prepaid wallet. Built with TypeScript, Next.js, PostgreSQL and SST on AWS.
 
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
@@ -51,7 +51,7 @@ design works for any region where customers cannot or do not want to pay AWS in 
 | WHMCS   | Addon in [pro/whmcs](pro/whmcs)                                               | Addon included on the AMI                                                                                            |
 | Updates | `git pull`                                                                    | Packaged updates while the contract is active; the installed version keeps running after it ends                     |
 | Support | [GitHub issues](https://github.com/bemoshiur/panelpay/issues)                 | Vendor support by TiCON System Limited (business@ticonsys.com)                                                       |
-| Status  | Source available now                                                          | **Coming soon:** version 1.0.0 is in AWS Marketplace review. The link will appear here when the listing is public.   |
+| Status  | Source available now                                                          | **Coming soon:** version 1.0.2 is in AWS Marketplace review. The link will appear here when the listing is public.   |
 
 Both editions are built from the same code. The Pro edition packages it for a single EC2 instance and installs
 it in minutes, so you do not need to run a multi-account AWS setup yourself.
@@ -120,7 +120,7 @@ Requirements: Node.js 24, pnpm 10, Docker.
 
 ```bash
 git clone https://github.com/bemoshiur/panelpay.git
-cd tryaws.now
+cd panelpay
 pnpm install
 pnpm db:up && pnpm db:migrate      # local PostgreSQL in Docker
 pnpm verify --quick                # lint, typecheck and unit tests of the packages you changed
