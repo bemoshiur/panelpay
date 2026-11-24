@@ -42,4 +42,4 @@ Related: [ledger-check-failed.md](ledger-check-failed.md), [refund.md](refund.md
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

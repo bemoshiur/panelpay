@@ -1,4 +1,4 @@
-# TryAWS.now Pro: single-EC2 edition, sold on AWS Marketplace
+# PanelPay Pro: single-EC2 edition, sold on AWS Marketplace
 
 Status: plan, 23 Nov 2026. Owner decisions are in "Decisions". Nothing here changes the open-source edition.
 

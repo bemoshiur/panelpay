@@ -342,7 +342,7 @@ describe("cognitoTotpPort", () => {
     expect(calls[0]!.body).toEqual({
       AccessToken: PLANTED.accessToken,
       UserCode: "123456",
-      FriendlyDeviceName: "TryAWS.now",
+      FriendlyDeviceName: "PanelPay",
     });
     expect(calls[1]!.headers["X-Amz-Target"]).toBe(
       "AWSCognitoIdentityProviderService.SetUserMFAPreference",

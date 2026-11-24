@@ -1,16 +1,16 @@
 cff-version: 1.2.0
-message: "If you use TryAWS.now in your work or research, please cite it as below."
-title: "TryAWS.now: an open-source AWS Lightsail reseller panel with prepaid wallet, billing and automatic provisioning"
+message: "If you use PanelPay in your work or research, please cite it as below."
+title: "PanelPay: an open-source AWS Lightsail reseller panel with prepaid wallet, billing and automatic provisioning"
 type: software
 authors:
   - family-names: "Rahman"
     given-names: "S M Moshiur"
     website: "https://www.linkedin.com/in/in-moshiur"
-repository-code: "https://github.com/bemoshiur/tryaws.now"
+repository-code: "https://github.com/bemoshiur/panelpay"
 url: "https://tryaws.now"
 license: Apache-2.0
 abstract: >-
-  TryAWS.now is a free, open-source control panel and billing system for reselling Amazon Lightsail. It combines
+  PanelPay is a free, open-source control panel and billing system for reselling Amazon Lightsail. It combines
   a prepaid wallet, an append-only double-entry ledger, a multi-account provisioning engine on AWS Lambda and
   SQS, tenant isolation, and Route 53 domains and DNS, built with TypeScript, Next.js, PostgreSQL and SST.
 keywords:

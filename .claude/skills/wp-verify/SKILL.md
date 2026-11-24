@@ -1,6 +1,6 @@
 ---
 name: wp-verify
-description: Run the proof of a task or a gate of the TryAWS.now mega plan and report evidence
+description: Run the proof of a task or a gate of the PanelPay mega plan and report evidence
 disable-model-invocation: true
 ---
 Target: $ARGUMENTS (a task id such as WP3-T1, or a gate M0 to M7)

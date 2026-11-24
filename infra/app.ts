@@ -1,4 +1,4 @@
-// The SST app of TryAWS.now (WP0-T2, WP0-T3, WP0-T4). Nothing here deploys by itself: a deploy is
+// The SST app of PanelPay (WP0-T2, WP0-T3, WP0-T4). Nothing here deploys by itself: a deploy is
 // `npx sst deploy --stage staging` by a person who was asked (CLAUDE.md), or the protected CI job.
 //
 // SST reads `sst.config.ts` at the repository root. SST 4 refuses every static import in a file named

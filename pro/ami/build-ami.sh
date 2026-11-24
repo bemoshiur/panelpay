@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PRO-7. Builds the TryAWS.now Pro AMI in the AWS account of the current AWS CLI profile. The owner
+# PRO-7. Builds the PanelPay Pro AMI in the AWS account of the current AWS CLI profile. The owner
 # approved this step and its cost on 23 Nov 2026: one t3.small for about 15-30 minutes, a temporary S3
 # object and security group (deleted at the end, also on failure), and the AMI snapshot that stays.
 #
@@ -50,7 +50,7 @@ command aws s3 cp "$TGZ" "s3://$BUCKET/$NAME.tar.gz" --region "$REGION" --only-s
 URL="$(command aws s3 presign "s3://$BUCKET/$NAME.tar.gz" --expires-in 3600 --region "$REGION")"
 
 SG="$(aws ec2 create-security-group --group-name "tc-pro-ami-build-$STAMP" \
-  --description "TryAWS.now Pro AMI build: no inbound" --vpc-id "$VPC" --query GroupId)"
+  --description "PanelPay Pro AMI build: no inbound" --vpc-id "$VPC" --query GroupId)"
 # No inbound rule at all; the default egress rule lets the instance download its packages.
 
 USERDATA="$(mktemp)"
@@ -62,7 +62,7 @@ INSTANCE="$(aws ec2 run-instances --image-id "$BASE_AMI" --instance-type "$TYPE"
   --metadata-options HttpTokens=required,HttpPutResponseHopLimit=1,HttpEndpoint=enabled \
   --block-device-mappings 'DeviceName=/dev/sda1,Ebs={VolumeSize=16,VolumeType=gp3,DeleteOnTermination=true,Encrypted=false}' \
   --instance-initiated-shutdown-behavior stop \
-  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=tc-pro-ami-build},{Key=Project,Value=tryawsnow-pro}]" \
+  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=tc-pro-ami-build},{Key=Project,Value=panelpay-pro}]" \
   --query 'Instances[0].InstanceId')"
 rm -f "$USERDATA"
 echo "build-ami: build instance $INSTANCE ($TYPE) started; waiting for it to power off (up to 45 minutes)"
@@ -81,10 +81,10 @@ if ! grep -q "TC-BAKE-OK $RELEASE_ID" <<<"$CONSOLE"; then
   exit 1
 fi
 
-IMAGE="$(aws ec2 create-image --instance-id "$INSTANCE" --name "tryawsnow-pro-$RELEASE_ID-$STAMP" \
-  --description "TryAWS.now Pro $RELEASE_ID (Ubuntu 24.04, run sudo tc-install)" \
-  --tag-specifications "ResourceType=image,Tags=[{Key=Project,Value=tryawsnow-pro},{Key=Release,Value=$RELEASE_ID}]" \
-  "ResourceType=snapshot,Tags=[{Key=Project,Value=tryawsnow-pro},{Key=Release,Value=$RELEASE_ID}]" \
+IMAGE="$(aws ec2 create-image --instance-id "$INSTANCE" --name "panelpay-pro-$RELEASE_ID-$STAMP" \
+  --description "PanelPay Pro $RELEASE_ID (Ubuntu 24.04, run sudo tc-install)" \
+  --tag-specifications "ResourceType=image,Tags=[{Key=Project,Value=panelpay-pro},{Key=Release,Value=$RELEASE_ID}]" \
+  "ResourceType=snapshot,Tags=[{Key=Project,Value=panelpay-pro},{Key=Release,Value=$RELEASE_ID}]" \
   --query ImageId)"
 echo "build-ami: image $IMAGE being created"
 aws ec2 wait image-available --image-ids "$IMAGE"

@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-body">
-    <h3 class="card-title">TryAWS.now Panel</h3>
+    <h3 class="card-title">PanelPay Panel</h3>
     {if $openPanelUrl}
       <p><a class="btn btn-primary" href="{$openPanelUrl|escape:'html'}" target="_blank" rel="noopener">Open panel</a></p>
     {else}
@@ -15,7 +15,7 @@
     {elseif $error eq 'invoice_failed'}
       <div class="alert alert-danger">The invoice could not be created. Please contact support.</div>
     {/if}
-    <form method="post" action="index.php?m=tryawsnow">
+    <form method="post" action="index.php?m=panelpay">
       <input type="hidden" name="token" value="{$token}">
       <div class="input-group" style="max-width:320px">
         <span class="input-group-text">{$currency|escape:'html'}</span>

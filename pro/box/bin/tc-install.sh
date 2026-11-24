@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PRO-4. Installs or re-runs the setup of TryAWS.now Pro on ONE Ubuntu 24.04 instance in the buyer's own
+# PRO-4. Installs or re-runs the setup of PanelPay Pro on ONE Ubuntu 24.04 instance in the buyer's own
 # AWS account. Idempotent: a second run keeps every generated secret and only rewrites what the answers
 # change. Creates no AWS resource; AWS calls of the platform use the instance role (R3).
 #

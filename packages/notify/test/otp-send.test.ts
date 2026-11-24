@@ -52,7 +52,7 @@ it.each(["bn", "en"] as const)(
     expect(sms.sent).toHaveLength(1);
     expect(sms.sent[0]!.to).toBe(to);
     expect(sms.sent[0]!.text).toBe(
-      `TryAWS.now Your OTP is: ${lastCode(sms, to)}. Please do not share your OTP with anyone.`,
+      `PanelPay Your OTP is: ${lastCode(sms, to)}. Please do not share your OTP with anyone.`,
     );
     expect(sms.sent[0]!.reference).toBe(r.ok ? r.value.challengeId : "no challenge");
     const rows = await rowsOf(s.customerId);

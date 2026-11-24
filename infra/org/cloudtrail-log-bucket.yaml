@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now organization trail, part 1 of 2 (Sections 3.3 and 15 item 14): the KMS key and the S3
+  PanelPay organization trail, part 1 of 2 (Sections 3.3 and 15 item 14): the KMS key and the S3
   log bucket. Deploy in the LOG ARCHIVE account (tc-log-archive, proposed in accounts-and-ous.md) in
   the Region of the trail (ap-southeast-1), BEFORE cloudtrail-trail.yaml. Nobody can delete a log
   object: the bucket policy denies delete to everyone, versions are kept and Object Lock holds them.

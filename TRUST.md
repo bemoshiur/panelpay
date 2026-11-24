@@ -3,7 +3,7 @@
 Security, compliance and data-handling information for products of **TiCON System Limited** sold on
 AWS Marketplace:
 
-- **TryAWS.now Pro**: prepaid Amazon Lightsail reseller panel with WHMCS (AMI with CloudFormation).
+- **PanelPay Pro**: prepaid Amazon Lightsail reseller panel with WHMCS (AMI with CloudFormation).
 - **BlessBit Multicast**: one live feed to many Facebook Pages and YouTube channels (SaaS).
 
 Questions, or a document you need for a vendor review: **business@ticonsys.com** ·
@@ -21,7 +21,7 @@ Questions, or a document you need for a vendor review: **business@ticonsys.com**
 
 ## How each product handles your data
 
-### TryAWS.now Pro (runs in your AWS account)
+### PanelPay Pro (runs in your AWS account)
 
 TiCON does not host your data. The CloudFormation stack runs the panel in **your own AWS account**,
 so customer data, invoices and logs stay there.
@@ -29,7 +29,7 @@ so customer data, invoices and logs stay there.
 - **Access**: no long-lived AWS keys. The instance uses its instance role (IMDSv2 only, hop limit 1). The
   provisioning roles trust only that role, with an ExternalId.
 - **Least privilege**: IAM roles are scoped to the stack. Route 53 roles are created only if you turn on
-  domain selling (`EnableDomains=yes`). The stack must go in an account used only for TryAWS.now.
+  domain selling (`EnableDomains=yes`). The stack must go in an account used only for PanelPay.
 - **Network**: the security group opens 80 and 443. SSH is allowed only from your operator CIDR, which can
   be no wider than /8. A host firewall (nftables) keeps the internal ports local and blocks instance-metadata
   access for every user except root and the worker.

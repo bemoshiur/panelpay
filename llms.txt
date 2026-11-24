@@ -1,30 +1,30 @@
-# TryAWS.now
+# PanelPay
 
-> TryAWS.now is a free, open-source (Apache-2.0) control panel and billing system for reselling Amazon Lightsail: a prepaid wallet, a double-entry ledger, automatic provisioning of servers, databases, storage, CDN, DNS and domains across many AWS accounts, built with TypeScript, Next.js, PostgreSQL and SST. Created by S M Moshiur Rahman (https://www.linkedin.com/in/in-moshiur). Status: pre-launch, proven on staging, not yet taking real payments in production. It is not affiliated with AWS or WHMCS, and it gives no right to resell AWS.
+> PanelPay is a free, open-source (Apache-2.0) control panel and billing system for reselling Amazon Lightsail: a prepaid wallet, a double-entry ledger, automatic provisioning of servers, databases, storage, CDN, DNS and domains across many AWS accounts, built with TypeScript, Next.js, PostgreSQL and SST. Created by S M Moshiur Rahman (https://www.linkedin.com/in/in-moshiur). Status: pre-launch, proven on staging, not yet taking real payments in production. It is not affiliated with AWS or WHMCS, and it gives no right to resell AWS.
 
-TryAWS.now is an alternative to a general-purpose billing platform such as WHMCS for one job: selling AWS Lightsail resources with a prepaid wallet. It is not a WHMCS module.
+PanelPay is an alternative to a general-purpose billing platform such as WHMCS for one job: selling AWS Lightsail resources with a prepaid wallet. It is not a WHMCS module.
 
 ## Start here
 
-- [README](https://github.com/bemoshiur/tryaws.now/blob/main/README.md): what it is, features, quick start
-- [Architecture explained](https://github.com/bemoshiur/tryaws.now/blob/main/docs/architecture-explained.md): multi-account AWS design, STS AssumeRole, SQS provisioning, tenant isolation, ledger
-- [For hosting resellers and WHMCS sellers](https://github.com/bemoshiur/tryaws.now/blob/main/docs/for-hosting-resellers.md): fit and honest comparison
-- [FAQ](https://github.com/bemoshiur/tryaws.now/blob/main/docs/faq.md): short answers
+- [README](https://github.com/bemoshiur/panelpay/blob/main/README.md): what it is, features, quick start
+- [Architecture explained](https://github.com/bemoshiur/panelpay/blob/main/docs/architecture-explained.md): multi-account AWS design, STS AssumeRole, SQS provisioning, tenant isolation, ledger
+- [For hosting resellers and WHMCS sellers](https://github.com/bemoshiur/panelpay/blob/main/docs/for-hosting-resellers.md): fit and honest comparison
+- [FAQ](https://github.com/bemoshiur/panelpay/blob/main/docs/faq.md): short answers
 
 ## Specification and rules
 
-- [Specification index](https://github.com/bemoshiur/tryaws.now/blob/main/docs/spec/INDEX.md)
-- [The rules that are never broken](https://github.com/bemoshiur/tryaws.now/blob/main/docs/spec/02-rules-that-are-never-broken.md)
-- [Security gate before launch](https://github.com/bemoshiur/tryaws.now/blob/main/docs/spec/15-security-gate-before-launch.md)
+- [Specification index](https://github.com/bemoshiur/panelpay/blob/main/docs/spec/INDEX.md)
+- [The rules that are never broken](https://github.com/bemoshiur/panelpay/blob/main/docs/spec/02-rules-that-are-never-broken.md)
+- [Security gate before launch](https://github.com/bemoshiur/panelpay/blob/main/docs/spec/15-security-gate-before-launch.md)
 
 ## Operate and contribute
 
-- [Runbooks](https://github.com/bemoshiur/tryaws.now/blob/main/docs/runbooks/README.md)
-- [Contributing](https://github.com/bemoshiur/tryaws.now/blob/main/CONTRIBUTING.md)
-- [Security policy](https://github.com/bemoshiur/tryaws.now/blob/main/SECURITY.md)
+- [Runbooks](https://github.com/bemoshiur/panelpay/blob/main/docs/runbooks/README.md)
+- [Contributing](https://github.com/bemoshiur/panelpay/blob/main/CONTRIBUTING.md)
+- [Security policy](https://github.com/bemoshiur/panelpay/blob/main/SECURITY.md)
 
 ## Optional
 
-- [Licence (Apache-2.0)](https://github.com/bemoshiur/tryaws.now/blob/main/LICENSE)
-- [Attribution notice](https://github.com/bemoshiur/tryaws.now/blob/main/NOTICE)
+- [Licence (Apache-2.0)](https://github.com/bemoshiur/panelpay/blob/main/LICENSE)
+- [Attribution notice](https://github.com/bemoshiur/panelpay/blob/main/NOTICE)
 - [Website](https://tryaws.now)

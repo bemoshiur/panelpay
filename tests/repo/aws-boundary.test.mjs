@@ -147,7 +147,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 `;
-const ROOT_PKG = { name: "tryaws-now-platform" };
+const ROOT_PKG = { name: "panelpay-platform" };
 const WEB = { name: "@tc/web" };
 // The checksum is not checked by the reader; every fixture uses this one of ms@2.1.3.
 const SUM =
@@ -226,8 +226,8 @@ importers:
 `,
     );
     expect(readInstalledGraph(root)).toEqual({
-      packages: { ".": "tryaws-now-platform", "apps/web": "@tc/web", "packages/core": "@tc/core" },
-      graph: { "tryaws-now-platform": [], "@tc/web": ["@tc/core"], "@tc/core": [] },
+      packages: { ".": "panelpay-platform", "apps/web": "@tc/web", "packages/core": "@tc/core" },
+      graph: { "panelpay-platform": [], "@tc/web": ["@tc/core"], "@tc/core": [] },
     });
   });
 
@@ -297,7 +297,7 @@ importers:
   packages/aws: {}
 `,
     );
-    expect(readInstalledGraph(root).graph["tryaws-now-platform"]).toEqual(["@tc/aws"]);
+    expect(readInstalledGraph(root).graph["panelpay-platform"]).toEqual(["@tc/aws"]);
   });
 
   it("G5: a registry version gives the key, an alias gives the name of the package", () => {
@@ -492,7 +492,7 @@ importers:
 `,
     );
     expect(readInstalledGraph(root).graph).toEqual({
-      "tryaws-now-platform": [],
+      "panelpay-platform": [],
       "@tc/fn-reader": ["@tc/aws"],
       "@tc/aws": [],
     });
@@ -843,7 +843,7 @@ ${MS_ONLY}`;
   });
 
   it.each([
-    ["to the root", "tryaws-now-platform", "workspace:*", "link:../.."],
+    ["to the root", "panelpay-platform", "workspace:*", "link:../.."],
     ["to a folder that is no project", "x", "link:../../packages", "link:../../packages"],
     ["out of the repository", "x", "link:../../../x", "link:../../../x"],
     ["to a folder named constructor", "x", "link:../../constructor", "link:../../constructor"],
@@ -1561,7 +1561,7 @@ describe("readDirectLinks lists what a node_modules folder really holds", () => 
         target: "node_modules/.pnpm/x/node_modules/@tc/aws",
         packageName: "@tc/aws",
       },
-      { name: "up", target: ".", packageName: "tryaws-now-platform" },
+      { name: "up", target: ".", packageName: "panelpay-platform" },
     ]);
   });
 

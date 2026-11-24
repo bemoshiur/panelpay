@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now GitHub OIDC identity provider (R3: CI holds no AWS key). An account can hold only one
+  PanelPay GitHub OIDC identity provider (R3: CI holds no AWS key). An account can hold only one
   provider for this URL, and the three CI role templates build its ARN from the account and the host, so
   they work with a provider that exists already (created by hand or by another project). Deploy this
   template only when `aws iam list-open-id-connect-providers` shows none for

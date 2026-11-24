@@ -55,9 +55,9 @@ describe("support request messages (WPU-Z6)", () => {
     expect(supportEn.SupportRequests.thread.author).toEqual({
       customer: "You",
       visitor: "Sent from the public support form",
-      admin: "TryAWS.now support",
+      admin: "PanelPay support",
     });
-    expect(supportBn.SupportRequests.thread.author.admin).toBe("TryAWS.now সাপোর্ট");
+    expect(supportBn.SupportRequests.thread.author.admin).toBe("PanelPay সাপোর্ট");
   });
 
   // Final review (Z6 minors).

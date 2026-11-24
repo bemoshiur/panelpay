@@ -1,4 +1,4 @@
-# TryAWS.now platform
+# PanelPay platform
 
 Prepaid cloud panel for Bangladesh. Customer resources are Amazon Lightsail resources in
 TiCON's AWS pool accounts; DNS zones and domains are Amazon Route 53 resources in `tc-dns`. The money is real: wallet, double-entry ledger, EPS payments.

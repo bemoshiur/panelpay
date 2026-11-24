@@ -1,8 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now CI role TcCiDeployStaging and its permissions boundary TcCiRoleBoundaryStaging. Assumed through GitHub OIDC by the staging deploy job only (aud, sub = environment staging, job_workflow_ref on the protected branch). Changes the staging stage only, also in an account shared with production. Full notes are in the comments at the top of this file.
+  PanelPay CI role TcCiDeployStaging and its permissions boundary TcCiRoleBoundaryStaging. Assumed through GitHub OIDC by the staging deploy job only (aud, sub = environment staging, job_workflow_ref on the protected branch). Changes the staging stage only, also in an account shared with production. Full notes are in the comments at the top of this file.
 # Description (moved from the Description field: CloudFormation allows at most 1024 characters):
-# TryAWS.now CI role TcCiDeployStaging (R3, B.1 of docs/analysis/pending-audit.md) and the permissions
+# PanelPay CI role TcCiDeployStaging (R3, B.1 of docs/analysis/pending-audit.md) and the permissions
 # boundary TcCiRoleBoundaryStaging that every role it creates must carry. Assumed by the job `deploy` of
 # .github/workflows/deploy-staging.yml (and the job `remove` of remove-staging.yml) through GitHub OIDC. The
 # trust is the three conditions those workflows document: aud, sub = the GitHub environment `staging`, and

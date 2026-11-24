@@ -18,7 +18,7 @@ const base: InvoiceDocument = {
   kind: "invoice",
   number: "TC-2026-000042",
   issuedAt: new Date("2026-11-11T05:00:00Z"),
-  company: { name: "TryAWS.now", address: ["Dhaka"] },
+  company: { name: "PanelPay", address: ["Dhaka"] },
   customer: { name: "Rahim", address: "Mirpur, Dhaka" },
   lines: [],
   totalMinor: 0n,

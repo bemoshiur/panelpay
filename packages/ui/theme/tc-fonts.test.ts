@@ -179,7 +179,7 @@ describe("the composite family 'Open Sans' (16.4, WPU-F1)", () => {
   it("has a glyph for every character of the Bengali statements and product names of 16.13", () => {
     const texts = [
       "১০০% AWS অবকাঠামো। Amazon Lightsail দিয়ে তৈরি।",
-      "এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।",
+      "এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।",
       "ক্লাউড সার্ভার ম্যানেজড ডেটাবেস ব্লক স্টোরেজ অবজেক্ট স্টোরেজ লোড ব্যালান্সার কন্টেইনার সার্ভিস সিডিএন স্ট্যাটিক আইপি ব্যাকআপ প্ল্যান ইমেজ লোকেশন ডিএনএস, ডোমেইন টপ আপ AWS সার্ভিস মূল্য",
       "৳ ১,২৩৪.৫০ ০১৭১২৩৪৫৬৭৮৯",
     ];

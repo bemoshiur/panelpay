@@ -6,7 +6,7 @@ export const NOTIFIER_CONFIG_ERROR = "notifier: the configuration is not valid";
 export interface NotifierConfig {
   // https origin of the panel; the links in a message are built from it (16.14).
   readonly panelOrigin: string;
-  // "TryAWS.now <no-reply@...>" or a bare address: the verified identity of SES.
+  // "PanelPay <no-reply@...>" or a bare address: the verified identity of SES.
   readonly sesFrom: string;
 }
 

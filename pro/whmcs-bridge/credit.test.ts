@@ -64,7 +64,7 @@ function whmcsClient(email: string, currencyCode = "BDT"): WhmcsClient {
   return { clientId: String(++clientSeq), email, currencyCode };
 }
 const line = (c: WhmcsClient, amount: string, currency = c.currencyCode) => ({
-  description: `TryAWS.now wallet top-up (${currency} ${amount}) [ref ${clientRef(SECRET, c.clientId, c.email)}]`,
+  description: `PanelPay wallet top-up (${currency} ${amount}) [ref ${clientRef(SECRET, c.clientId, c.email)}]`,
   amount,
 });
 const paid = (invoiceId: string, c: WhmcsClient, amount = "25.00"): WhmcsInvoice => ({

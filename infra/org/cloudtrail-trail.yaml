@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now organization trail, part 2 of 2 (Sections 3.3 and 15 item 14): one trail, all accounts of
+  PanelPay organization trail, part 2 of 2 (Sections 3.3 and 15 item 14): one trail, all accounts of
   the organization, all approved Regions plus global events, log file validation on, SSE-KMS. Deploy in
   the MANAGEMENT account (or in a CloudTrail delegated administrator account, see VERIFY), in the home
   Region of the trail (ap-southeast-1), AFTER cloudtrail-log-bucket.yaml. Trusted access for CloudTrail

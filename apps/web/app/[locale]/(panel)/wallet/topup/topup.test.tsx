@@ -280,12 +280,12 @@ describe("/wallet/topup: errors and states", () => {
     expect(await render("en")).not.toContain("Payments waiting");
   });
 
-  it("explains how the payment works and that card details never reach TryAWS.now", async () => {
+  it("explains how the payment works and that card details never reach PanelPay", async () => {
     const en = await render("en");
     expect(en).toContain("You are taken to the secure EPS page to pay.");
-    expect(en).toContain("Card and mobile-wallet details never reach TryAWS.now.");
+    expect(en).toContain("Card and mobile-wallet details never reach PanelPay.");
     const bn = await render("bn");
-    expect(bn).toContain("কার্ড বা মোবাইল ওয়ালেটের তথ্য TryAWS.now-এ আসে না।");
+    expect(bn).toContain("কার্ড বা মোবাইল ওয়ালেটের তথ্য PanelPay-এ আসে না।");
   });
 });
 
@@ -300,7 +300,7 @@ describe("/wallet/topup: the EPS badge (WPU-X21)", () => {
       "Pay with EPS: Visa, Mastercard, American Express, DBBL Nexus, UnionPay and Bangladeshi mobile wallets and banks. Verified by EPS.",
     );
     expect(en).toContain(
-      "Payments are processed by EPS in taka; TryAWS.now never sees your card or wallet details.",
+      "Payments are processed by EPS in taka; PanelPay never sees your card or wallet details.",
     );
     const bn = await render("bn");
     expect(bn).toContain("EPS দিয়ে পেমেন্ট করুন: ভিসা");

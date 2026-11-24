@@ -1,5 +1,5 @@
-// PRO-8. Builds pro/cfn/tryawsnow-pro.yaml, the "AMI with CloudFormation" template of the Marketplace
-// listing: one stack in the buyer's account that makes everything TryAWS.now Pro needs and launches the
+// PRO-8. Builds pro/cfn/panelpay-pro.yaml, the "AMI with CloudFormation" template of the Marketplace
+// listing: one stack in the buyer's account that makes everything PanelPay Pro needs and launches the
 // instance. The Tc roles are copied from infra/org/pool-roles.yaml and infra/org/dns-account.yaml (same
 // permissions, same boundaries); only the trust changes: instead of the Lambda roles of a control plane,
 // the instance role of this stack, in this account, with the stack's ExternalId (R3).
@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 import YAML from "yaml";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const OUT = join(ROOT, "pro", "cfn", "tryawsnow-pro.yaml");
+const OUT = join(ROOT, "pro", "cfn", "panelpay-pro.yaml");
 const load = (p) => YAML.parse(readFileSync(join(ROOT, p), "utf8"));
 
 // Plain JSON data: a JSON round trip is a deep copy.
@@ -107,7 +107,7 @@ const NO_OAUTH = {
 // to root-only files. The instance user data therefore holds no secret (R3).
 const USER_DATA = [
   "#!/bin/bash",
-  "# TryAWS.now Pro first boot (pro/cfn/build-template.mjs). No secret in this script.",
+  "# PanelPay Pro first boot (pro/cfn/build-template.mjs). No secret in this script.",
   "set -euo pipefail",
   "umask 077 # the first-boot log and the answers are root-only (review L2)",
   "install -d -m 0700 /root/tc",
@@ -132,7 +132,7 @@ const USER_DATA = [
   "TCEOF",
   "chmod 0600 /root/tc/answers.env",
   "if /usr/local/sbin/tc-install --answers /root/tc/answers.env >/var/log/tc-firstboot.log 2>&1; then",
-  "  echo 'tc-firstboot: TryAWS.now Pro is installed' >/dev/console",
+  "  echo 'tc-firstboot: PanelPay Pro is installed' >/dev/console",
   "else",
   "  echo 'tc-firstboot: install failed, see /var/log/tc-firstboot.log' >/dev/console",
   "fi",
@@ -156,7 +156,7 @@ export function buildTemplate() {
     Type: "AWS::IAM::Role",
     Properties: {
       Description:
-        "TryAWS.now Pro instance. Only the tc-worker service reaches its credentials (IMDS).",
+        "PanelPay Pro instance. Only the tc-worker service reaches its credentials (IMDS).",
       AssumeRolePolicyDocument: {
         Version: "2012-10-17",
         Statement: [
@@ -347,7 +347,7 @@ export function buildTemplate() {
   resources.SecurityGroup = {
     Type: "AWS::EC2::SecurityGroup",
     Properties: {
-      GroupDescription: "TryAWS.now Pro: HTTPS and HTTP for everyone, SSH for the operator only",
+      GroupDescription: "PanelPay Pro: HTTPS and HTTP for everyone, SSH for the operator only",
       VpcId: { Ref: "VpcId" },
       SecurityGroupIngress: [
         {
@@ -420,9 +420,9 @@ export function buildTemplate() {
       IamInstanceProfile: { Ref: "InstanceProfile" },
       KeyName: { "Fn::If": ["HasKeyName", { Ref: "KeyName" }, { Ref: "AWS::NoValue" }] },
       Tags: [
-        { Key: "Name", Value: "tryawsnow-pro" },
+        { Key: "Name", Value: "panelpay-pro" },
         // The buyer's confirmation (security review H1), kept where an auditor can see it.
-        { Key: "tryawsnow:dedicated-account", Value: { Ref: "DedicatedAccount" } },
+        { Key: "panelpay:dedicated-account", Value: { Ref: "DedicatedAccount" } },
       ],
       UserData: {
         "Fn::Base64": {
@@ -442,8 +442,8 @@ export function buildTemplate() {
   return {
     AWSTemplateFormatVersion: "2010-09-09",
     Description:
-      "TryAWS.now Pro by TiCON System Limited: one EC2 instance, its IAM roles and two Cognito user pools. " +
-      "Use an AWS account dedicated to TryAWS.now. Built by pro/cfn/build-template.mjs; do not edit by hand.",
+      "PanelPay Pro by TiCON System Limited: one EC2 instance, its IAM roles and two Cognito user pools. " +
+      "Use an AWS account dedicated to PanelPay. Built by pro/cfn/build-template.mjs; do not edit by hand.",
     Metadata: {
       "AWS::CloudFormation::Interface": {
         ParameterGroups: [
@@ -462,7 +462,7 @@ export function buildTemplate() {
     Parameters: {
       ImageId: {
         Type: "AWS::EC2::Image::Id",
-        Description: "The TryAWS.now Pro AMI (AWS Marketplace fills this in).",
+        Description: "The PanelPay Pro AMI (AWS Marketplace fills this in).",
       },
       InstanceType: {
         Type: "String",
@@ -502,7 +502,7 @@ export function buildTemplate() {
         Type: "String",
         AllowedValues: ["yes"],
         Description:
-          "Install in an AWS account (or AWS Organizations member account) used only for TryAWS.now: the " +
+          "Install in an AWS account (or AWS Organizations member account) used only for PanelPay: the " +
           "platform's roles can change every Lightsail resource of this account in its Regions. Type yes to confirm.",
       },
       EnableDomains: {
@@ -557,7 +557,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const current = readFileSync(OUT, "utf8");
     if (current !== text) {
       process.stderr.write(
-        "pro/cfn/tryawsnow-pro.yaml is out of date: run node pro/cfn/build-template.mjs\n",
+        "pro/cfn/panelpay-pro.yaml is out of date: run node pro/cfn/build-template.mjs\n",
       );
       process.exit(1);
     }

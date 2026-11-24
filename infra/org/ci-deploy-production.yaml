@@ -1,8 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now CI role TcCiDeployProduction and its permissions boundary TcCiRoleBoundaryProduction. Assumed through GitHub OIDC by the production deploy job only, at a v* tag. Changes the production stage only, also in an account shared with staging. Full notes are in the comments at the top of this file.
+  PanelPay CI role TcCiDeployProduction and its permissions boundary TcCiRoleBoundaryProduction. Assumed through GitHub OIDC by the production deploy job only, at a v* tag. Changes the production stage only, also in an account shared with staging. Full notes are in the comments at the top of this file.
 # Description (moved from the Description field: CloudFormation allows at most 1024 characters):
-# TryAWS.now CI role TcCiDeployProduction (R3, B.1 of docs/analysis/pending-audit.md) and the permissions
+# PanelPay CI role TcCiDeployProduction (R3, B.1 of docs/analysis/pending-audit.md) and the permissions
 # boundary TcCiRoleBoundaryProduction that every role it creates must carry. Assumed by the job `deploy` of
 # .github/workflows/deploy-production.yml through GitHub OIDC. It is the ONLY production deploy role. The
 # trust is the three conditions that workflow documents: aud, sub = the GitHub environment `production`, and

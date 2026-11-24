@@ -1,5 +1,5 @@
 [Unit]
-Description=TryAWS.now Pro: worker (provisioning queue, jobs, invoke socket)
+Description=PanelPay Pro: worker (provisioning queue, jobs, invoke socket)
 After=network-online.target postgresql.service tc-firewall.service
 Wants=network-online.target
 Requires=postgresql.service

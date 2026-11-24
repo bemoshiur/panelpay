@@ -1,5 +1,5 @@
 # Configuration of the secret scan in .github/workflows/ci.yml.
-title = "TryAWS.now secret scan"
+title = "PanelPay secret scan"
 
 [extend]
 useDefault = true

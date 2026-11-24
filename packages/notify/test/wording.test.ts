@@ -44,34 +44,34 @@ describe("notify wording (WP9-T5)", () => {
     expect(SHARED.en.awsShort).toBe("100% AWS infrastructure. Built on Amazon Lightsail.");
   });
 
-  it("WPU-Z8: the brand TryAWS.now opens every SMS and is the wordmark and the footer note of every email", () => {
+  it("WPU-Z8: the brand PanelPay opens every SMS and is the wordmark and the footer note of every email", () => {
     let sms = 0;
     for (const catalog of [BN, EN]) {
       for (const [id, text] of Object.entries(catalog)) {
         if (text.sms === undefined) continue;
-        expect(text.sms.startsWith("TryAWS.now: "), id).toBe(true);
+        expect(text.sms.startsWith("PanelPay: "), id).toBe(true);
         sms += 1;
       }
     }
     expect(sms).toBeGreaterThanOrEqual(20);
-    expect(SHARED.bn.wordmark).toBe("TryAWS.now");
-    expect(SHARED.en.wordmark).toBe("TryAWS.now");
+    expect(SHARED.bn.wordmark).toBe("PanelPay");
+    expect(SHARED.en.wordmark).toBe("PanelPay");
     expect(SHARED.bn.footerNote).toBe(
-      "এই বার্তাটি আপনার TryAWS.now অ্যাকাউন্টের জন্য পাঠানো হয়েছে।",
+      "এই বার্তাটি আপনার PanelPay অ্যাকাউন্টের জন্য পাঠানো হয়েছে।",
     );
-    expect(SHARED.en.footerNote).toBe("This message was sent for your TryAWS.now account.");
+    expect(SHARED.en.footerNote).toBe("This message was sent for your PanelPay account.");
     for (const [kind, texts] of Object.entries(COGNITO_TEXTS)) {
-      expect(texts.bn.subject.startsWith("TryAWS.now"), kind).toBe(true);
-      expect(texts.en.subject.startsWith("TryAWS.now"), kind).toBe(true);
+      expect(texts.bn.subject.startsWith("PanelPay"), kind).toBe(true);
+      expect(texts.en.subject.startsWith("PanelPay"), kind).toBe(true);
     }
   });
 
-  it("OTP SMS text: the gateway's English format for every locale (WPU-Z3), with the brand TryAWS.now, no link, no other AWS name", () => {
+  it("OTP SMS text: the gateway's English format for every locale (WPU-Z3), with the brand PanelPay, no link, no other AWS name", () => {
     const text = otpSmsText("123456");
-    expect(text.startsWith("TryAWS.now ")).toBe(true);
+    expect(text.startsWith("PanelPay ")).toBe(true);
     expect(text).not.toMatch(/https?:|www\./i);
-    // 16.13: the owner's exception (2026-11-13) covers the exact token TryAWS.now and nothing else
-    expect(text.replace("TryAWS.now", "")).not.toMatch(/AWS|Amazon|Lightsail/i);
+    // 16.13: the owner's exception (2026-11-13) covers the exact token PanelPay and nothing else
+    expect(text.replace("PanelPay", "")).not.toMatch(/AWS|Amazon|Lightsail/i);
     expect(text).not.toMatch(/[ঀ-৿]/);
   });
 });

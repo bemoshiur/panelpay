@@ -1,6 +1,6 @@
 ---
 name: wp-start
-description: Start one task of the TryAWS.now mega plan by its id, for example WP3-T1
+description: Start one task of the PanelPay mega plan by its id, for example WP3-T1
 disable-model-invocation: true
 ---
 Task id: $ARGUMENTS

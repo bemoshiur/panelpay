@@ -15,7 +15,7 @@ const SENDER = "FAKESENDERID";
 const TO = "+8801712345678";
 const MSISDN = "8801712345678";
 const CODE = "123456";
-const TEXT = `TryAWS.now Your OTP is: ${CODE}. Please do not share your OTP with anyone.`;
+const TEXT = `PanelPay Your OTP is: ${CODE}. Please do not share your OTP with anyone.`;
 const URL_OF_THE_API = "https://isms.gennet.com.bd/api/v3/send-sms";
 
 interface Answer {
@@ -596,7 +596,7 @@ describe("GennetSmsTransport: secrets and personal data (R3, R14)", () => {
     const results: SmsTransportResult[] = [];
     for (const answer of answers) results.push(await sendWith(answer, "ref-5"));
     const shown = JSON.stringify(results);
-    for (const value of [TOKEN, SENDER, MSISDN, CODE, "TryAWS.now"]) {
+    for (const value of [TOKEN, SENDER, MSISDN, CODE, "PanelPay"]) {
       expect(shown).not.toContain(value);
     }
     // a failure carries one of the fixed reason words of the port and nothing else

@@ -101,7 +101,7 @@ describe("answer blocks (AEO, OmniRank gate answer-block)", () => {
   it("the entity statement names what, for whom, where and how it is billed, in both languages", () => {
     const en = MESSAGES.en.entity.statement;
     for (const part of [
-      "TryAWS.now",
+      "PanelPay",
       "Bangladesh",
       "Amazon Lightsail",
       "Singapore",
@@ -114,7 +114,7 @@ describe("answer blocks (AEO, OmniRank gate answer-block)", () => {
     }
     const bn = MESSAGES.bn.entity.statement;
     for (const part of [
-      "TryAWS.now",
+      "PanelPay",
       "বাংলাদেশ",
       "Amazon Lightsail",
       "Singapore",
@@ -205,10 +205,10 @@ describe("structured data (OmniRank gates schema, schema-required, speakable)", 
         const org = blocks.find((b) => b["@type"] === "Organization")!;
         expect(org).toMatchObject({
           "@id": `${ORIGIN}/#organization`,
-          name: "TryAWS.now",
+          name: "PanelPay",
           url: `${ORIGIN}/`,
-          // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now, with its BIN and trade licence.
-          legalName: "TryAWS.now",
+          // WPU-Y6 (owner, 2026-11-14): the company is PanelPay, with its BIN and trade licence.
+          legalName: "PanelPay",
           description: MESSAGES[locale].entity.statement,
           identifier: [
             { "@type": "PropertyValue", propertyID: "BIN", value: "000000000-0000" },
@@ -355,7 +355,7 @@ describe("metadata lengths (OmniRank gates title-length, description-length, og)
     };
     expect(og.title).toBe("t");
     expect(og.images).toEqual([
-      { url: `${ORIGIN}${OG_IMAGE.path}`, width: 1200, height: 630, alt: "TryAWS.now" },
+      { url: `${ORIGIN}${OG_IMAGE.path}`, width: 1200, height: 630, alt: "PanelPay" },
     ]);
   });
 });

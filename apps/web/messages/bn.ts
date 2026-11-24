@@ -3,13 +3,13 @@
 export const bn = {
   Web: {
     meta: {
-      title: "TryAWS.now",
+      title: "PanelPay",
       description:
         "বাংলাদেশের জন্য প্রিপেইড ক্লাউড প্যানেল। ১০০% AWS অবকাঠামো। Amazon Lightsail দিয়ে তৈরি।",
     },
-    announcement: "TryAWS.now শীঘ্রই আসছে।",
+    announcement: "PanelPay শীঘ্রই আসছে।",
     home: {
-      title: "TryAWS.now শীঘ্রই আসছে",
+      title: "PanelPay শীঘ্রই আসছে",
     },
   },
 };

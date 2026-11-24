@@ -5,8 +5,8 @@
 // removed the points that were still open, so no text holds an open note; a native speaker reviews the
 // Bengali. Each section has a numbered `title` and the paragraphs p1, p2, ... (LegalContent.tsx).
 // `{company}`, `{address}`, `{bin}` and `{tradeLicense}` are filled from the footer messages of the shell
-// (Section 1; WPU-Y6: the company is TryAWS.now), and `{brand}` from the shell's brand (WPU-Z8:
-// TryAWS.now), so that no text writes a name of its own.
+// (Section 1; WPU-Y6: the company is PanelPay), and `{brand}` from the shell's brand (WPU-Z8:
+// PanelPay), so that no text writes a name of its own.
 export const legalDocsBn = {
   terms: {
     title: "সেবার শর্তাবলি",

@@ -42,7 +42,7 @@ export interface SesTransport {
 
 export interface SesEmailOptions {
   readonly transport: SesTransport;
-  // "TryAWS.now <no-reply@...>": the verified identity of the SES account.
+  // "PanelPay <no-reply@...>": the verified identity of the SES account.
   readonly from: string;
   readonly timeoutMs?: number | undefined;
 }

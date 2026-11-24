@@ -93,7 +93,7 @@ describe("structured data", () => {
     expect(organizationLd(ORIGIN, { description: "d", legalName: "L" })).toMatchObject({
       "@type": "Organization",
       "@id": `${ORIGIN}/#organization`,
-      name: "TryAWS.now",
+      name: "PanelPay",
       legalName: "L",
       description: "d",
       // WPU-Y6: the BIN and the trade licence of the company as identifiers, exactly as the owner gave them.

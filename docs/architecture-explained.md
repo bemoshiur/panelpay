@@ -1,4 +1,4 @@
-# How TryAWS.now works on AWS (architecture explained)
+# How PanelPay works on AWS (architecture explained)
 
 This page explains, in plain language, how an AWS Lightsail reseller platform can be built safely: which AWS
 accounts it uses, how a purchase becomes a server, how money is kept correct, and how customers are kept apart.
@@ -78,7 +78,7 @@ deduplication id includes a counter, because SQS silently drops a repeated dedup
 ## 5. Keeping customers apart on shared infrastructure
 
 Lightsail filters traffic to the public IP only. Instances of different customers in the same pool account can
-see each other on the private network. TryAWS.now closes that gap: the first-boot script of every Linux instance
+see each other on the private network. PanelPay closes that gap: the first-boot script of every Linux instance
 installs `nftables` rules that **drop all traffic from the account's private network range**, then proves it by
 starting a small "beacon" that the platform probes from a fixed address. A server is marked ready only after the
 probe sees the proof marker. See [docs/spec/10-provisioning.md](spec/10-provisioning.md) section 10.4 and
@@ -127,4 +127,4 @@ number, not a promise.
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

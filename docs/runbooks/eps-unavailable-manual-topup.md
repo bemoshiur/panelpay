@@ -5,7 +5,7 @@ Section M: "EPS unavailable (manual top-up by a `finance` admin with a bank or w
 ## Trigger
 
 - EPS GetToken or InitializeEPS fails for many customers (payments marked `failed` at once), or EPS is announced as down.
-- A customer holds a bank or wallet receipt for money sent to TryAWS.now outside the gateway.
+- A customer holds a bank or wallet receipt for money sent to PanelPay outside the gateway.
 
 ## Who
 
@@ -46,4 +46,4 @@ Credit a wallet from a screenshot nobody checked; credit without a reason; appro
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

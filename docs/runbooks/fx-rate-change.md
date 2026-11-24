@@ -4,7 +4,7 @@ Rules: R4 (money is bigint paisa; decimal math only in `packages/core/pricing`; 
 
 ## Trigger
 
-The USD to BDT rate that TryAWS.now charges must change (the market moved, or the owner decides on a new rate). Prices of existing subscriptions are not changed by a new rate; renewals use "today's rate" (Section 11).
+The USD to BDT rate that PanelPay charges must change (the market moved, or the owner decides on a new rate). Prices of existing subscriptions are not changed by a new rate; renewals use "today's rate" (Section 11).
 
 ## Who
 
@@ -48,4 +48,4 @@ Use floats or spreadsheet rounding for the stored rate; change a price of an exi
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

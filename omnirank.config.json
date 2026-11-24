@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/bemoshiur/OmniRank/v0.4.0/schemas/omnirank.config.schema.json",
   "site": {
-    "name": "TryAWS.now",
-    "legalName": "TryAWS.now",
+    "name": "PanelPay",
+    "legalName": "PanelPay",
     "url": "https://tryaws.now",
     "entityType": "Organization",
     "locales": [
@@ -34,7 +34,7 @@
   },
   "geo": {
     "license": "CC-BY-4.0",
-    "attribution": "TryAWS.now",
+    "attribution": "PanelPay",
     "answerBlockSelector": ".subheading"
   },
   "aeo": {

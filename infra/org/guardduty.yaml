@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now GuardDuty (Sections 3.3 and 15 item 14): the detector of the delegated administrator
+  PanelPay GuardDuty (Sections 3.3 and 15 item 14): the detector of the delegated administrator
   account in ONE Region, and an alarm path for high severity findings. GuardDuty is regional: deploy
   this template once in each approved Region (ap-southeast-1, ap-south-1, us-east-1). Enabling every
   member account is the organization step in README.md ("GuardDuty"), not a CloudFormation resource.

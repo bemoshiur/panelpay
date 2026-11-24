@@ -35,7 +35,7 @@ interface Text {
 export const COGNITO_TEXTS: Readonly<Record<CognitoMessageKind, Readonly<Record<Locale, Text>>>> = {
   verify_code: {
     bn: {
-      subject: "TryAWS.now: আপনার ইমেইল যাচাইয়ের কোড",
+      subject: "PanelPay: আপনার ইমেইল যাচাইয়ের কোড",
       headline: "ইমেইল যাচাই করুন",
       body: [
         "আপনার ইমেইল যাচাই করতে নিচের কোডটি প্যানেলে লিখুন।",
@@ -44,7 +44,7 @@ export const COGNITO_TEXTS: Readonly<Record<CognitoMessageKind, Readonly<Record<
       ],
     },
     en: {
-      subject: "TryAWS.now: your email verification code",
+      subject: "PanelPay: your email verification code",
       headline: "Verify your email",
       body: [
         "Enter this code in the panel to verify your email.",
@@ -55,7 +55,7 @@ export const COGNITO_TEXTS: Readonly<Record<CognitoMessageKind, Readonly<Record<
   },
   reset_code: {
     bn: {
-      subject: "TryAWS.now: পাসওয়ার্ড রিসেটের কোড",
+      subject: "PanelPay: পাসওয়ার্ড রিসেটের কোড",
       headline: "পাসওয়ার্ড রিসেট",
       body: [
         "পাসওয়ার্ড রিসেট করতে নিচের কোডটি প্যানেলে লিখুন।",
@@ -64,7 +64,7 @@ export const COGNITO_TEXTS: Readonly<Record<CognitoMessageKind, Readonly<Record<
       ],
     },
     en: {
-      subject: "TryAWS.now: your password reset code",
+      subject: "PanelPay: your password reset code",
       headline: "Reset your password",
       body: [
         "Enter this code in the panel to reset your password.",
@@ -75,7 +75,7 @@ export const COGNITO_TEXTS: Readonly<Record<CognitoMessageKind, Readonly<Record<
   },
   admin_temp_password: {
     bn: {
-      subject: "TryAWS.now অ্যাডমিন: আপনার সাময়িক পাসওয়ার্ড",
+      subject: "PanelPay অ্যাডমিন: আপনার সাময়িক পাসওয়ার্ড",
       headline: "অ্যাডমিন অ্যাকাউন্ট তৈরি হয়েছে",
       body: [
         "আপনার অ্যাডমিন অ্যাকাউন্ট তৈরি হয়েছে।",
@@ -85,7 +85,7 @@ export const COGNITO_TEXTS: Readonly<Record<CognitoMessageKind, Readonly<Record<
       ],
     },
     en: {
-      subject: "TryAWS.now admin: your temporary password",
+      subject: "PanelPay admin: your temporary password",
       headline: "Your admin account is ready",
       body: [
         "Your admin account has been created.",

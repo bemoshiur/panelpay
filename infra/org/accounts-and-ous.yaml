@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now organization units (Section 3.1). Applied by DevOps in the MANAGEMENT account
+  PanelPay organization units (Section 3.1). Applied by DevOps in the MANAGEMENT account
   with a person's role (never by Claude Code, never by a CI role). Creates OUs only: the
   accounts are created by hand, see accounts-and-ous.md.
 # VERIFY: AWS::Organizations::OrganizationalUnit is available in the management account, in

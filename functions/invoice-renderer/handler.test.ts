@@ -16,7 +16,7 @@ const doc: InvoiceDocument = {
   kind: "invoice",
   number: "TC-2026-000042",
   issuedAt: new Date("2026-11-11T05:00:00Z"),
-  company: { name: "TryAWS.now", address: ["Dhaka"] },
+  company: { name: "PanelPay", address: ["Dhaka"] },
   // A test fixture only: these are not the owner's details. A tax invoice is refused without a seller.
   seller: {
     legalNameBn: "পরীক্ষা বিক্রেতা",

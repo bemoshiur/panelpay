@@ -1,6 +1,6 @@
-// WPU-B1, WPU-Z8: the product brand is TryAWS.now (owner decision 2026-11-13), after MeghVPS (WPU-B1) and
-// the first brand name before it. No old brand name may return to any text a customer reads. WPU-Y6: the company is
-// TryAWS.now too (below). Technical names (tc- prefixes, TiCON-Pools-Dev, ticon-log-protection, @tc/*)
+// BRAND-2 (owner, 2026-11-24): the product brand is PanelPay, after TryAWS.now (WPU-Z8, rejected by AWS
+// Marketplace for the AWS mark inside the name), MeghVPS (WPU-B1) and the first brand name before them. No old
+// brand name may return to any text a customer reads. WPU-Y6: the company is PanelPay too (below). Technical names (tc- prefixes, TiCON-Pools-Dev, ticon-log-protection, @tc/*)
 // stay and are not scanned for.
 import { spawnSync } from "node:child_process";
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
@@ -8,8 +8,9 @@ import { join } from "node:path";
 import { expect, it } from "vitest";
 
 const OLD = /TiCON\s+Cloud|টিকন\s+ক্লাউড/i;
-// WPU-Z8: the brand of WPU-B1, replaced by TryAWS.now.
-const FORMER = /MeghVPS|মেঘ\s*ভিপিএস/i;
+// WPU-Z8, BRAND-2: the brands of WPU-B1 and WPU-Z8, replaced by PanelPay. The all-lower-case domain name
+// "tryaws.now" is not the brand and is not matched (case-sensitive "TryAWS").
+const FORMER = /MeghVPS|মেঘ\s*ভিপিএস|TryAWS|ট্রাই\s*এডব্লিউএস/;
 
 const walk = (dir, out = []) => {
   for (const name of readdirSync(dir)) {
@@ -46,42 +47,41 @@ it("no customer-facing message, template, logo or invoice text says the first br
   expect(hits).toEqual([]);
 });
 
-it("no customer-facing message, template, logo or invoice text says MeghVPS (WPU-Z8)", () => {
+it("no customer-facing message, template, logo or invoice text says MeghVPS or TryAWS.now (WPU-Z8, BRAND-2)", () => {
   const files = customerFacing();
   expect(files.length).toBeGreaterThan(20);
   const hits = files.filter((f) => FORMER.test(readFileSync(f, "utf8")));
   expect(hits).toEqual([]);
 });
 
-it("the brand is TryAWS.now in the shell, the admin title, the mail wordmark, the SMS, the invoice and the site name", () => {
+it("the brand is PanelPay in the shell, the admin title, the mail wordmark, the SMS, the invoice and the site name", () => {
   for (const [file, part] of [
-    ["packages/ui/shells/messages/en.ts", 'brand: "TryAWS.now"'],
-    ["packages/ui/shells/messages/bn.ts", 'brand: "TryAWS.now"'],
-    ["packages/notify/templates/messages.ts", 'wordmark: "TryAWS.now"'],
-    ["packages/notify/sms/otp-text.ts", "`TryAWS.now Your OTP is: "],
-    ["packages/core/invoices/render.ts", '"TryAWS.now sells, bills and supports the service."'],
-    ["apps/web/server/public/seo.ts", 'SITE_NAME = "TryAWS.now"'],
-    ["apps/admin/messages/en.ts", "TryAWS.now Admin"],
-    ["apps/web/public/brand/logo.svg", 'aria-label="TryAWS.now"'],
-    ["apps/admin/public/brand/logo.svg", 'aria-label="TryAWS.now"'],
+    ["packages/ui/shells/messages/en.ts", 'brand: "PanelPay"'],
+    ["packages/ui/shells/messages/bn.ts", 'brand: "PanelPay"'],
+    ["packages/notify/templates/messages.ts", 'wordmark: "PanelPay"'],
+    ["packages/notify/sms/otp-text.ts", "`PanelPay Your OTP is: "],
+    ["packages/core/invoices/render.ts", '"PanelPay sells, bills and supports the service."'],
+    ["apps/web/server/public/seo.ts", 'SITE_NAME = "PanelPay"'],
+    ["apps/admin/messages/en.ts", "PanelPay Admin"],
+    ["apps/web/public/brand/logo.svg", 'aria-label="PanelPay"'],
+    ["apps/admin/public/brand/logo.svg", 'aria-label="PanelPay"'],
   ]) {
     expect(readFileSync(file, "utf8"), file).toContain(part);
   }
 });
 
-// WPU-Z8: the brand is written exactly "TryAWS.now" (capital T, A, W, S; ".now" in lower case), in Latin
-// letters in both locales. The all-lower-case "tryaws.now" is the domain name (out of this rule).
-it("writes the brand exactly TryAWS.now in every customer-facing file", () => {
+// BRAND-2: the brand is written exactly "PanelPay" (capital P twice), in Latin letters in both locales.
+it("writes the brand exactly PanelPay in every customer-facing file", () => {
   const wrong = [];
   for (const file of customerFacing()) {
-    for (const m of readFileSync(file, "utf8").matchAll(/try[\s_-]*aws[\s_-]*\.?[\s_-]*now/gi)) {
-      if (m[0] !== "TryAWS.now" && m[0] !== "tryaws.now") wrong.push(`${file}: ${m[0]}`);
+    for (const m of readFileSync(file, "utf8").matchAll(/panel[\s_-]*pay/gi)) {
+      if (m[0] !== "PanelPay" && m[0] !== "panelpay") wrong.push(`${file}: ${m[0]}`);
     }
   }
   expect(wrong).toEqual([]);
 });
 
-// WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now on every page, in every e-mail, invoice, GEO file
+// WPU-Y6 (owner, 2026-11-14): the company is PanelPay on every page, in every e-mail, invoice, GEO file
 // and JSON-LD: never "TiCON System Limited" / "TiCON System Ltd". A deliberate deviation from 16.14 of the
 // spec, which names the old legal entity. The BIN and the trade licence are written exactly as given.
 const OLD_COMPANY = /TiCON\s+System\s+(Limited|Ltd)|TICON\s+SYSTEM\s+(LIMITED|LTD)|টিকন\s+সিস্টেম/i;
@@ -109,7 +109,7 @@ it("no page, message, template, invoice, GEO file or JSON-LD names the old compa
   expect(hits).toEqual([]);
 });
 
-it("the company is TryAWS.now with its BIN and trade licence where the legal entity is printed (WPU-Y6)", () => {
+it("the company is PanelPay with its BIN and trade licence where the legal entity is printed (WPU-Y6)", () => {
   for (const file of [
     "packages/ui/shells/messages/en.ts",
     "packages/ui/shells/messages/bn.ts",
@@ -124,15 +124,15 @@ it("the company is TryAWS.now with its BIN and trade licence where the legal ent
   }
   for (const file of ["packages/ui/shells/messages/en.ts", "packages/ui/shells/messages/bn.ts"]) {
     const text = readFileSync(file, "utf8");
-    expect(text, file).toContain('companyName: "TryAWS.now"');
+    expect(text, file).toContain('companyName: "PanelPay"');
     expect(text, file).toContain('bin: "BIN: 000000000-0000"');
     expect(text, file).toContain('tradeLicense: "Trade License: TRAD/DNCC/000000/2000"');
   }
-  expect(readFileSync("apps/web/public/facts.json", "utf8")).toContain('"legalName": "TryAWS.now"');
+  expect(readFileSync("apps/web/public/facts.json", "utf8")).toContain('"legalName": "PanelPay"');
 });
 
 // WPU-Y6 (owner, 2026-11-14): the internal name of the first brand is gone too: the SST app is
-// "tryaws-now" and every text says TryAWS.now. Kept on purpose: the specification and the plans it was
+// "tryaws-now" and every text says PanelPay. Kept on purpose: the specification and the plans it was
 // split from (docs/spec, TICON_CLOUD_MEGA_PLAN.md and the first Bengali launch plan), the mockup, the
 // JOURNEY.md history, the migrations already on main, and the dated records of earlier sessions
 // (docs/audit, docs/analysis, docs/superpowers). The package scope @tc/*, the AWS names tc-<type>-<id>

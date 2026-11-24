@@ -1,6 +1,6 @@
 ---
 name: security-reviewer
-description: Reviews a diff of the TryAWS.now platform for security and tenant isolation gaps
+description: Reviews a diff of the PanelPay platform for security and tenant isolation gaps
 tools: Read, Grep, Glob, Bash
 model: opus
 ---

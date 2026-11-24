@@ -15,7 +15,7 @@ const CUSTOMER = "0193f7c2-5b8a-7c3e-9a1b-1234567890ab";
 const ADDRESS = "rahim.uddin@example.test";
 const config = {
   panelOrigin: "https://my.ticoncloud.test",
-  sesFrom: "TryAWS.now <no-reply@ticoncloud.test>",
+  sesFrom: "PanelPay <no-reply@ticoncloud.test>",
 };
 
 const DATA: Record<string, Record<string, string>> = {

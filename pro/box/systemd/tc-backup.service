@@ -1,5 +1,5 @@
 [Unit]
-Description=TryAWS.now Pro: nightly database backup
+Description=PanelPay Pro: nightly database backup
 After=postgresql.service
 Requires=postgresql.service
 OnSuccess=tc-backup-s3.service

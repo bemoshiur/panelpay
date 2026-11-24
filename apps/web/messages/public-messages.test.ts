@@ -25,7 +25,7 @@ describe("public site messages (WPP-T1 to WPP-T4)", () => {
     expect(Object.keys(items).length).toBeGreaterThanOrEqual(10);
     expect(publicEn.Public.help.items.realAws.a).toMatch(/^Yes, 100%/);
     expect(publicEn.Public.help.items.noAccount.a).toMatch(/^No\./);
-    expect(publicEn.Public.help.items.billing.a).toMatch(/^TryAWS\.now/);
+    expect(publicEn.Public.help.items.billing.a).toMatch(/^PanelPay/);
     expect(publicEn.Public.help.items.dataLocation.a).toMatch(/AWS Singapore/);
   });
 
@@ -50,15 +50,15 @@ describe("support through support requests, no phone and no e-mail (WPU-Z7)", ()
     }
   });
 
-  it("the FAQ says who bills and supports: TryAWS.now, through support requests in the panel, no phone", () => {
+  it("the FAQ says who bills and supports: PanelPay, through support requests in the panel, no phone", () => {
     const { billing, support } = publicEn.Public.help.items;
-    expect(billing.a).toMatch(/^TryAWS\.now\./);
+    expect(billing.a).toMatch(/^PanelPay\./);
     expect(billing.a).toContain("support requests in the panel");
     expect(billing.a).toContain("no support phone");
     expect(support.a).toContain("support request");
     expect(support.a).toContain("no support phone line or support email address");
     const bn = publicBn.Public.help.items;
-    expect(bn.billing.a).toMatch(/^TryAWS\.now।/);
+    expect(bn.billing.a).toMatch(/^PanelPay।/);
     expect(bn.billing.a).toContain("সাপোর্ট অনুরোধ");
     expect(bn.billing.a).toContain("ফোন লাইন নেই");
     expect(bn.support.a).toContain("সাপোর্ট অনুরোধ");
@@ -185,7 +185,7 @@ describe("legal drafts (WPU-Z7)", () => {
             .split(".")
             .reduce<unknown>((n, p) => (n as Record<string, unknown>)[p], tree.Public.legal.docs),
         );
-        expect(value, `${locale} ${key}`).not.toMatch(/TryAWS\.now|MeghVPS|TiCON\s+Cloud/i);
+        expect(value, `${locale} ${key}`).not.toMatch(/PanelPay|TryAWS|MeghVPS|TiCON\s+Cloud/i);
         uses += (value.match(/\{brand\}/g) ?? []).length;
       }
       expect(uses, locale).toBeGreaterThanOrEqual(10);

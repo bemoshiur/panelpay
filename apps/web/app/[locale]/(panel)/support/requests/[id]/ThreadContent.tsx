@@ -9,7 +9,7 @@ import type { ThreadAction } from "./ThreadForms.tsx";
 
 // The content of /support/requests/[id] (WPU-Z6), after viewticket.tpl: the request (subject, type, status,
 // times), then the thread oldest first (the text the customer sent, then every reply), then the reply form
-// and "Close request". An entry of support is signed "TryAWS.now support", never with a person's name or id
+// and "Close request". An entry of support is signed "PanelPay support", never with a person's name or id
 // (the repository never answers one). Times are in the customer's locale and digits. Text is plain text:
 // React escapes it, and a line break becomes <br>. Synchronous, so it renders in a test without a request.
 

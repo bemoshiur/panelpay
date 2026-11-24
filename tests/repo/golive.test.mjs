@@ -174,7 +174,7 @@ describe("scripts/golive/ci-roles.sh", () => {
     for (const d of deploys) {
       expect(d).toContain("GitHubOrg=bemoshiur");
       expect(d).toContain("GitHubOwnerId=11111");
-      expect(d).toContain("GitHubRepo=tryaws.now");
+      expect(d).toContain("GitHubRepo=panelpay");
       expect(d).toContain("GitHubRepoId=22222");
       expect(d).toContain("--capabilities CAPABILITY_NAMED_IAM");
     }

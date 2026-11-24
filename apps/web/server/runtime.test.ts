@@ -412,7 +412,7 @@ describe("assembleRuntime: the auth parts", () => {
       };
       return new Response(JSON.stringify(answer), { status: 200 });
     });
-    const text = "TryAWS.now Your OTP is: 123456. Please do not share your OTP with anyone.";
+    const text = "PanelPay Your OTP is: 123456. Please do not share your OTP with anyone.";
     expect(await runtime.otp?.sms.send("+8801712345678", text, "challenge-1")).toEqual({
       ok: true,
       messageId: "gw-1",

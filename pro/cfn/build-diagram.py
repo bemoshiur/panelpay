@@ -24,7 +24,7 @@ W,H=1560,878
 o=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
  '<defs><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#545B64"/></marker></defs>',
  f'<rect width="{W}" height="{H}" fill="#FFFFFF"/>',
- txt(W/2,38,"TryAWS.now Pro — AWS Marketplace AMI with CloudFormation (standard deployment)",22,"bold"),
+ txt(W/2,38,"PanelPay Pro — AWS Marketplace AMI with CloudFormation (standard deployment)",22,"bold"),
  txt(W/2,62,"One CloudFormation stack in the buyer's own AWS account (dedicated account recommended). All resources below are created by the template unless marked as existing.",13,"normal","middle","#545B64")]
 # outside actors
 o.append(node("resource/Users.svg" if False else "resource/User.svg",95,150,"Customers",("Browser, HTTPS 443",)))

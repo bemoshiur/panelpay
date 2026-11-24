@@ -1,6 +1,6 @@
 <div align="center">
 
-# TryAWS.now
+# PanelPay
 
 ### Open-source AWS Lightsail reseller panel: prepaid wallet, billing and automatic provisioning
 
@@ -14,7 +14,7 @@ in their own currency from a prepaid wallet. Built with TypeScript, Next.js, Pos
 ![Status](https://img.shields.io/badge/status-pre--launch-orange)
 [![AWS Marketplace: Pro edition coming soon](https://img.shields.io/badge/AWS%20Marketplace-Pro%20edition%20coming%20soon-ff9900)](#choose-your-edition)
 
-<a href="docs/pro-edition.md"><img src="docs/assets/editions-banner.svg" alt="TryAWS.now editions: free open-source edition under Apache-2.0, and the Pro edition with a one-click AWS CloudFormation install, coming soon to AWS Marketplace" width="100%"></a>
+<a href="docs/pro-edition.md"><img src="docs/assets/editions-banner.svg" alt="PanelPay editions: free open-source edition under Apache-2.0, and the Pro edition with a one-click AWS CloudFormation install, coming soon to AWS Marketplace" width="100%"></a>
 
 [Website](https://tryaws.now) · **[Pro install guide](docs/pro-edition.md)** · [Documentation](docs/index.md) · [Architecture explained](docs/architecture-explained.md) ·
 [For hosting resellers](docs/for-hosting-resellers.md) · [FAQ](docs/faq.md) · [Contributing](CONTRIBUTING.md)
@@ -25,9 +25,9 @@ in their own currency from a prepaid wallet. Built with TypeScript, Next.js, Pos
 
 ---
 
-## What is TryAWS.now?
+## What is PanelPay?
 
-**TryAWS.now is a free, open-source control panel and billing system for reselling Amazon Lightsail.** A
+**PanelPay is a free, open-source control panel and billing system for reselling Amazon Lightsail.** A
 customer signs up, tops up a prepaid wallet, and launches a server, a managed database, a storage bucket, a CDN
 distribution, a DNS zone or a domain from a simple panel. The platform charges the wallet, writes a
 double-entry ledger, creates the resource in your AWS accounts, and renews or suspends it on schedule.
@@ -43,20 +43,20 @@ design works for any region where customers cannot or do not want to pay AWS in 
 
 ## Choose your edition
 
-|         | **Open source** (this repository)                                             | **TryAWS.now Pro** on AWS Marketplace                                                                                |
+|         | **Open source** (this repository)                                             | **PanelPay Pro** on AWS Marketplace                                                                                  |
 | ------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | Price   | Free, [Apache-2.0](LICENSE)                                                   | $199 for a 36-month contract, billed through your AWS account                                                        |
 | Runs on | Your AWS Organization: Lambda, RDS, SQS and more, deployed with SST           | One Amazon EC2 instance in your own AWS account                                                                      |
 | Install | Clone, configure and deploy yourself ([Quick start](#quick-start-developers)) | One AWS CloudFormation stack: ready AMI, IAM roles, Amazon Cognito user pools, Amazon S3 invoices bucket, Elastic IP |
 | WHMCS   | Addon in [pro/whmcs](pro/whmcs)                                               | Addon included on the AMI                                                                                            |
 | Updates | `git pull`                                                                    | Packaged updates while the contract is active; the installed version keeps running after it ends                     |
-| Support | [GitHub issues](https://github.com/bemoshiur/tryaws.now/issues)               | Vendor support by TiCON System Limited (business@ticonsys.com)                                                       |
+| Support | [GitHub issues](https://github.com/bemoshiur/panelpay/issues)                 | Vendor support by TiCON System Limited (business@ticonsys.com)                                                       |
 | Status  | Source available now                                                          | **Coming soon:** version 1.0.0 is in AWS Marketplace review. The link will appear here when the listing is public.   |
 
 Both editions are built from the same code. The Pro edition packages it for a single EC2 instance and installs
 it in minutes, so you do not need to run a multi-account AWS setup yourself.
 
-> **📘 Read the [TryAWS.now Pro install guide](docs/pro-edition.md)**: what the stack creates, parameters,
+> **📘 Read the [PanelPay Pro install guide](docs/pro-edition.md)**: what the stack creates, parameters,
 > after-launch steps, WHMCS, costs and limits. Template and installer: [pro/cfn](pro/cfn) and
 > [pro/box/README.md](pro/box/README.md).
 
@@ -119,7 +119,7 @@ Read the long version with the reasons behind each choice in [Architecture expla
 Requirements: Node.js 24, pnpm 10, Docker.
 
 ```bash
-git clone https://github.com/bemoshiur/tryaws.now.git
+git clone https://github.com/bemoshiur/panelpay.git
 cd tryaws.now
 pnpm install
 pnpm db:up && pnpm db:migrate      # local PostgreSQL in Docker
@@ -192,7 +192,7 @@ privately: see [SECURITY.md](SECURITY.md).
 
 ## Credits
 
-TryAWS.now is created and maintained by **[S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur)**
+PanelPay is created and maintained by **[S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur)**
 ([LinkedIn](https://www.linkedin.com/in/in-moshiur)). If this project helps you, please keep the attribution in
 [NOTICE](NOTICE), star the repository, and share it.
 
@@ -205,6 +205,6 @@ TryAWS.now is created and maintained by **[S M Moshiur Rahman](https://www.linke
 
 <div align="center">
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
 
 </div>

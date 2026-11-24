@@ -114,7 +114,7 @@ describe("/support/requests", () => {
 });
 
 describe("/support/requests/[id]", () => {
-  it("shows the request first and the replies oldest first, signed You or TryAWS.now support", () => {
+  it("shows the request first and the replies oldest first, signed You or PanelPay support", () => {
     const text = textOf(render("thread.ready"));
     const order = [
       "My payment went through",
@@ -124,7 +124,7 @@ describe("/support/requests/[id]", () => {
     ].map((s) => text.indexOf(s));
     expect(order.every((p) => p >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    expect(text.match(/TryAWS\.now support/g)).toHaveLength(2);
+    expect(text.match(/PanelPay support/g)).toHaveLength(2);
     expect(text.match(/\bYou\b/g)).toHaveLength(2);
   });
 
@@ -138,7 +138,7 @@ describe("/support/requests/[id]", () => {
   it("formats the times in the customer's locale and digits", () => {
     expect(render("thread.ready")).toContain('dateTime="2026-11-11T05:00:00.000Z"');
     expect(render("thread.ready", "bn")).toMatch(/[০-৯]/);
-    expect(textOf(render("thread.ready", "bn"))).toContain("TryAWS.now সাপোর্ট");
+    expect(textOf(render("thread.ready", "bn"))).toContain("PanelPay সাপোর্ট");
   });
 
   it("shows no admin name or id: the thread data has none and the page adds none", () => {

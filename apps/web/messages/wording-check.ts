@@ -26,14 +26,12 @@ export function flatLeaves(tree: Messages): Map<string, string> {
 }
 
 const BENGALI = /[ঀ-৿]/;
-// WPU-Z8, owner decision 2026-11-13: the brand is "TryAWS.now", a deliberate deviation from 16.13 ("no AWS
-// mark inside a product name, a company name or a domain name"). The trademark question is closed by the
-// owner (WPU-Y6, 2026-11-14: "TryAWS.now is a different name"). The exception is this exact token, standing alone: "TryAWS", "TryAWS.com", the token in other
-// letter cases, "TryAWS.nowhere" or "MyTryAWS.now" are not the brand, and "aws-in-name" below catches them.
-const BRAND_TOKEN = /(?<![A-Za-z0-9][.-]?)TryAWS\.now(?![.-]?[A-Za-z0-9])/g;
+// BRAND-2 (owner, 2026-11-24): the brand is "PanelPay". The former brand (WPU-Z8) put the AWS mark inside a
+// product and a domain name, and AWS Marketplace rejected the listing for it (16.13), so the old exception for
+// that token is gone: "aws-in-name" below now catches every name with AWS inside it, the former brand included.
 // Brand and product marks that stay in Latin script inside Bengali text (16.13).
 const TOKENS =
-  /TryAWS\.now|TiCON|Amazon Lightsail|Amazon Route 53|Amazon Web Services|Amazon\.com, Inc\.|AWS|KYC|EPS|SSH|TOTP|DNS|CDN|HTTPS?|IPv[46]|IP|SMS|OTP|PDF|CSV|API|URL|TLS|SSL|MX|TXT|CNAME|NS|SOA|CAA|SRV|ICMP|TCP|UDP|BDT|GB|MB|TB|vCPU|RAM|SSD|bKash|Nagad|Rocket|Windows|Linux|Ubuntu|Debian|MySQL|PostgreSQL|WordPress|Docker|Node\.js|Cognito|Singapore|Mumbai|Virginia|ap-[a-z]+-\d|us-east-1/g;
+  /PanelPay|TiCON|Amazon Lightsail|Amazon Route 53|Amazon Web Services|Amazon\.com, Inc\.|AWS|KYC|EPS|SSH|TOTP|DNS|CDN|HTTPS?|IPv[46]|IP|SMS|OTP|PDF|CSV|API|URL|TLS|SSL|MX|TXT|CNAME|NS|SOA|CAA|SRV|ICMP|TCP|UDP|BDT|GB|MB|TB|vCPU|RAM|SSD|bKash|Nagad|Rocket|Windows|Linux|Ubuntu|Debian|MySQL|PostgreSQL|WordPress|Docker|Node\.js|Cognito|Singapore|Mumbai|Virginia|ap-[a-z]+-\d|us-east-1/g;
 
 /** True when the text holds no word that a translator would change. */
 export function isLanguageNeutral(text: string): boolean {
@@ -72,12 +70,11 @@ const FORBIDDEN: readonly { rule: string; test: RegExp; except?: RegExp }[] = [
   { rule: "bare-lightsail", test: /(?<!Amazon )Lightsail/ },
   { rule: "joined-mark", test: /\b(?:AWS|Amazon)(?:Lightsail|Route53)\b|Amazon-Lightsail/i },
   // 16.13 "Exact marks" and "Own brand first": AWS is never joined or hyphenated with another word, so it
-  // is never part of a name ("MyAWS", "AWS-Hosting", "TryAWS.com"). A Bengali case ending ("AWS-এর") is
-  // not a word, and the brand token is the one exception (BRAND_TOKEN).
+  // is never part of a name ("MyAWS", "AWS-Hosting", "MyAWS.now"). A Bengali case ending ("AWS-এর") is
+  // not a word.
   {
     rule: "aws-in-name",
     test: /[A-Za-z0-9][.-]?AWS|AWS[.-]?[A-Za-z0-9]/,
-    except: BRAND_TOKEN,
   },
   { rule: "route53", test: /(?<!Amazon )Route\s?53|Route53/ },
   { rule: "powered-by-aws", test: /powered\s+by\s+(?:AWS|Amazon)/i },
@@ -89,7 +86,7 @@ const FORBIDDEN: readonly { rule: string; test: RegExp; except?: RegExp }[] = [
   {
     // the brand (or the company) followed by an AWS mark, as if AWS were part of the product's name
     rule: "ticon-aws-product",
-    test: /(?:TryAWS\.now|TiCON)\s+(?:AWS|Lightsail)|(?:TryAWS\.now|TiCON)'s\s+AWS/i,
+    test: /(?:PanelPay|TiCON)\s+(?:AWS|Lightsail)|(?:PanelPay|TiCON)'s\s+AWS/i,
   },
   {
     rule: "aws-sku-name",

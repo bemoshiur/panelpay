@@ -6,7 +6,7 @@ import type { Locale } from "@tc/ui/runtime";
 // server, from fixed fields and the texts of the page; it is serialised with every character that
 // could end a script block escaped, so no text of a catalog or of a message can break out of it.
 
-export const SITE_NAME = "TryAWS.now";
+export const SITE_NAME = "PanelPay";
 
 /**
  * WPU-Z16: the date the public texts were last changed (ISO date, Asia/Dhaka). Shown at the foot of
@@ -126,7 +126,7 @@ export const organizationId = (origin: string): string => `${origin}/#organizati
 export const websiteId = (origin: string): string => `${origin}/#website`;
 
 /**
- * WPU-Y6 (owner, 2026-11-14): the two identifiers of the company TryAWS.now, exactly as the owner gave
+ * WPU-Y6 (owner, 2026-11-14): the two identifiers of the company PanelPay, exactly as the owner gave
  * them. The footer prints them with their labels (`Shell.footer.bin`, `Shell.footer.tradeLicense`); a
  * test keeps the two in step.
  */
@@ -142,7 +142,7 @@ export const companyIdentifiers = (): Ld[] => [
 export interface OrganizationFacts {
   /** The entity statement (`Public.entity.statement`) in the page's language. */
   description: string;
-  /** The company of the footer (`Shell.footer.companyName`): TryAWS.now (WPU-Y6). */
+  /** The company of the footer (`Shell.footer.companyName`): PanelPay (WPU-Y6). */
   legalName: string;
 }
 

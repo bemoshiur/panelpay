@@ -14,7 +14,7 @@ export const SAME_IN_BOTH: readonly WordingAllow[] = [
   { key: "kit.locale.*", reason: "each language is written in its own script in both locales" },
   { key: "Settings.profile.details.localeBn", reason: "language name in its own script" },
   { key: "Settings.profile.details.localeEn", reason: "language name in its own script" },
-  { key: "Shell.footer.companyName", reason: "the company name, the brand TryAWS.now (WPU-Y6)" },
+  { key: "Shell.footer.companyName", reason: "the company name, the brand PanelPay (WPU-Y6)" },
   {
     key: "Shell.footer.bin",
     reason: "WPU-Y6: the BIN of the company, written exactly as the owner gave it",
