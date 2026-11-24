@@ -11,7 +11,7 @@
     "build": "node build.mjs && node bundle-deps.mjs"
   },
   "dependencies": {
-    "@aws-sdk/client-license-manager": "3.1166.0",
+    "@aws-sdk/client-license-manager": "3.1175.0",
     "@tc/core": "workspace:*",
     "@tc/fn-access-details": "workspace:*",
     "@tc/fn-catalog-sync": "workspace:*",
