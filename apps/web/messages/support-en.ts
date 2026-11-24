@@ -7,7 +7,7 @@ export const supportEn: Same<typeof supportBn> = {
     meta: { title: "Contact support" },
     heading: "Contact support",
     intro:
-      "Write down your problem or question. The TryAWS.now support team answers in your support requests.",
+      "Write down your problem or question. The PanelPay support team answers in your support requests.",
     form: {
       title: "New request",
       category: {
@@ -85,7 +85,7 @@ export const supportEn: Same<typeof supportBn> = {
       author: {
         customer: "You",
         visitor: "Sent from the public support form",
-        admin: "TryAWS.now support",
+        admin: "PanelPay support",
       },
       earlier: "Some earlier replies are not shown here. Tell support if you need them.",
       closed: "This request is closed. Writing a reply below opens it again.",

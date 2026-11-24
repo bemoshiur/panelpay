@@ -1,5 +1,5 @@
 [Unit]
-Description=TryAWS.now Pro: run the database backup every night
+Description=PanelPay Pro: run the database backup every night
 
 [Timer]
 OnCalendar=*-*-* 21:30:00 UTC

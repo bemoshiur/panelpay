@@ -404,3 +404,20 @@ Owner approval: "হ্যাঁ, বানাও ও টেস্ট করো"
 - Cleanup: build and test instances terminated, security group and build bucket deleted, ap-southeast-1 image deregistered and its snapshot deleted. Left: the us-east-1 copy in 739 (delete after the seller copy is available) and the seller AMIs.
 - 1.0.1 template at https://tryawsnow-pro-mp-assets-739275468267.s3.amazonaws.com/1.0.1/tryawsnow-pro.yaml (public read added to the bucket policy).
 - Cost: about 35 minutes of t3.small in total, a few cents.
+
+## 2026-11-24 15:50 BRAND-2 rename TryAWS.now to PanelPay
+- Why: AWS Marketplace rejected the Pro listing (request djwfsqssecc5fhvr72m69dvo3, AUDIT_ERROR): AWS trademark
+  in the product name, combined with the product name, and in domain names/URLs. Owner chose the name PanelPay.
+- Changed: every customer-facing and developer-facing brand string (messages bn/en, shells, admin, e-mail and SMS
+  templates, invoices, SEO/GEO files, docs, README, Pro edition, CloudFormation template, WHMCS addon renamed to
+  `panelpay`, WHMCS bridge, MOTD), logos (new mark: three server panels with a coin), og.png, architecture diagram.
+- Tests: brand.test.mjs now also forbids "TryAWS" in customer-facing files; wording-check drops the TryAWS.now
+  exception, so "aws-in-name" catches the former brand; SMS OTP text is 71 characters.
+- Kept on purpose: the domain tryaws.now (no new domain bought yet: Needs decision), SST app name `tryaws-now`
+  and the `tryaws-now-<stage>-*` resource names (renaming would replace deployed stacks), docs/spec, design/mockup,
+  migrations and the plan (never edited in a task).
+- GitHub repo renamed to bemoshiur/panelpay; scripts/golive use GITHUB_REPO=panelpay. Needs owner: rerun
+  scripts/golive/ci-roles.sh so the CI OIDC roles trust the new repository name.
+- Evidence: npx vitest run apps/web/brand.test.ts apps/web/messages packages/notify/test/otp-text.test.ts
+  tests/repo/brand.test.mjs tests/repo/tag-ruleset.test.mjs tests/repo/golive.test.mjs tests/repo/infra-ci-oidc.test.mjs
+  all pass. Full run: remaining failures need PostgreSQL (not in this sandbox) or Node 24 (.nvmrc), same as main.

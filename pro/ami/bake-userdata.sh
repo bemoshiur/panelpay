@@ -41,16 +41,16 @@ say "install"
 snap install aws-cli --classic >/dev/null
 ln -sfn /opt/tc/current/box/bin/tc-install.sh /usr/local/sbin/tc-install
 
-cat >/etc/update-motd.d/99-tryawsnow <<'MOTD'
+cat >/etc/update-motd.d/99-panelpay <<'MOTD'
 #!/bin/sh
 if [ ! -f /etc/tc/answers.env ]; then
   echo
-  echo "  TryAWS.now Pro is installed but not set up yet."
+  echo "  PanelPay Pro is installed but not set up yet."
   echo "  Run:  sudo tc-install      (guide: /opt/tc/current/box/README.md)"
   echo
 fi
 MOTD
-chmod 0755 /etc/update-motd.d/99-tryawsnow
+chmod 0755 /etc/update-motd.d/99-panelpay
 
 say "clean"
 # AWS Marketplace AMI rules: no keys, no history, no logs of the build, a fresh identity at first boot.

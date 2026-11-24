@@ -377,7 +377,7 @@ describe("/support and /legal (WPP-T2, WPU-Z7)", () => {
         );
         expect(page, where).not.toMatch(/\{[A-Za-z]+\}/);
         if (doc === "terms" || doc === "privacy") {
-          // WPU-Y6: the provider is TryAWS.now with its BIN and trade licence, exactly as given.
+          // WPU-Y6: the provider is PanelPay with its BIN and trade licence, exactly as given.
           expect(main, where).toContain("BIN: 000000000-0000");
           expect(main, where).toContain("Trade License: TRAD/DNCC/000000/2000");
         }

@@ -96,7 +96,7 @@ export function geoPages(locale: Locale): GeoPage[] {
 const urlOf = (locale: Locale, path: string): string => GEO_SITE_URL + localePath(locale, path);
 
 /**
- * The company of the footer is the publisher. WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now, so
+ * The company of the footer is the publisher. WPU-Y6 (owner, 2026-11-14): the company is PanelPay, so
  * the attribution is the brand alone, and the BIN and the trade licence follow the company.
  */
 const company = (): string => SHELL.en.Shell.footer.companyName;

@@ -1,5 +1,5 @@
 [Unit]
-Description=TryAWS.now Pro: WHMCS bridge (credits paid WHMCS top-up invoices, PRO-6)
+Description=PanelPay Pro: WHMCS bridge (credits paid WHMCS top-up invoices, PRO-6)
 After=network-online.target postgresql.service tc-firewall.service
 Wants=network-online.target
 Requires=postgresql.service tc-firewall.service

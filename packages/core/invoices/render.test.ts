@@ -23,7 +23,7 @@ const doc: InvoiceDocument = {
   kind: "invoice",
   number: "TC-2026-000042",
   issuedAt: new Date("2026-11-11T05:00:00Z"),
-  company: { name: "TryAWS.now", address: ["House 1, Road 2", "Dhaka"] },
+  company: { name: "PanelPay", address: ["House 1, Road 2", "Dhaka"] },
   customer: { name: "Rahim & <Sons>", address: "Mirpur, Dhaka" },
   lines: [
     {
@@ -77,10 +77,10 @@ describe("renderInvoiceHtml", () => {
     expect(en).toContain(
       "Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of Amazon.com, Inc. or its affiliates.",
     );
-    expect(en).toContain("TryAWS.now sells, bills and supports the service.");
+    expect(en).toContain("PanelPay sells, bills and supports the service.");
     const bn = plain(renderInvoiceHtml(doc, "bn"));
     expect(bn).toContain("১০০% AWS অবকাঠামো। Amazon Lightsail দিয়ে তৈরি।");
-    expect(bn).toContain("বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়।");
+    expect(bn).toContain("বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।");
     expect(en).not.toMatch(/AWS Lightsail/);
   });
   it("escapes customer text, so it is never markup (R11)", () => {

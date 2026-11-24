@@ -126,7 +126,7 @@ describe("support_reply data and words", () => {
 
   it("the texts name no support phone, no support address and no brand (the brand is the shared wordmark)", () => {
     for (const catalog of [BN, EN]) {
-      expect(strings(catalog)).not.toMatch(/@|\+?880|\bphone\b|MeghVPS|TryAWS/i);
+      expect(strings(catalog)).not.toMatch(/@|\+?880|\bphone\b|MeghVPS|PanelPay/i);
     }
   });
 });

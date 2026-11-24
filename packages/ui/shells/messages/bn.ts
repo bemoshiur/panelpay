@@ -3,9 +3,9 @@
 export const bn = {
   Shell: {
     skip: "মূল অংশে যান",
-    brand: "TryAWS.now",
-    logoAlt: "TryAWS.now",
-    homeLabel: "TryAWS.now হোম",
+    brand: "PanelPay",
+    logoAlt: "PanelPay",
+    homeLabel: "PanelPay হোম",
     menu: "মেনু",
     close: "বন্ধ করুন",
     public: {
@@ -29,9 +29,9 @@ export const bn = {
       contact: "সাপোর্ট অনুরোধ",
       terms: "সেবার শর্তাবলি",
       privacy: "গোপনীয়তা নীতি",
-      // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now everywhere a customer or crawler reads it,
+      // WPU-Y6 (owner, 2026-11-14): the company is PanelPay everywhere a customer or crawler reads it,
       // with its two identifiers written exactly as the owner gave them, in both locales.
-      companyName: "TryAWS.now",
+      companyName: "PanelPay",
       bin: "BIN: 000000000-0000",
       tradeLicense: "Trade License: TRAD/DNCC/000000/2000",
       address: "Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000",
@@ -99,7 +99,7 @@ export const bn = {
   },
   Aws: {
     short: "১০০% AWS অবকাঠামো। Amazon Lightsail দিয়ে তৈরি।",
-    long: "এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।",
+    long: "এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।",
     trademark:
       "Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of Amazon.com, Inc. or its affiliates.",
   },

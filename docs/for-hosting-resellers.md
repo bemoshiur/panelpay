@@ -1,12 +1,12 @@
 # For hosting resellers and WHMCS sellers
 
 If you sell hosting, VPS or cloud and you are looking at AWS Lightsail as something to offer, this page helps you
-decide whether TryAWS.now fits. It is written to be fair: TryAWS.now is **not** a WHMCS module and not a
+decide whether PanelPay fits. It is written to be fair: PanelPay is **not** a WHMCS module and not a
 general-purpose billing system.
 
-## What TryAWS.now is, and is not
+## What PanelPay is, and is not
 
-|                                                                  | TryAWS.now                                                                            | WHMCS (for comparison)                                                          |
+|                                                                  | PanelPay                                                                            | WHMCS (for comparison)                                                          |
 | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | What it is                                                       | A purpose-built panel, wallet, ledger and provisioner for **reselling AWS Lightsail** | A general-purpose billing and client-management platform for hosting businesses |
 | Licence                                                          | Open source, Apache-2.0                                                               | Commercial                                                                      |
@@ -19,9 +19,9 @@ general-purpose billing system.
 | Maturity                                                         | Pre-launch, proven on staging                                                         | Mature, widely used                                                             |
 
 This table is a good-faith summary of public information and of this repository's code. Check each vendor's own
-documentation for the current facts. TryAWS.now is not affiliated with WHMCS Limited.
+documentation for the current facts. PanelPay is not affiliated with WHMCS Limited.
 
-## When TryAWS.now fits
+## When PanelPay fits
 
 - You want to sell **only AWS-backed** resources (servers, databases, storage, CDN, DNS, domains) with your own
   brand and your own prices.
@@ -38,12 +38,12 @@ documentation for the current facts. TryAWS.now is not affiliated with WHMCS Lim
 
 ## Using it next to WHMCS
 
-A common path is to run both: keep WHMCS for your existing products and use TryAWS.now for the AWS-backed
+A common path is to run both: keep WHMCS for your existing products and use PanelPay for the AWS-backed
 line. The [WHMCS addon](../pro/whmcs/README.md) opens the panel with the client's e-mail filled in and lets
 clients pay wallet top-ups through WHMCS invoices, which the panel verifies server to server before crediting. It
 is not full single sign-on and does not sync balances back into WHMCS.
 
-The quickest way to run both is **[TryAWS.now Pro](pro-edition.md)**: one CloudFormation stack in your AWS
+The quickest way to run both is **[PanelPay Pro](pro-edition.md)**: one CloudFormation stack in your AWS
 account, with the addon on the AMI (coming soon on AWS Marketplace).
 
 ## Before you resell AWS
@@ -65,4 +65,4 @@ account, with the addon on the AMI (coming soon on AWS Marketplace).
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

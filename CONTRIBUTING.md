@@ -1,6 +1,6 @@
-# Contributing to TryAWS.now
+# Contributing to PanelPay
 
-Thank you for helping. TryAWS.now is an open-source, prepaid AWS Lightsail reseller panel, and it gets better
+Thank you for helping. PanelPay is an open-source, prepaid AWS Lightsail reseller panel, and it gets better
 with people who know AWS, billing, payments, Next.js or hosting operations.
 
 By taking part you agree to the [Code of Conduct](CODE_OF_CONDUCT.md). By sending a contribution you agree it is
@@ -70,4 +70,4 @@ Do not use a public issue. See [SECURITY.md](SECURITY.md).
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

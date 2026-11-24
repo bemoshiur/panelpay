@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TryAWS.now: security alternate contact of every account (Section 3.3, Section 15 item 17,
+# PanelPay: security alternate contact of every account (Section 3.3, Section 15 item 17,
 # docs/runbooks/pool-account-onboarding.md step 4). AUTHORED ONLY. DevOps runs it by hand from the
 # management account (or the delegated administrator of AWS Account Management) with a person's role.
 # Claude Code never runs it.

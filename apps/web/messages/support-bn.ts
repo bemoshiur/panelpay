@@ -6,7 +6,7 @@ export const supportBn = {
     meta: { title: "সাপোর্টে অনুরোধ" },
     heading: "সাপোর্টে অনুরোধ",
     intro:
-      "সমস্যা বা প্রশ্ন লিখে পাঠান। TryAWS.now-এর সাপোর্ট দলের উত্তর আপনার সাপোর্ট অনুরোধে দেখা যাবে।",
+      "সমস্যা বা প্রশ্ন লিখে পাঠান। PanelPay-এর সাপোর্ট দলের উত্তর আপনার সাপোর্ট অনুরোধে দেখা যাবে।",
     form: {
       title: "নতুন অনুরোধ",
       category: {
@@ -64,7 +64,7 @@ export const supportBn = {
     field: { invalid: "এই ঘরের তথ্য ঠিক নয়।" },
   },
   // WPU-Z6: the customer's requests (/support/requests) and the thread of one (/support/requests/[id]).
-  // Support's replies are signed "TryAWS.now সাপোর্ট", never with the name of the person who wrote them.
+  // Support's replies are signed "PanelPay সাপোর্ট", never with the name of the person who wrote them.
   SupportRequests: {
     meta: { title: "সাপোর্ট অনুরোধ", threadTitle: "সাপোর্ট অনুরোধের বিস্তারিত" },
     heading: "সাপোর্ট অনুরোধ",
@@ -92,7 +92,7 @@ export const supportBn = {
       author: {
         customer: "আপনি",
         visitor: "সর্বজনীন সাপোর্ট ফর্ম থেকে পাঠানো",
-        admin: "TryAWS.now সাপোর্ট",
+        admin: "PanelPay সাপোর্ট",
       },
       earlier: "আগের কিছু উত্তর এখানে দেখানো হচ্ছে না। প্রয়োজনে সাপোর্টকে জানান।",
       closed: "এই অনুরোধটি বন্ধ। নিচে উত্তর লিখলে অনুরোধটি আবার খুলবে।",

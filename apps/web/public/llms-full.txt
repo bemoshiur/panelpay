@@ -1,21 +1,21 @@
-# TryAWS.now: full text
+# PanelPay: full text
 
-> TryAWS.now is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. TryAWS.now sells, bills and supports the service.
+> PanelPay is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. PanelPay sells, bills and supports the service.
 
 Canonical site: https://tryaws.now
-Published by TryAWS.now, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000
+Published by PanelPay, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000
 Identifiers: BIN: 000000000-0000, Trade License: TRAD/DNCC/000000/2000
 Last updated: 2026-11-15
 
 ## English
 
-### TryAWS.now: Cloud Server, built on Amazon Lightsail
+### PanelPay: Cloud Server, built on Amazon Lightsail
 
 URL: https://tryaws.now/en
 
 Prepaid cloud panel for Bangladesh. Cloud Server, built on Amazon Lightsail. Prices in taka, paid from a taka wallet, top up with EPS.
 
-TryAWS.now is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. TryAWS.now sells, bills and supports the service.
+PanelPay is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. PanelPay sells, bills and supports the service.
 
 ### Pricing: Cloud Server, built on Amazon Lightsail
 
@@ -23,7 +23,7 @@ URL: https://tryaws.now/en/pricing
 
 Cloud Server plans with prices in taka (BDT) for 30 days. Prices include VAT and fees. Built on Amazon Lightsail.
 
-Every Cloud Server price on TryAWS.now is in taka (BDT) for 30 days and already includes VAT and fees. At checkout you see the exact amount before you confirm, and exactly that amount is taken from your taka wallet, which you top up with EPS.
+Every Cloud Server price on PanelPay is in taka (BDT) for 30 days and already includes VAT and fees. At checkout you see the exact amount before you confirm, and exactly that amount is taken from your taka wallet, which you top up with EPS.
 
 ### Cloud Server, built on Amazon Lightsail
 
@@ -31,47 +31,47 @@ URL: https://tryaws.now/en/products/cloud-servers
 
 Cloud servers that run in the AWS Region Singapore or Mumbai. Plans, specifications and prices in taka. Built on Amazon Lightsail.
 
-A Cloud Server on TryAWS.now is an Amazon Lightsail instance that runs in the AWS Region Singapore or Mumbai. You pick a plan and a location, see the price in taka for 30 days with VAT and fees included, pay from your taka wallet, and manage the server from the TryAWS.now panel.
+A Cloud Server on PanelPay is an Amazon Lightsail instance that runs in the AWS Region Singapore or Mumbai. You pick a plan and a location, see the price in taka for 30 days with VAT and fees included, pay from your taka wallet, and manage the server from the PanelPay panel.
 
 ### Help and frequently asked questions
 
 URL: https://tryaws.now/en/help
 
-Answers about TryAWS.now and Amazon Lightsail: AWS, billing, support and where your data is.
+Answers about PanelPay and Amazon Lightsail: AWS, billing, support and where your data is.
 
-TryAWS.now sells Cloud Servers, built on Amazon Lightsail, in the AWS Region Singapore or Mumbai. You top up a wallet in taka with EPS and buy from it; prices are in taka (BDT), include VAT and fees, and are taken from the wallet at checkout. To buy, you verify your email and mobile and use an authenticator app.
+PanelPay sells Cloud Servers, built on Amazon Lightsail, in the AWS Region Singapore or Mumbai. You top up a wallet in taka with EPS and buy from it; prices are in taka (BDT), include VAT and fees, and are taken from the wallet at checkout. To buy, you verify your email and mobile and use an authenticator app.
 
 ### Support and contact
 
 URL: https://tryaws.now/en/support
 
-How to get support from TryAWS.now: support requests in the panel, or the form on the support page without an account.
+How to get support from PanelPay: support requests in the panel, or the form on the support page without an account.
 
-TryAWS.now gives support through support requests only, and our support team answers every request in writing. With an account, open a request in the panel and follow the answers there. Without an account, use the form on the support page and we answer by email. There is no support phone line and no support email address.
+PanelPay gives support through support requests only, and our support team answers every request in writing. With an account, open a request in the panel and follow the answers there. Without an account, use the form on the support page and we answer by email. There is no support phone line and no support email address.
 
 ### Terms of service
 
 URL: https://tryaws.now/en/legal/terms
 
-Terms of service of TryAWS.now, the prepaid cloud panel for Bangladesh.
+Terms of service of PanelPay, the prepaid cloud panel for Bangladesh.
 
 ### Privacy policy
 
 URL: https://tryaws.now/en/legal/privacy
 
-Privacy policy of TryAWS.now, the prepaid cloud panel for Bangladesh.
+Privacy policy of PanelPay, the prepaid cloud panel for Bangladesh.
 
 ### Acceptable use policy
 
 URL: https://tryaws.now/en/legal/acceptable-use
 
-Acceptable use policy of TryAWS.now, the prepaid cloud panel for Bangladesh.
+Acceptable use policy of PanelPay, the prepaid cloud panel for Bangladesh.
 
 ### Refund policy
 
 URL: https://tryaws.now/en/legal/refund
 
-Refund policy of TryAWS.now, the prepaid cloud panel for Bangladesh.
+Refund policy of PanelPay, the prepaid cloud panel for Bangladesh.
 
 ### Frequently asked questions
 
@@ -79,10 +79,10 @@ Q: Is this real AWS?
 A: Yes, 100%. Every server, database, disk and bucket you buy here is an Amazon Lightsail resource that runs in the AWS Region you choose.
 
 Q: Do I get an AWS account or the AWS console?
-A: No. You run everything from the TryAWS.now panel. You do not need a separate AWS account or the AWS console.
+A: No. You run everything from the PanelPay panel. You do not need a separate AWS account or the AWS console.
 
 Q: Who bills me and who supports me?
-A: TryAWS.now. We sell and bill the service, and we support you through support requests in the panel. There is no support phone line.
+A: PanelPay. We sell and bill the service, and we support you through support requests in the panel. There is no support phone line.
 
 Q: Where is my data?
 A: Servers, databases, disks and buckets are in the AWS Region you choose. CDN copies are at AWS edge locations worldwide. DNS is a global service. Your account, and any identity documents you sent before, are kept in AWS Singapore.
@@ -112,12 +112,12 @@ Q: Are prices in taka?
 A: Prices are shown in Bangladeshi taka (BDT), and so are your wallet, top-ups and invoices. The amount you see at checkout is exactly the amount taken from your wallet.
 
 Q: Do I get a VAT invoice?
-A: Yes. For each purchase and renewal TryAWS.now gives you a tax invoice (Mushak-6.3) in taka. Every price includes VAT and the other taxes and fees that apply, and the invoice shows the VAT and the fees. A VAT-registered business can have its BIN printed on the invoice.
+A: Yes. For each purchase and renewal PanelPay gives you a tax invoice (Mushak-6.3) in taka. Every price includes VAT and the other taxes and fees that apply, and the invoice shows the VAT and the fees. A VAT-registered business can have its BIN printed on the invoice.
 
 Q: Can I get a refund?
 A: If a resource cannot be created after you paid, the full amount goes back to your wallet automatically. When we cancel a purchase or a renewal, the whole amount goes back to your wallet and you get a credit note in taka. For anything else, open a billing support request; the refund policy has the details.
 
-Every server, database and storage resource you buy here is an Amazon Lightsail resource running in an AWS Region (Singapore or Mumbai). TryAWS.now sells, bills and supports the service. You manage everything from this panel and do not need an AWS account.
+Every server, database and storage resource you buy here is an Amazon Lightsail resource running in an AWS Region (Singapore or Mumbai). PanelPay sells, bills and supports the service. You manage everything from this panel and do not need an AWS account.
 
 Prices are in taka (BDT), for 30 days, and include VAT and fees. You pay from your taka wallet, and you see the amount before you confirm. 100% AWS infrastructure. Built on Amazon Lightsail.
 
@@ -125,15 +125,15 @@ Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of
 
 ## বাংলা
 
-### TryAWS.now: ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি
+### PanelPay: ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি
 
 URL: https://tryaws.now/
 
 বাংলাদেশের জন্য প্রিপেইড ক্লাউড প্যানেল। ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি। মূল্য টাকায়, টাকার ওয়ালেট থেকে পরিশোধ, EPS দিয়ে টপ আপ।
 
-TryAWS.now বাংলাদেশের মানুষ ও প্রতিষ্ঠানের জন্য একটি প্রিপেইড ক্লাউড প্যানেল। এখানে Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার কেনা যায়, যা Singapore বা Mumbai AWS Region থেকে চলে। মূল্য টাকায় (BDT) এবং তাতে VAT ও ফি অন্তর্ভুক্ত; পরিশোধ হয় টাকার ওয়ালেট থেকে, যা EPS দিয়ে টপ আপ করা যায়। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়।
+PanelPay বাংলাদেশের মানুষ ও প্রতিষ্ঠানের জন্য একটি প্রিপেইড ক্লাউড প্যানেল। এখানে Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার কেনা যায়, যা Singapore বা Mumbai AWS Region থেকে চলে। মূল্য টাকায় (BDT) এবং তাতে VAT ও ফি অন্তর্ভুক্ত; পরিশোধ হয় টাকার ওয়ালেট থেকে, যা EPS দিয়ে টপ আপ করা যায়। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।
 
-এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।
+এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।
 
 মূল্য টাকায় (BDT), ৩০ দিনের জন্য, VAT ও ফি অন্তর্ভুক্ত। পরিশোধ হয় আপনার টাকার ওয়ালেট থেকে, আর পরিমাণটি নিশ্চিত করার আগেই দেখানো হয়। ১০০% AWS অবকাঠামো। Amazon Lightsail দিয়ে তৈরি।
 
@@ -141,5 +141,5 @@ Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of
 
 ## How to cite us
 
-Content is licensed CC-BY-4.0. When quoting, attribute to TryAWS.now and link the source URL.
+Content is licensed CC-BY-4.0. When quoting, attribute to PanelPay and link the source URL.
 When quoting a page, prefer that page's AnswerBlock — it is written to be lifted verbatim.

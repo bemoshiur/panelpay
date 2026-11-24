@@ -79,41 +79,41 @@ describe("wording check (WP9-T5)", () => {
     }
     const missing = checkWording({ A: { b: "ঢাকা" } }, { A: { b: "Dhaka", extra: "x" } });
     expect(missing.map((f) => f.rule)).toContain("missing-in-bn");
-    expect(isLanguageNeutral("TryAWS.now 24 {n} GB")).toBe(true);
+    expect(isLanguageNeutral("PanelPay 24 {n} GB")).toBe(true);
     expect(isLanguageNeutral("Save")).toBe(false);
     expect(placeholdersOf("{count, plural, one {# x} other {{n} y}}")).toEqual(["count", "n"]);
   });
 
-  // WPU-Z8, owner decision 2026-11-13: the brand is "TryAWS.now". That is a deliberate deviation from 16.13
-  // ("no AWS mark inside a product name, a company name or a domain name"). The trademark question is closed
-  // by the owner (WPU-Y6, 2026-11-14: "TryAWS.now is a different name"). The exception is narrow: the exact token only. AWS joined to any other word still fails,
-  // and every other rule about AWS still applies next to the brand.
-  describe("the brand token TryAWS.now (WPU-Z8)", () => {
+  // BRAND-2 (owner, 2026-11-24): the brand is "PanelPay", with no AWS mark inside it (16.13). AWS Marketplace
+  // rejected the former brand "TryAWS.now" for joining the mark with the product name, so that name now fails
+  // like any other, and every other rule about AWS still applies next to the brand.
+  describe("the brand PanelPay (BRAND-2)", () => {
     const rulesOf = (bn: string, en: string): string[] =>
       checkWording({ A: { k: bn } }, { A: { k: en } }).map((f) => f.rule);
 
-    it("accepts the exact token as the brand, alone, in a sentence and in Bengali text", () => {
-      expect(isLanguageNeutral("TryAWS.now")).toBe(true);
+    it("accepts the brand alone, in a sentence and in Bengali text", () => {
+      expect(isLanguageNeutral("PanelPay")).toBe(true);
       for (const [bn, en] of [
-        ["TryAWS.now", "TryAWS.now"],
-        ["TryAWS.now অ্যাডমিন", "TryAWS.now Admin"],
+        ["PanelPay", "PanelPay"],
+        ["PanelPay অ্যাডমিন", "PanelPay Admin"],
         [
-          "বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়।",
-          "TryAWS.now sells, bills and supports the service.",
+          "বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।",
+          "PanelPay sells, bills and supports the service.",
         ],
-        ["TryAWS.now-এর নিয়ম", "The rules of TryAWS.now."],
+        ["PanelPay-এর নিয়ম", "The rules of PanelPay."],
         [
-          "এই শর্তাবলিতে “TryAWS.now” বলতে কোম্পানিকে বোঝায়।",
-          "In these terms, “TryAWS.now” means the company.",
+          "এই শর্তাবলিতে “PanelPay” বলতে কোম্পানিকে বোঝায়।",
+          "In these terms, “PanelPay” means the company.",
         ],
-        ["TryAWS.now: আপনার পাসওয়ার্ড বদলানো হয়েছে।", "TryAWS.now: your password was changed."],
+        ["PanelPay: আপনার পাসওয়ার্ড বদলানো হয়েছে।", "PanelPay: your password was changed."],
       ] as const) {
         expect(rulesOf(bn, en), en).toEqual([]);
       }
     });
 
-    it("rejects every other name with AWS inside it, the near misses of the brand included", () => {
+    it("rejects every name with AWS inside it, the former brand TryAWS.now included", () => {
       for (const name of [
+        "TryAWS.now",
         "TryAWS",
         "TryAWS.com",
         "tryAWS.now",
@@ -133,23 +133,23 @@ describe("wording check (WP9-T5)", () => {
       }
       // A Bengali case ending after the mark is grammar, not a joined word ("AWS-এর" = "of AWS").
       expect(rulesOf("AWS-এর নিয়ম", "The rules of AWS.")).toEqual([]);
-      // Only the exact token is language-neutral: a near miss reads as words a translator would change.
+      // The former brand is no longer a mark that stays in Latin script: it reads as words.
       expect(isLanguageNeutral("TryAWS")).toBe(false);
       expect(isLanguageNeutral("tryaws.now")).toBe(false);
     });
 
     it("keeps every other AWS rule next to the brand", () => {
       const found = (text: string): string[] => rulesOf(text, text);
-      expect(found("TryAWS.now AWS Lightsail")).toEqual(
+      expect(found("PanelPay AWS Lightsail")).toEqual(
         expect.arrayContaining(["aws-lightsail(en)", "ticon-aws-product(en)"]),
       );
-      expect(found("TryAWS.now Lightsail")).toEqual(
+      expect(found("PanelPay Lightsail")).toEqual(
         expect.arrayContaining(["bare-lightsail(en)", "ticon-aws-product(en)"]),
       );
-      expect(found("TryAWS.now's AWS servers")).toContain("ticon-aws-product(en)");
-      expect(found("TryAWS.now, powered by AWS")).toContain("powered-by-aws(en)");
-      expect(found("TryAWS.now, an official AWS partner")).toContain("aws-endorses(en)");
-      expect(found("TryAWS.now AWS Cloud Server")).toContain("aws-sku-name(en)");
+      expect(found("PanelPay's AWS servers")).toContain("ticon-aws-product(en)");
+      expect(found("PanelPay, powered by AWS")).toContain("powered-by-aws(en)");
+      expect(found("PanelPay, an official AWS partner")).toContain("aws-endorses(en)");
+      expect(found("PanelPay AWS Cloud Server")).toContain("aws-sku-name(en)");
     });
   });
 });

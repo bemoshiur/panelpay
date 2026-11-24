@@ -4,7 +4,7 @@ export const invoicesBn = {
   Invoices: {
     meta: { title: "ইনভয়েস" },
     heading: "ইনভয়েস",
-    intro: "প্রতিটি কেনা বা নবায়নের ইনভয়েস এখানে থাকে। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়।",
+    intro: "প্রতিটি কেনা বা নবায়নের ইনভয়েস এখানে থাকে। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।",
     list: {
       caption: "আপনার ইনভয়েস",
       number: "নম্বর",

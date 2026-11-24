@@ -133,7 +133,7 @@ export function cognitoTotpPort(pool: PoolConfig, fetchImpl: typeof fetch = fetc
       const answer = await post("VerifySoftwareToken", {
         AccessToken: accessToken,
         UserCode: code,
-        FriendlyDeviceName: "TryAWS.now",
+        FriendlyDeviceName: "PanelPay",
       });
       if (answer === null) return unavailable();
       if (answer.status !== 200) return failure(answer, VERIFY);

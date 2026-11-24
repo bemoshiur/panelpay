@@ -68,7 +68,7 @@ export const accountEn: Same<typeof accountBn> = {
     meta: { title: "Billing and usage" },
     heading: "Billing and usage",
     intro:
-      "TryAWS.now is prepaid. Each service is paid from your wallet for one term and renews at the end of it when auto renew is on. This page shows the cost of one term of everything that runs now.",
+      "PanelPay is prepaid. Each service is paid from your wallet for one term and renews at the end of it when auto renew is on. This page shows the cost of one term of everything that runs now.",
     balance: "Wallet balance",
     topUp: "Top up",
     running: "Services running",

@@ -218,7 +218,7 @@ describe("customMessage: which codes go out for which client", () => {
 
   it("a customer password-reset code only for the sign-up client (round 3)", () => {
     const ok = customMessage(messageEvent("CustomMessage_ForgotPassword", SIGN_UP_ID), CONFIG);
-    expect(ok.response.emailSubject).toBe("TryAWS.now: your password reset code");
+    expect(ok.response.emailSubject).toBe("PanelPay: your password reset code");
     for (const event of [
       messageEvent("CustomMessage_ForgotPassword", APP_ID),
       messageEvent("CustomMessage_ForgotPassword"),
@@ -232,7 +232,7 @@ describe("customMessage: which codes go out for which client", () => {
       messageEvent("CustomMessage_ForgotPassword", ADMIN_APP_ID, ADMIN_POOL),
       CONFIG,
     );
-    expect(out.response.emailSubject).toBe("TryAWS.now: your password reset code");
+    expect(out.response.emailSubject).toBe("PanelPay: your password reset code");
     expect(out.response.emailMessage).toContain("{####}");
   });
 

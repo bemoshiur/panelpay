@@ -4,7 +4,7 @@ import { QR_MARGIN, qrPathOf } from "./totp-qr.ts";
 // WPU-X11: the QR code of the otpauth URI, as path data for one inline SVG path.
 
 const URI =
-  "otpauth://totp/TryAWS.now?secret=JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP&issuer=TryAWS.now&algorithm=SHA1&digits=6&period=30";
+  "otpauth://totp/PanelPay?secret=JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP&issuer=PanelPay&algorithm=SHA1&digits=6&period=30";
 
 function darkSet(d: string): Set<string> {
   return new Set([...d.matchAll(/M(\d+) (\d+)h1v1h-1z/g)].map((m) => `${m[1]},${m[2]}`));

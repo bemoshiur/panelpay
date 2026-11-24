@@ -5,7 +5,7 @@
 #   bridge/       bridge.mjs + its pinned npm dependencies (WHMCS bridge, PRO-6)
 #   migrations/   packages/db/migrations (forward-only)
 #   box/          pro/box (units, Caddyfile, installer, pins)
-#   whmcs/        the WHMCS addon (modules/addons/tryawsnow) for the buyer to upload to their WHMCS
+#   whmcs/        the WHMCS addon (modules/addons/panelpay) for the buyer to upload to their WHMCS
 #   RELEASE       the git commit
 # Output: pro/ami/out/tc-pro-<commit>.tar.gz. No secret is in it: secrets are made at first boot.
 set -euo pipefail

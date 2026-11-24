@@ -1,6 +1,6 @@
-# TryAWS.now documentation
+# PanelPay documentation
 
-TryAWS.now is an open-source AWS Lightsail reseller panel with a prepaid wallet, billing and automatic
+PanelPay is an open-source AWS Lightsail reseller panel with a prepaid wallet, billing and automatic
 provisioning. Start here.
 
 ## I want to understand it
@@ -11,7 +11,7 @@ provisioning. Start here.
 
 ## I want the one-click Pro edition
 
-- **[TryAWS.now Pro install guide](pro-edition.md)**: one CloudFormation stack on one EC2 instance, WHMCS addon,
+- **[PanelPay Pro install guide](pro-edition.md)**: one CloudFormation stack on one EC2 instance, WHMCS addon,
   coming soon on AWS Marketplace.
 
 ## I sell hosting and use WHMCS
@@ -35,4 +35,4 @@ provisioning. Start here.
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

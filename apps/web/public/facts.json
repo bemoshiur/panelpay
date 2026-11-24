@@ -1,10 +1,10 @@
 {
-  "name": "TryAWS.now",
+  "name": "PanelPay",
   "url": "https://tryaws.now",
   "entityType": "Organization",
   "license": "CC-BY-4.0",
-  "attribution": "TryAWS.now",
-  "legalName": "TryAWS.now",
+  "attribution": "PanelPay",
+  "legalName": "PanelPay",
   "identifiers": {
     "bin": "000000000-0000",
     "tradeLicense": "TRAD/DNCC/000000/2000"
@@ -27,8 +27,8 @@
     "country": "BD"
   },
   "description": {
-    "bn": "TryAWS.now বাংলাদেশের মানুষ ও প্রতিষ্ঠানের জন্য একটি প্রিপেইড ক্লাউড প্যানেল। এখানে Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার কেনা যায়, যা Singapore বা Mumbai AWS Region থেকে চলে। মূল্য টাকায় (BDT) এবং তাতে VAT ও ফি অন্তর্ভুক্ত; পরিশোধ হয় টাকার ওয়ালেট থেকে, যা EPS দিয়ে টপ আপ করা যায়। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়।",
-    "en": "TryAWS.now is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. TryAWS.now sells, bills and supports the service."
+    "bn": "PanelPay বাংলাদেশের মানুষ ও প্রতিষ্ঠানের জন্য একটি প্রিপেইড ক্লাউড প্যানেল। এখানে Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার কেনা যায়, যা Singapore বা Mumbai AWS Region থেকে চলে। মূল্য টাকায় (BDT) এবং তাতে VAT ও ফি অন্তর্ভুক্ত; পরিশোধ হয় টাকার ওয়ালেট থেকে, যা EPS দিয়ে টপ আপ করা যায়। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।",
+    "en": "PanelPay is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. PanelPay sells, bills and supports the service."
   },
   "service": {
     "product": {
@@ -36,8 +36,8 @@
       "en": "Cloud Server"
     },
     "statement": {
-      "bn": "এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।",
-      "en": "Every server, database and storage resource you buy here is an Amazon Lightsail resource running in an AWS Region (Singapore or Mumbai). TryAWS.now sells, bills and supports the service. You manage everything from this panel and do not need an AWS account."
+      "bn": "এখানে কেনা প্রতিটি সার্ভার, ডেটাবেস ও স্টোরেজ একটি Amazon Lightsail resource, যা Singapore বা Mumbai AWS Region থেকে চলে। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়। সবকিছু এই প্যানেল থেকেই চালানো যায়, আলাদা AWS account লাগে না।",
+      "en": "Every server, database and storage resource you buy here is an Amazon Lightsail resource running in an AWS Region (Singapore or Mumbai). PanelPay sells, bills and supports the service. You manage everything from this panel and do not need an AWS account."
     },
     "regions": [
       {
@@ -57,8 +57,8 @@
     "paymentCurrency": "BDT",
     "payment": "EPS",
     "support": {
-      "bn": "TryAWS.now সাপোর্ট দেয় শুধু সাপোর্ট অনুরোধের মাধ্যমে, এবং প্রতিটি অনুরোধের লিখিত উত্তর দেয় আমাদের সাপোর্ট দল। অ্যাকাউন্ট থাকলে প্যানেলে অনুরোধ খুলুন এবং সেখানেই উত্তর দেখুন। অ্যাকাউন্ট না থাকলে সাপোর্ট পাতার ফর্ম ব্যবহার করুন, আমরা ইমেইলে উত্তর দেব। সাপোর্টের কোনো ফোন লাইন বা ইমেইল ঠিকানা নেই।",
-      "en": "TryAWS.now gives support through support requests only, and our support team answers every request in writing. With an account, open a request in the panel and follow the answers there. Without an account, use the form on the support page and we answer by email. There is no support phone line and no support email address."
+      "bn": "PanelPay সাপোর্ট দেয় শুধু সাপোর্ট অনুরোধের মাধ্যমে, এবং প্রতিটি অনুরোধের লিখিত উত্তর দেয় আমাদের সাপোর্ট দল। অ্যাকাউন্ট থাকলে প্যানেলে অনুরোধ খুলুন এবং সেখানেই উত্তর দেখুন। অ্যাকাউন্ট না থাকলে সাপোর্ট পাতার ফর্ম ব্যবহার করুন, আমরা ইমেইলে উত্তর দেব। সাপোর্টের কোনো ফোন লাইন বা ইমেইল ঠিকানা নেই।",
+      "en": "PanelPay gives support through support requests only, and our support team answers every request in writing. With an account, open a request in the panel and follow the answers there. Without an account, use the form on the support page and we answer by email. There is no support phone line and no support email address."
     }
   },
   "faq": {
@@ -69,11 +69,11 @@
       },
       {
         "q": "Do I get an AWS account or the AWS console?",
-        "a": "No. You run everything from the TryAWS.now panel. You do not need a separate AWS account or the AWS console."
+        "a": "No. You run everything from the PanelPay panel. You do not need a separate AWS account or the AWS console."
       },
       {
         "q": "Who bills me and who supports me?",
-        "a": "TryAWS.now. We sell and bill the service, and we support you through support requests in the panel. There is no support phone line."
+        "a": "PanelPay. We sell and bill the service, and we support you through support requests in the panel. There is no support phone line."
       },
       {
         "q": "Where is my data?",
@@ -113,7 +113,7 @@
       },
       {
         "q": "Do I get a VAT invoice?",
-        "a": "Yes. For each purchase and renewal TryAWS.now gives you a tax invoice (Mushak-6.3) in taka. Every price includes VAT and the other taxes and fees that apply, and the invoice shows the VAT and the fees. A VAT-registered business can have its BIN printed on the invoice."
+        "a": "Yes. For each purchase and renewal PanelPay gives you a tax invoice (Mushak-6.3) in taka. Every price includes VAT and the other taxes and fees that apply, and the invoice shows the VAT and the fees. A VAT-registered business can have its BIN printed on the invoice."
       },
       {
         "q": "Can I get a refund?",
@@ -124,13 +124,13 @@
   "pages": {
     "bn": [
       {
-        "title": "TryAWS.now: ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি",
+        "title": "PanelPay: ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি",
         "url": "https://tryaws.now/"
       }
     ],
     "en": [
       {
-        "title": "TryAWS.now: Cloud Server, built on Amazon Lightsail",
+        "title": "PanelPay: Cloud Server, built on Amazon Lightsail",
         "url": "https://tryaws.now/en"
       },
       {

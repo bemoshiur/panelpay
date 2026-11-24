@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now roles in tc-dns (Sections 6.3 and 12): TcDnsProvisioner, TcDnsReader and TcBillingReader,
+  PanelPay roles in tc-dns (Sections 6.3 and 12): TcDnsProvisioner, TcDnsReader and TcBillingReader,
   with one permissions boundary. Deploy with the DevOps admin role. Control plane stage: staging or
   production. Separate accounts: deploy once in tc-dns with CreateBillingReader=true. ONE account (owner
   ruling): deploy pool-roles.yaml first, then this with CreateBillingReader=false. No test-zone split yet.

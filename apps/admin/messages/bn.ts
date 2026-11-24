@@ -3,7 +3,7 @@
 export const bn = {
   Admin: {
     meta: {
-      title: "TryAWS.now অ্যাডমিন",
+      title: "PanelPay অ্যাডমিন",
     },
     home: {
       title: "অ্যাডমিন প্যানেল তৈরি হচ্ছে",

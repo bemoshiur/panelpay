@@ -27,7 +27,7 @@ const {
 const { INITIAL_FORM_STATE } = await import("../../../../../server/action-state.ts");
 
 const SECRET = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
-const URI = `otpauth://totp/TryAWS.now?secret=${SECRET}&issuer=TryAWS.now&algorithm=SHA1&digits=6&period=30`;
+const URI = `otpauth://totp/PanelPay?secret=${SECRET}&issuer=PanelPay&algorithm=SHA1&digits=6&period=30`;
 const never = async (): Promise<never> => {
   throw new Error("not called in a render");
 };

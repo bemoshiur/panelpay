@@ -32,8 +32,8 @@ function specRow(markdown: string, label: string): { en: string; bn: string } {
   const [, en, bn] = cells;
   if (en === undefined || bn === undefined) throw new Error(`row has no two statements: ${label}`);
   // WPU-B1, WPU-Z8: docs/spec/16.13 still names the old brand (the plan is edited in its own pull request);
-  // the statements are compared with the brand of the product, TryAWS.now (owner decision 2026-11-13).
-  const brand = (text: string): string => text.replace(/TiCON\s+Cloud/g, "TryAWS.now");
+  // the statements are compared with the brand of the product, PanelPay (owner decision 2026-11-13).
+  const brand = (text: string): string => text.replace(/TiCON\s+Cloud/g, "PanelPay");
   return { en: brand(en), bn: brand(bn) };
 }
 
@@ -119,26 +119,26 @@ describe("shellMessages", () => {
     expect(leaf(bn, "Shell.nav.dashboard")).not.toBe(leaf(en, "Shell.nav.dashboard"));
   });
 
-  // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now, never the old legal name, with the BIN and
+  // WPU-Y6 (owner, 2026-11-14): the company is PanelPay, never the old legal name, with the BIN and
   // the trade licence written exactly as the owner gave them. A deliberate deviation from 16.14 of the spec.
-  it("names the company TryAWS.now with its BIN and trade licence, the same in both locales", () => {
+  it("names the company PanelPay with its BIN and trade licence, the same in both locales", () => {
     for (const key of ["address", "companyName", "bin", "tradeLicense"]) {
       expect(leaf(bn, `Shell.footer.${key}`)).toBe(leaf(en, `Shell.footer.${key}`));
     }
-    expect(leaf(en, "Shell.footer.companyName")).toBe("TryAWS.now");
+    expect(leaf(en, "Shell.footer.companyName")).toBe("PanelPay");
     expect(leaf(en, "Shell.footer.bin")).toBe("BIN: 000000000-0000");
     expect(leaf(en, "Shell.footer.tradeLicense")).toBe("Trade License: TRAD/DNCC/000000/2000");
     for (const tree of [bn, en]) expect(JSON.stringify(tree)).not.toMatch(/TiCON System/i);
   });
 
-  // WPU-Z8: the brand is TryAWS.now (owner decision 2026-11-13), in Latin letters in both locales.
-  it("names the brand TryAWS.now in the header, the logo text and the home link", () => {
+  // WPU-Z8: the brand is PanelPay (owner decision 2026-11-13), in Latin letters in both locales.
+  it("names the brand PanelPay in the header, the logo text and the home link", () => {
     for (const tree of [bn, en]) {
-      expect(leaf(tree, "Shell.brand")).toBe("TryAWS.now");
-      expect(leaf(tree, "Shell.logoAlt")).toBe("TryAWS.now");
+      expect(leaf(tree, "Shell.brand")).toBe("PanelPay");
+      expect(leaf(tree, "Shell.logoAlt")).toBe("PanelPay");
     }
-    expect(leaf(bn, "Shell.homeLabel")).toBe("TryAWS.now হোম");
-    expect(leaf(en, "Shell.homeLabel")).toBe("TryAWS.now home");
+    expect(leaf(bn, "Shell.homeLabel")).toBe("PanelPay হোম");
+    expect(leaf(en, "Shell.homeLabel")).toBe("PanelPay home");
   });
 
   // WPU-Z8: the footer link carries the title of the page it opens (apps/web: Public.legal.docs.terms.title).

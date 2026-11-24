@@ -34,25 +34,27 @@ describe("placeholder brand files", () => {
     }
   });
 
-  // WPU-Z8: the brand is TryAWS.now (owner decision 2026-11-13). The wordmark is plain SVG text with a
-  // generic font stack until the owner supplies final artwork; the symbol mark (the T) is kept.
-  it("name TryAWS.now and write it as the wordmark of both logos; the symbol keeps its mark", () => {
+  // BRAND-2 (owner, 2026-11-24): the brand is PanelPay. The wordmark is plain SVG text with a generic font
+  // stack; the symbol is three server panels with a coin (panel + pay), the same in the logo and the icon.
+  it("name PanelPay and write it as the wordmark of both logos; the symbol is the panels-and-coin mark", () => {
     for (const name of FILES) {
       const text = read(SOURCE, name).toString("utf8");
-      expect(text, name).toContain('aria-label="TryAWS.now"');
-      expect(text, name).toContain("<title>TryAWS.now</title>");
-      expect(text, name).not.toMatch(/Megh|VPS/);
+      expect(text, name).toContain('aria-label="PanelPay"');
+      expect(text, name).toContain("<title>PanelPay</title>");
+      expect(text, name).not.toMatch(/Megh|VPS|TryAWS/);
     }
     for (const name of ["logo.svg", "logo-light.svg"]) {
       const text = read(SOURCE, name).toString("utf8");
       const visible = [...text.matchAll(/<text\b[^>]*>(.*?)<\/text>/g)]
         .map((m) => (m[1] as string).replace(/<[^>]+>/g, ""))
         .join("");
-      expect(visible, name).toBe("TryAWS.now");
+      expect(visible, name).toBe("PanelPay");
       expect(text, name).toMatch(/<text\b[^>]*font-family="[^"]*, sans-serif"/);
     }
-    expect(read(SOURCE, "symbol.svg").toString("utf8")).toContain('<path d="M18 24h28M32 24v26"');
-    expect(read(SOURCE, "logo.svg").toString("utf8")).toContain('<path d="M9 19h14M16 19v14"');
+    expect(read(SOURCE, "symbol.svg").toString("utf8")).toContain('<path d="M15 19h34M15 32h34M15 45h17"');
+    expect(read(SOURCE, "symbol.svg").toString("utf8")).toContain('<circle cx="46" cy="45" r="6.8"');
+    expect(read(SOURCE, "logo.svg").toString("utf8")).toContain('<path d="M8 17.5h16M8 24.5h16M8 31.5h8"');
+    expect(read(SOURCE, "logo.svg").toString("utf8")).toContain('<circle cx="23" cy="31.5" r="3.4"');
   });
 
   it("hold no script, style, link, external URL or foreignObject", () => {

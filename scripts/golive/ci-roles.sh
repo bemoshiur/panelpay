@@ -22,7 +22,7 @@ set -euo pipefail
 umask 077
 
 readonly GITHUB_ORG="bemoshiur"
-readonly GITHUB_REPO="tryaws.now"
+readonly GITHUB_REPO="panelpay"
 readonly STAGING_WEB_DOMAIN="staging.tryaws.now"
 readonly STAGING_ADMIN_DOMAIN="admin-staging.tryaws.now"
 readonly PROTECTED_BRANCH="main"

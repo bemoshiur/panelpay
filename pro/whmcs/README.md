@@ -1,12 +1,12 @@
-# TryAWS.now Pro: WHMCS addon (PRO-6)
+# PanelPay Pro: WHMCS addon (PRO-6)
 
-For resellers who sell TryAWS.now Pro (AWS Lightsail under their own brand) to clients they already
+For resellers who sell PanelPay Pro (AWS Lightsail under their own brand) to clients they already
 bill in WHMCS. Two things, both owner decisions of 23 Nov 2026:
 
-1. **Open panel.** The client area page `index.php?m=tryawsnow` links to the panel's own sign-in page
+1. **Open panel.** The client area page `index.php?m=panelpay` links to the panel's own sign-in page
    with the client's e-mail filled in. The client signs in with the panel password; WHMCS gets no new
    sign-in power over the panel.
-2. **Top up wallet.** The client enters an amount and gets a normal WHMCS invoice ("TryAWS.now wallet
+2. **Top up wallet.** The client enters an amount and gets a normal WHMCS invoice ("PanelPay wallet
    top-up (USD 25.00) [ref …]"; the reference ties the invoice to the client and e-mail that made it). They pay it with any gateway of your WHMCS. When it is paid, the addon tells the panel the
    invoice number. The panel then reads the invoice **from your WHMCS API itself** and credits the
    wallet only if all of this holds:
@@ -28,7 +28,7 @@ bill in WHMCS. Two things, both owner decisions of 23 Nov 2026:
 
 2. In WHMCS, create an **API role** that allows only `GetInvoice` and `GetClientsDetails`, and an API
    credential for an admin with that role. Those are the identifier and secret of step 1.
-3. Copy `modules/addons/tryawsnow/` into your WHMCS `modules/addons/`. Then activate **TryAWS.now Panel** in
+3. Copy `modules/addons/panelpay/` into your WHMCS `modules/addons/`. Then activate **PanelPay Panel** in
    _System Settings → Addon Modules_ and set:
    - **Panel URL**: `https://panel.your-brand.com`;
    - **Bridge secret**: the content of `/etc/tc/bridge-secret.txt`;
@@ -40,7 +40,7 @@ bill in WHMCS. Two things, both owner decisions of 23 Nov 2026:
 
 The panel never credits a paid top-up in these cases. Each one is recorded as a payment discrepancy on the
 operator's reconciliation screen (note `whmcs invoice <n>: <reason>`), and WHMCS logs
-`TryAWS.now: invoice #… not credited yet (…)` in the Activity Log:
+`PanelPay: invoice #… not credited yet (…)` in the Activity Log:
 
 | Reason             | Meaning                                                                                                 | What to do                                                    |
 | ------------------ | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -58,7 +58,7 @@ corrects the wallet with an approved adjustment. The panel never reverses a wall
 
 **Missed notices.** If the panel was down when an invoice was paid, the bridge finds it within 15 minutes:
 every 15 minutes it reads the newest paid invoices from your WHMCS and credits any top-up it has not credited
-yet. To force it now, open _Addons → TryAWS.now Panel_, enter the invoice number and choose **Re-send**.
+yet. To force it now, open _Addons → PanelPay Panel_, enter the invoice number and choose **Re-send**.
 
 ## Tests
 

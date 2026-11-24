@@ -7,12 +7,12 @@ import { legalDocsBn } from "./legal-bn.ts";
 export const publicBn = {
   Public: {
     crumb: { home: "হোম" },
-    // WPU-Z16 (AEO and GEO): one statement of what TryAWS.now is, for whom, where and how it is billed.
+    // WPU-Z16 (AEO and GEO): one statement of what PanelPay is, for whom, where and how it is billed.
     // The home page shows it as its answer block (40 to 60 words), and the same text is the
     // description of the Organization JSON-LD, of llms.txt and of facts.json.
     entity: {
       statement:
-        "TryAWS.now বাংলাদেশের মানুষ ও প্রতিষ্ঠানের জন্য একটি প্রিপেইড ক্লাউড প্যানেল। এখানে Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার কেনা যায়, যা Singapore বা Mumbai AWS Region থেকে চলে। মূল্য টাকায় (BDT) এবং তাতে VAT ও ফি অন্তর্ভুক্ত; পরিশোধ হয় টাকার ওয়ালেট থেকে, যা EPS দিয়ে টপ আপ করা যায়। বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়।",
+        "PanelPay বাংলাদেশের মানুষ ও প্রতিষ্ঠানের জন্য একটি প্রিপেইড ক্লাউড প্যানেল। এখানে Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার কেনা যায়, যা Singapore বা Mumbai AWS Region থেকে চলে। মূল্য টাকায় (BDT) এবং তাতে VAT ও ফি অন্তর্ভুক্ত; পরিশোধ হয় টাকার ওয়ালেট থেকে, যা EPS দিয়ে টপ আপ করা যায়। বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।",
     },
     // WPU-Z16: the dated line at the foot of every public page (the same date is in facts.json).
     updated: { label: "সর্বশেষ হালনাগাদ: <time>{date}</time>" },
@@ -22,7 +22,7 @@ export const publicBn = {
     },
     meta: {
       home: {
-        title: "TryAWS.now: ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি",
+        title: "PanelPay: ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি",
         description:
           "বাংলাদেশের জন্য প্রিপেইড ক্লাউড প্যানেল। ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি। মূল্য টাকায়, টাকার ওয়ালেট থেকে পরিশোধ, EPS দিয়ে টপ আপ।",
       },
@@ -39,18 +39,18 @@ export const publicBn = {
       help: {
         title: "সাহায্য ও সাধারণ প্রশ্ন",
         description:
-          "TryAWS.now ও Amazon Lightsail নিয়ে সাধারণ প্রশ্নের উত্তর: AWS, বিল, সাপোর্ট, ডেটা কোথায় থাকে।",
+          "PanelPay ও Amazon Lightsail নিয়ে সাধারণ প্রশ্নের উত্তর: AWS, বিল, সাপোর্ট, ডেটা কোথায় থাকে।",
       },
       support: {
         title: "সাপোর্ট ও যোগাযোগ",
         description:
-          "TryAWS.now-এর সাপোর্ট পাওয়ার উপায়: প্যানেলে সাপোর্ট অনুরোধ, আর অ্যাকাউন্ট না থাকলে সাপোর্ট পাতার ফর্ম।",
+          "PanelPay-এর সাপোর্ট পাওয়ার উপায়: প্যানেলে সাপোর্ট অনুরোধ, আর অ্যাকাউন্ট না থাকলে সাপোর্ট পাতার ফর্ম।",
       },
       legal: {
         title: "আইনি নথি",
-        description: "TryAWS.now-এর শর্তাবলি, গোপনীয়তা, গ্রহণযোগ্য ব্যবহার ও ফেরতের নীতি।",
+        description: "PanelPay-এর শর্তাবলি, গোপনীয়তা, গ্রহণযোগ্য ব্যবহার ও ফেরতের নীতি।",
         // WPU-Z16: one description per document, so no two legal pages share one (OmniRank).
-        descriptionOf: "{title}: বাংলাদেশের প্রিপেইড ক্লাউড প্যানেল TryAWS.now-এর নথি।",
+        descriptionOf: "{title}: বাংলাদেশের প্রিপেইড ক্লাউড প্যানেল PanelPay-এর নথি।",
       },
       soon: {
         description: "এই পণ্য এখনো খোলা হয়নি। খোলা হলে ইমেইলে জানাতে আপনার ঠিকানা দিন।",
@@ -158,7 +158,7 @@ export const publicBn = {
       heading: "মূল্য তালিকা",
       lead: "ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি। প্রতিটি মূল্য ৩০ দিনের জন্য, টাকায় (BDT)।",
       answer:
-        "TryAWS.now-এর প্রতিটি ক্লাউড সার্ভারের মূল্য টাকায় (BDT), ৩০ দিনের জন্য, এবং তাতে VAT ও ফি অন্তর্ভুক্ত। চেকআউটে নিশ্চিত করার আগেই ঠিক কত টাকা লাগবে তা দেখতে পাবেন, আর ঠিক সেই পরিমাণই আপনার টাকার ওয়ালেট থেকে কাটা হয়, যা EPS দিয়ে টপ আপ করা যায়।",
+        "PanelPay-এর প্রতিটি ক্লাউড সার্ভারের মূল্য টাকায় (BDT), ৩০ দিনের জন্য, এবং তাতে VAT ও ফি অন্তর্ভুক্ত। চেকআউটে নিশ্চিত করার আগেই ঠিক কত টাকা লাগবে তা দেখতে পাবেন, আর ঠিক সেই পরিমাণই আপনার টাকার ওয়ালেট থেকে কাটা হয়, যা EPS দিয়ে টপ আপ করা যায়।",
       tabsLabel: "পণ্যের ধরন",
       tabCloudServers: "ক্লাউড সার্ভার",
       tableTitle: "প্ল্যানের তুলনা",
@@ -176,7 +176,7 @@ export const publicBn = {
       heading: "ক্লাউড সার্ভার, Amazon Lightsail দিয়ে তৈরি",
       lead: "প্রতিটি ক্লাউড সার্ভার একটি Amazon Lightsail instance, যা Singapore বা Mumbai AWS Region-এ চলে।",
       answer:
-        "TryAWS.now-এর একটি ক্লাউড সার্ভার হলো একটি Amazon Lightsail instance, যা Singapore বা Mumbai AWS Region-এ চলে। আপনি প্ল্যান ও লোকেশন বেছে নেন, ৩০ দিনের মূল্য টাকায় VAT ও ফি সহ দেখেন, টাকার ওয়ালেট থেকে পরিশোধ করেন, আর TryAWS.now প্যানেল থেকে সার্ভার চালান।",
+        "PanelPay-এর একটি ক্লাউড সার্ভার হলো একটি Amazon Lightsail instance, যা Singapore বা Mumbai AWS Region-এ চলে। আপনি প্ল্যান ও লোকেশন বেছে নেন, ৩০ দিনের মূল্য টাকায় VAT ও ফি সহ দেখেন, টাকার ওয়ালেট থেকে পরিশোধ করেন, আর PanelPay প্যানেল থেকে সার্ভার চালান।",
       plansTitle: "প্ল্যান",
       featuresTitle: "যা পাবেন",
       features: {
@@ -228,9 +228,9 @@ export const publicBn = {
     },
     help: {
       heading: "সাধারণ প্রশ্ন",
-      lead: "TryAWS.now ও Amazon Lightsail নিয়ে সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্ন।",
+      lead: "PanelPay ও Amazon Lightsail নিয়ে সবচেয়ে বেশি জিজ্ঞাসিত প্রশ্ন।",
       answer:
-        "TryAWS.now Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার বিক্রি করে, যা Singapore বা Mumbai AWS Region-এ চলে। EPS দিয়ে টাকায় ওয়ালেট টপ আপ করে সেখান থেকে কেনা যায়; মূল্য টাকায় (BDT), VAT ও ফি সহ, আর চেকআউটে ওয়ালেট থেকে কাটা হয়। কেনার জন্য ইমেইল ও মোবাইল নম্বর যাচাই করে একটি অথেনটিকেটর অ্যাপ চালু করতে হয়।",
+        "PanelPay Amazon Lightsail দিয়ে তৈরি ক্লাউড সার্ভার বিক্রি করে, যা Singapore বা Mumbai AWS Region-এ চলে। EPS দিয়ে টাকায় ওয়ালেট টপ আপ করে সেখান থেকে কেনা যায়; মূল্য টাকায় (BDT), VAT ও ফি সহ, আর চেকআউটে ওয়ালেট থেকে কাটা হয়। কেনার জন্য ইমেইল ও মোবাইল নম্বর যাচাই করে একটি অথেনটিকেটর অ্যাপ চালু করতে হয়।",
       listTitle: "প্রশ্নোত্তর",
       stillTitle: "উত্তর পাননি?",
       stillText: "সাপোর্ট পাতায় আমাদের জানান।",
@@ -241,11 +241,11 @@ export const publicBn = {
         },
         noAccount: {
           q: "আমি কি AWS account বা AWS console পাব?",
-          a: "না। আপনি TryAWS.now প্যানেল থেকেই সবকিছু চালান। আলাদা AWS account বা AWS console লাগে না।",
+          a: "না। আপনি PanelPay প্যানেল থেকেই সবকিছু চালান। আলাদা AWS account বা AWS console লাগে না।",
         },
         billing: {
           q: "বিল ও সাপোর্ট কে দেয়?",
-          a: "TryAWS.now। আমরা বিক্রি করি ও বিল করি, আর প্যানেলের সাপোর্ট অনুরোধের মাধ্যমে সাপোর্ট দিই। সাপোর্টের কোনো ফোন লাইন নেই।",
+          a: "PanelPay। আমরা বিক্রি করি ও বিল করি, আর প্যানেলের সাপোর্ট অনুরোধের মাধ্যমে সাপোর্ট দিই। সাপোর্টের কোনো ফোন লাইন নেই।",
         },
         dataLocation: {
           q: "আমার ডেটা কোথায় থাকে?",
@@ -286,7 +286,7 @@ export const publicBn = {
         // WPU-Z16: what people ask AI assistants about this offer; facts of the terms and refund drafts.
         vatInvoice: {
           q: "আমি কি VAT সহ কর চালানপত্র পাব?",
-          a: "হ্যাঁ। প্রতিটি কেনা ও নবায়নের জন্য TryAWS.now আপনাকে টাকায় কর চালানপত্র (মূসক-৬.৩) দেয়। প্রতিটি মূল্যে VAT এবং প্রযোজ্য অন্যান্য কর ও ফি অন্তর্ভুক্ত, আর ইনভয়েসে VAT ও ফি দেখানো হয়। VAT-নিবন্ধিত প্রতিষ্ঠান তার BIN ইনভয়েসে দিতে পারে।",
+          a: "হ্যাঁ। প্রতিটি কেনা ও নবায়নের জন্য PanelPay আপনাকে টাকায় কর চালানপত্র (মূসক-৬.৩) দেয়। প্রতিটি মূল্যে VAT এবং প্রযোজ্য অন্যান্য কর ও ফি অন্তর্ভুক্ত, আর ইনভয়েসে VAT ও ফি দেখানো হয়। VAT-নিবন্ধিত প্রতিষ্ঠান তার BIN ইনভয়েসে দিতে পারে।",
         },
         refunds: {
           q: "টাকা ফেরত পাওয়া যায় কি?",
@@ -297,7 +297,7 @@ export const publicBn = {
     support: {
       heading: "সাপোর্ট ও যোগাযোগ",
       // WPU-Z16: also the answer block of the page (40 to 60 words).
-      lead: "TryAWS.now সাপোর্ট দেয় শুধু সাপোর্ট অনুরোধের মাধ্যমে, এবং প্রতিটি অনুরোধের লিখিত উত্তর দেয় আমাদের সাপোর্ট দল। অ্যাকাউন্ট থাকলে প্যানেলে অনুরোধ খুলুন এবং সেখানেই উত্তর দেখুন। অ্যাকাউন্ট না থাকলে সাপোর্ট পাতার ফর্ম ব্যবহার করুন, আমরা ইমেইলে উত্তর দেব। সাপোর্টের কোনো ফোন লাইন বা ইমেইল ঠিকানা নেই।",
+      lead: "PanelPay সাপোর্ট দেয় শুধু সাপোর্ট অনুরোধের মাধ্যমে, এবং প্রতিটি অনুরোধের লিখিত উত্তর দেয় আমাদের সাপোর্ট দল। অ্যাকাউন্ট থাকলে প্যানেলে অনুরোধ খুলুন এবং সেখানেই উত্তর দেখুন। অ্যাকাউন্ট না থাকলে সাপোর্ট পাতার ফর্ম ব্যবহার করুন, আমরা ইমেইলে উত্তর দেব। সাপোর্টের কোনো ফোন লাইন বা ইমেইল ঠিকানা নেই।",
       customerTitle: "আপনার অ্যাকাউন্ট থাকলে",
       customerText:
         "প্যানেলে সাপোর্ট অনুরোধ খুলুন এবং সেখানেই সেটি অনুসরণ করুন: আমাদের উত্তর পড়ুন এবং একই জায়গায় জবাব দিন। সাইন ইন করা না থাকলে আগে সাইন ইন করতে হবে।",

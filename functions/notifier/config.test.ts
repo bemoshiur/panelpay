@@ -3,15 +3,15 @@ import { NOTIFIER_CONFIG_ERROR, readNotifierConfig } from "./config";
 
 const env = (over: Record<string, string | undefined> = {}) => ({
   PANEL_ORIGIN: "https://my.ticoncloud.test",
-  // WPU-Z8: the display name of the brand has a dot (TryAWS.now); the sender check must take it.
-  SES_FROM: "TryAWS.now <no-reply@ticoncloud.test>",
+  // WPU-Z8: the display name of the brand has a dot (PanelPay); the sender check must take it.
+  SES_FROM: "PanelPay <no-reply@ticoncloud.test>",
   ...over,
 });
 
 it("reads the panel origin and the sender", () => {
   expect(readNotifierConfig(env())).toEqual({
     panelOrigin: "https://my.ticoncloud.test",
-    sesFrom: "TryAWS.now <no-reply@ticoncloud.test>",
+    sesFrom: "PanelPay <no-reply@ticoncloud.test>",
   });
   expect(readNotifierConfig(env({ SES_FROM: "no-reply@ticoncloud.test" })).sesFrom).toBe(
     "no-reply@ticoncloud.test",

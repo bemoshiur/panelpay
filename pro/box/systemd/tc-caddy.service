@@ -1,5 +1,5 @@
 [Unit]
-Description=TryAWS.now Pro: Caddy (the only public listener)
+Description=PanelPay Pro: Caddy (the only public listener)
 After=network-online.target tc-web.service tc-admin.service tc-firewall.service
 Wants=network-online.target
 Requires=tc-firewall.service

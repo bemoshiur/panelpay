@@ -163,7 +163,7 @@ describe.each(LOCALES)("PublicShell (%s)", (locale) => {
     expect(hrefs(container).filter((h) => h === CREDIT_URL)).toHaveLength(1);
   });
 
-  it("puts the name of the company behind TryAWS.now before any AWS text", () => {
+  it("puts the name of the company behind PanelPay before any AWS text", () => {
     const { container } = shell(locale);
     const body = container.textContent as string;
     const brand = body.indexOf(t.footer["companyName"] as string);
@@ -171,11 +171,11 @@ describe.each(LOCALES)("PublicShell (%s)", (locale) => {
     expect(brand).toBeLessThan(body.indexOf(aws["short"] as string));
   });
 
-  // WPU-Y6: the footer legal line is the company TryAWS.now with its BIN and trade licence.
-  it("prints the company TryAWS.now, its BIN and its trade licence in the footer", () => {
+  // WPU-Y6: the footer legal line is the company PanelPay with its BIN and trade licence.
+  it("prints the company PanelPay, its BIN and its trade licence in the footer", () => {
     const { container } = shell(locale);
     const bottom = container.querySelector("footer .footer-bottom")?.textContent ?? "";
-    expect(bottom).toContain("TryAWS.now");
+    expect(bottom).toContain("PanelPay");
     expect(bottom).toContain("BIN: 000000000-0000");
     expect(bottom).toContain("Trade License: TRAD/DNCC/000000/2000");
     expect(bottom).not.toMatch(/TiCON System/i);

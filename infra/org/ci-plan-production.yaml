@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now CI role TcCiPlanProduction (R3, B.1 of docs/analysis/pending-audit.md): READ-ONLY and
+  PanelPay CI role TcCiPlanProduction (R3, B.1 of docs/analysis/pending-audit.md): READ-ONLY and
   MINIMAL. Assumed by the job `plan` of .github/workflows/deploy-production.yml through GitHub OIDC, in
   the account of the production stage, to run `sst diff` so DevOps reads the plan before approving the deploy
   job. The trust is the three conditions that workflow documents: aud, sub = the GitHub environment

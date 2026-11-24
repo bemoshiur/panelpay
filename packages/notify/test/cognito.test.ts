@@ -21,7 +21,7 @@ it("renders the three messages of 16.14 in bn and en, each with the code placeho
       expect(m.subject).not.toMatch(/[\r\n]/);
       expect(m.html).toContain(`<html lang="${locale}">`);
       expect(m.html).toContain(CODE);
-      expect(m.html).toContain("TryAWS.now");
+      expect(m.html).toContain("PanelPay");
       expect(m.html).not.toMatch(/AWS Lightsail/);
       // the layout of the other emails: header, footer with the AWS statement
       expect(m.html).toContain("Amazon Web Services, AWS, Amazon Lightsail");

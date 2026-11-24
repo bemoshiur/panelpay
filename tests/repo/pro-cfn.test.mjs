@@ -8,7 +8,7 @@ import { INSTANCE_TYPES, renderTemplate } from "../../pro/cfn/build-template.mjs
 // PRO-8: the "AMI with CloudFormation" template of the Marketplace listing (pro/cfn).
 const clone = (v) => JSON.parse(JSON.stringify(v));
 const read = (p) => readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
-const committed = read("pro/cfn/tryawsnow-pro.yaml");
+const committed = read("pro/cfn/panelpay-pro.yaml");
 const t = parse(committed, { version: "1.1" });
 const pool = parse(read("infra/org/pool-roles.yaml"));
 const dns = parse(read("infra/org/dns-account.yaml"));
@@ -22,7 +22,7 @@ const TC = {
   TcDnsReader: dns,
 };
 
-describe("pro/cfn/tryawsnow-pro.yaml", () => {
+describe("pro/cfn/panelpay-pro.yaml", () => {
   it("is the output of the generator (run node pro/cfn/build-template.mjs after a change)", () => {
     expect(committed).toBe(renderTemplate());
   });
@@ -164,7 +164,7 @@ describe("the instance role's Cognito reads (security review L1)", () => {
       "pro/box/README.md",
       "pro/box/bin/tc-install.sh",
       "pro/cfn/build-template.mjs",
-      "pro/cfn/tryawsnow-pro.yaml",
+      "pro/cfn/panelpay-pro.yaml",
     ]);
   });
 });

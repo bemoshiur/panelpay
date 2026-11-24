@@ -6,9 +6,9 @@ type Same<T> = { [K in keyof T]: T[K] extends string ? string : Same<T[K]> };
 export const en: Same<typeof bn> = {
   Shell: {
     skip: "Skip to main content",
-    brand: "TryAWS.now",
-    logoAlt: "TryAWS.now",
-    homeLabel: "TryAWS.now home",
+    brand: "PanelPay",
+    logoAlt: "PanelPay",
+    homeLabel: "PanelPay home",
     menu: "Menu",
     close: "Close",
     public: {
@@ -32,9 +32,9 @@ export const en: Same<typeof bn> = {
       contact: "Support request",
       terms: "Terms of service",
       privacy: "Privacy policy",
-      // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now everywhere a customer or crawler reads it,
+      // WPU-Y6 (owner, 2026-11-14): the company is PanelPay everywhere a customer or crawler reads it,
       // with its two identifiers written exactly as the owner gave them, in both locales.
-      companyName: "TryAWS.now",
+      companyName: "PanelPay",
       bin: "BIN: 000000000-0000",
       tradeLicense: "Trade License: TRAD/DNCC/000000/2000",
       address: "Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000",
@@ -102,7 +102,7 @@ export const en: Same<typeof bn> = {
   },
   Aws: {
     short: "100% AWS infrastructure. Built on Amazon Lightsail.",
-    long: "Every server, database and storage resource you buy here is an Amazon Lightsail resource running in an AWS Region (Singapore or Mumbai). TryAWS.now sells, bills and supports the service. You manage everything from this panel and do not need an AWS account.",
+    long: "Every server, database and storage resource you buy here is an Amazon Lightsail resource running in an AWS Region (Singapore or Mumbai). PanelPay sells, bills and supports the service. You manage everything from this panel and do not need an AWS account.",
     trademark:
       "Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of Amazon.com, Inc. or its affiliates.",
   },

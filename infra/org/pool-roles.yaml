@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now roles in ONE pool account (Section 6.3): TcProvisioner, TcReader, TcAccessDetails and
+  PanelPay roles in ONE pool account (Section 6.3): TcProvisioner, TcReader, TcAccessDetails and
   TcBillingReader, with one permissions boundary. Deploy once per pool account (tc-pool-v1, tc-pool-n1,
   tc-pool-dev, ...) with the DevOps admin role; never with a platform role or a StackSet execution role. Production pools trust tc-platform; tc-pool-dev trusts tc-platform-stg and nothing else.
   The trust names the control plane ACCOUNT with an aws:PrincipalArn condition on the fixed name of the

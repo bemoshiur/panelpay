@@ -53,7 +53,7 @@ describe("the GEO files on disk (WPU-Z16)", () => {
 describe("llms.txt", () => {
   const text = llmsTxt();
   it("opens with the brand, the entity statement in both languages and the canonical site", () => {
-    expect(text.startsWith("# TryAWS.now\n")).toBe(true);
+    expect(text.startsWith("# PanelPay\n")).toBe(true);
     expect(text).toContain(`> ${publicEn.Public.entity.statement}`);
     expect(text).toContain(`> ${publicBn.Public.entity.statement}`);
     expect(text).toContain(`Canonical site: ${GEO_SITE_URL}`);
@@ -69,10 +69,10 @@ describe("llms.txt", () => {
     expect(text).toContain(publicEn.Public.support.lead);
   });
 
-  // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now with its BIN and trade licence, never the old
+  // WPU-Y6 (owner, 2026-11-14): the company is PanelPay with its BIN and trade licence, never the old
   // legal name, in every GEO file.
-  it("names the company TryAWS.now with its BIN and trade licence, never the old legal name", () => {
-    expect(text).toContain("- Company: TryAWS.now, ");
+  it("names the company PanelPay with its BIN and trade licence, never the old legal name", () => {
+    expect(text).toContain("- Company: PanelPay, ");
     expect(text).toContain(
       "- Identifiers: BIN: 000000000-0000, Trade License: TRAD/DNCC/000000/2000",
     );
@@ -107,8 +107,8 @@ describe("llms.txt", () => {
     expect(text).toContain(
       `Content is licensed ${GEO_LICENSE}. When quoting, attribute to ${geoAttribution()} and link the source URL.`,
     );
-    // WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now; the attribution is the brand alone.
-    expect(geoAttribution()).toBe("TryAWS.now");
+    // WPU-Y6 (owner, 2026-11-14): the company is PanelPay; the attribution is the brand alone.
+    expect(geoAttribution()).toBe("PanelPay");
   });
 });
 
@@ -149,12 +149,12 @@ describe("facts.json", () => {
   const facts = JSON.parse(factsJson()) as Record<string, unknown>;
   it("parses, and carries OmniRank's keys with the licence and the attribution", () => {
     expect(facts).toMatchObject({
-      name: "TryAWS.now",
+      name: "PanelPay",
       url: GEO_SITE_URL,
       entityType: "Organization",
       license: GEO_LICENSE,
       attribution: geoAttribution(),
-      legalName: "TryAWS.now",
+      legalName: "PanelPay",
       identifiers: { bin: "000000000-0000", tradeLicense: "TRAD/DNCC/000000/2000" },
       dateModified: CONTENT_UPDATED,
     });
@@ -186,7 +186,7 @@ describe("omnirank.config.json (WPU-Z16)", () => {
   it("names the same site, licence, attribution and answer-block selector as the site", async () => {
     const { ANSWER_SELECTOR } = await import("./seo.ts");
     expect(config.site.url).toBe(GEO_SITE_URL);
-    expect(config.site.name).toBe("TryAWS.now");
+    expect(config.site.name).toBe("PanelPay");
     expect(config.site.legalName).toBe(shellEn.Shell.footer.companyName);
     expect(config.geo.license).toBe(GEO_LICENSE);
     expect(config.geo.attribution).toBe(geoAttribution());

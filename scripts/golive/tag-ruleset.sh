@@ -25,7 +25,7 @@ set -euo pipefail
 umask 077
 
 readonly GITHUB_ORG="bemoshiur"
-readonly GITHUB_REPO="tryaws.now"
+readonly GITHUB_REPO="panelpay"
 readonly RULESET_NAME="tc-release-tags"
 readonly TAG_PATTERN="refs/tags/v*"
 readonly ADMIN_ROLE_ID=5

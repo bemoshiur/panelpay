@@ -34,7 +34,7 @@ describe("whmcsApi", () => {
       balance: "0.00",
       total: "25.00",
       credit: "0.00",
-      items: { item: [{ description: "TryAWS.now wallet top-up", amount: "25.00" }] },
+      items: { item: [{ description: "PanelPay wallet top-up", amount: "25.00" }] },
     });
     expect(await a.getInvoice("1001")).toEqual({
       invoiceId: "1001",
@@ -43,7 +43,7 @@ describe("whmcsApi", () => {
       balance: "0.00",
       total: "25.00",
       credit: "0.00",
-      items: [{ description: "TryAWS.now wallet top-up", amount: "25.00" }],
+      items: [{ description: "PanelPay wallet top-up", amount: "25.00" }],
     });
     expect(calls[0]!.url).toBe("https://billing.example.test/includes/api.php");
     expect(calls[0]!.body.get("action")).toBe("GetInvoice");

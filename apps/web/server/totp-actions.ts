@@ -65,7 +65,7 @@ export const TOTP_LIMITS: readonly CustomerLimit[] = Object.freeze([
   Object.freeze({ action: "settings.totp", limit: 10, windowSeconds: 3600 }),
 ]);
 
-const ISSUER = "TryAWS.now";
+const ISSUER = "PanelPay";
 
 /**
  * The otpauth URI that an authenticator app reads (Key Uri Format). The label is the issuer only: the

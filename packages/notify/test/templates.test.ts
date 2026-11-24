@@ -91,12 +91,12 @@ describe.each(TEMPLATE_IDS)("template %s", (id) => {
   });
 });
 
-// WPU-Y6 (owner, 2026-11-14): every e-mail footer names the company TryAWS.now with its BIN and trade
+// WPU-Y6 (owner, 2026-11-14): every e-mail footer names the company PanelPay with its BIN and trade
 // licence, exactly as the owner gave them, never the old legal name.
-it("the e-mail footer names the company TryAWS.now with its BIN and trade licence", () => {
+it("the e-mail footer names the company PanelPay with its BIN and trade licence", () => {
   for (const locale of ["bn", "en"] as const) {
     const address = SHARED[locale].address;
-    expect(address.startsWith("TryAWS.now, ")).toBe(true);
+    expect(address.startsWith("PanelPay, ")).toBe(true);
     expect(address).toContain("BIN: 000000000-0000");
     expect(address).toContain("Trade License: TRAD/DNCC/000000/2000");
     const id = TEMPLATE_IDS[0];

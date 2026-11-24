@@ -1,5 +1,5 @@
 [Unit]
-Description=TryAWS.now Pro: operator app (Next.js)
+Description=PanelPay Pro: operator app (Next.js)
 After=network-online.target postgresql.service tc-firewall.service tc-worker.service
 Wants=network-online.target
 Requires=postgresql.service tc-firewall.service

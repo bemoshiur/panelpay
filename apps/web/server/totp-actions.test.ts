@@ -481,7 +481,7 @@ describe("disableTotpCore", () => {
 describe("otpauthUri and the fake authenticator", () => {
   it("names the issuer, never the customer's e-mail", () => {
     expect(otpauthUri("JBSWY3DPEHPK3PXP")).toBe(
-      "otpauth://totp/TryAWS.now?secret=JBSWY3DPEHPK3PXP&issuer=TryAWS.now&algorithm=SHA1&digits=6&period=30",
+      "otpauth://totp/PanelPay?secret=JBSWY3DPEHPK3PXP&issuer=PanelPay&algorithm=SHA1&digits=6&period=30",
     );
   });
 

@@ -33,8 +33,8 @@ describe("Admin messages", () => {
   });
 
   it("holds the agreed texts", () => {
-    expect(bn.Admin.meta.title).toBe("TryAWS.now অ্যাডমিন");
-    expect(en.Admin.meta.title).toBe("TryAWS.now Admin");
+    expect(bn.Admin.meta.title).toBe("PanelPay অ্যাডমিন");
+    expect(en.Admin.meta.title).toBe("PanelPay Admin");
     expect(bn.Admin.home.title).toBe("অ্যাডমিন প্যানেল তৈরি হচ্ছে");
     expect(en.Admin.home.title).toBe("The admin panel is being built");
     expect(bn.Admin.home.body).toBe("এই পৃষ্ঠায় এখন শুধু কাঠামো আছে।");

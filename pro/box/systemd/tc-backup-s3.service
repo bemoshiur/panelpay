@@ -1,5 +1,5 @@
 [Unit]
-Description=TryAWS.now Pro: copy of the newest backup to the buyer's S3 (optional)
+Description=PanelPay Pro: copy of the newest backup to the buyer's S3 (optional)
 # Started by tc-backup.service on success. Root: the only backup step that may use the instance role.
 ConditionPathExists=/etc/tc/backup.env
 

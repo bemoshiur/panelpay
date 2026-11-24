@@ -7,7 +7,7 @@ export const invoicesEn: Same<typeof invoicesBn> = {
     meta: { title: "Invoices" },
     heading: "Invoices",
     intro:
-      "The invoice of every purchase and renewal is here. TryAWS.now sells, bills and supports the service.",
+      "The invoice of every purchase and renewal is here. PanelPay sells, bills and supports the service.",
     list: {
       caption: "Your invoices",
       number: "Number",

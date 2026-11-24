@@ -90,7 +90,7 @@ const doc = (customer: InvoiceDocument["customer"]): InvoiceDocument => ({
   kind: "invoice",
   number: "TC-2026-000001",
   issuedAt: new Date("2026-11-12T04:00:00Z"),
-  company: { name: "TryAWS.now", address: [] },
+  company: { name: "PanelPay", address: [] },
   seller,
   customer,
   lines: [

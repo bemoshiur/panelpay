@@ -74,11 +74,11 @@ export const walletEn: Same<typeof walletBn> = {
         badge: "online payment",
         title: "How the payment works",
         p1: "You are taken to the secure EPS page to pay.",
-        p2: "Card and mobile-wallet details never reach TryAWS.now.",
+        p2: "Card and mobile-wallet details never reach PanelPay.",
         p3: "Your balance grows only after EPS confirms the payment.",
       },
       badgeCaption:
-        "Payments are processed by EPS in taka; TryAWS.now never sees your card or wallet details.",
+        "Payments are processed by EPS in taka; PanelPay never sees your card or wallet details.",
       open: { title: "Payments waiting", view: "View" },
       help: {
         support: "Write to support",

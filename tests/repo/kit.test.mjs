@@ -18,9 +18,9 @@ it.each([
   [".claude/agents/money-reviewer.md", "`.claude/agents/money-reviewer.md`"],
   [".claude/agents/spec-checker.md", "`.claude/agents/spec-checker.md`"],
 ])("%s is the plan's block, unchanged", (file, marker) => {
-  // WPU-Y6 (owner, 2026-11-14): the first brand name of the plan is TryAWS.now in these files; the plan
+  // WPU-Y6 (owner, 2026-11-14): the first brand name of the plan is PanelPay in these files; the plan
   // itself is edited in its own pull request. Nothing else may differ from the plan's block.
-  const brand = (text) => text.replace(/TiCON\s+Cloud/g, "TryAWS.now");
+  const brand = (text) => text.replace(/TiCON\s+Cloud/g, "PanelPay");
   expect(read(file)).toBe(brand(blockAfter(plan, marker)));
 });
 

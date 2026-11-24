@@ -1,8 +1,8 @@
 # Frequently asked questions
 
-## What is TryAWS.now?
+## What is PanelPay?
 
-TryAWS.now is a free, open-source control panel and billing system for reselling Amazon Lightsail. Customers
+PanelPay is a free, open-source control panel and billing system for reselling Amazon Lightsail. Customers
 top up a prepaid wallet and launch servers, databases, storage, CDN, DNS zones and domains. The platform charges
 the wallet, keeps a double-entry ledger, creates the resources in your AWS accounts and renews or suspends them
 on schedule.
@@ -87,4 +87,4 @@ runbooks, Lightsail product adapters, and a WHMCS bridge.
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

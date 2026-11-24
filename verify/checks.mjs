@@ -3639,7 +3639,7 @@ TASKS["WPU-Z7"] = [...wppBase, wppPages, wppAnchors, wppMessages, web, repo];
 // WPU-Z4: the admin screen that switches the unpaid-usage job on and off (db includes PostgreSQL tests).
 TASKS["WPU-Z4"] = [specSync, baselineSync, lint, typecheck, format, db, admin, repo];
 
-// WPU-Z8: the brand is TryAWS.now everywhere (web, admin, ui, e-mails, SMS, invoices, Cognito messages), and the
+// WPU-Z8: the brand is PanelPay everywhere (web, admin, ui, e-mails, SMS, invoices, Cognito messages), and the
 // legal text items of the WPU-Z7 review. brandNotify and brandWeb include PostgreSQL tests.
 TASKS["WPU-Z8"] = [
   specSync,
@@ -3860,9 +3860,9 @@ TASKS["WPU-X3"] = [
 // WPU-Y1: app images move to the Lightsail-packaged blueprints (core tables and defaults; no DB change).
 TASKS["WPU-Y1"] = [specSync, baselineSync, lint, typecheck, format, core, repo];
 
-// WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now with its BIN and trade licence on every page, e-mail,
+// WPU-Y6 (owner, 2026-11-14): the company is PanelPay with its BIN and trade licence on every page, e-mail,
 // invoice, GEO file and JSON-LD; the legal pages are approved (no draft notice); the SST app and every text of
-// the first brand name are TryAWS.now (tryaws-now). brandNotify and brandWeb include PostgreSQL tests.
+// the first brand name are PanelPay (tryaws-now). brandNotify and brandWeb include PostgreSQL tests.
 TASKS["WPU-Y6"] = [
   specSync,
   baselineSync,

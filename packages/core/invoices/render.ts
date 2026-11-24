@@ -55,8 +55,8 @@ const TRADEMARK_LINE =
   "Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of Amazon.com, Inc. or its affiliates.";
 // Who sells, bills and supports (no implied endorsement, 16.13).
 const SELLER_LINE: Record<Locale, string> = {
-  en: "TryAWS.now sells, bills and supports the service.",
-  bn: "বিক্রি, বিল ও সাপোর্ট TryAWS.now দেয়।",
+  en: "PanelPay sells, bills and supports the service.",
+  bn: "বিক্রি, বিল ও সাপোর্ট PanelPay দেয়।",
 };
 
 const TEXT = {

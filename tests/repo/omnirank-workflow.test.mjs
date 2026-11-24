@@ -177,7 +177,7 @@ describe("omnirank.config.json", () => {
     );
     expect(config.$schema).toContain("/v0.4.0/schemas/omnirank.config.schema.json");
     expect(config.site).toMatchObject({
-      name: "TryAWS.now",
+      name: "PanelPay",
       url: "https://tryaws.now",
       entityType: "Organization",
     });

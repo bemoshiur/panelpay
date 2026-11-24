@@ -11,7 +11,7 @@ import {
 
 const ARN = "arn:aws:ses:ap-southeast-1:123456789012:identity/ticoncloud.test";
 const REQUEST = {
-  from: "TryAWS.now <no-reply@ticoncloud.test>",
+  from: "PanelPay <no-reply@ticoncloud.test>",
   to: "rahim.uddin@example.test",
   subject: "স্বাগতম",
   html: "<p>Hello</p>",

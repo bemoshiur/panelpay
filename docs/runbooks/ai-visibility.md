@@ -1,13 +1,13 @@
 # AI visibility: OmniRank audit, GEO files, IndexNow
 
-How the public site of TryAWS.now stays readable and quotable for search engines and answer engines (ChatGPT, Claude, Gemini, Perplexity, Copilot), and what the owner does off the site (WPU-Z16). Owner decision 2026-11-13: no tracking tool is installed; the site itself is made easy to crawl, quote and cite. Nothing here needs an AWS role, a secret or a deploy.
+How the public site of PanelPay stays readable and quotable for search engines and answer engines (ChatGPT, Claude, Gemini, Perplexity, Copilot), and what the owner does off the site (WPU-Z16). Owner decision 2026-11-13: no tracking tool is installed; the site itself is made easy to crawl, quote and cite. Nothing here needs an AWS role, a secret or a deploy.
 
 What the site serves:
 
 - Every public page (home, pricing, Cloud Server, help, support, the four legal documents) in bn and en: one `h1`, a canonical URL, `hreflang` bn, en and `x-default`, a title of at most 60 and a description of at most 160 characters, OpenGraph with the picture `/brand/og.png` (1200 x 630), and JSON-LD: Organization (stable `@id` `<origin>/#organization`, the entity statement as description, no `sameAs` until a profile exists), WebSite, WebPage (`dateModified`), BreadcrumbList, FAQPage on help and Cloud Server, Product and Offer in USD where the page shows prices.
 - An answer block of 40 to 60 words near the top of home, help, pricing, Cloud Server and support: the hero subtitle class `.subheading` of the mockup (`geo.answerBlockSelector` of `omnirank.config.json`). The FAQ is a description list (`dl`, `dt`, `dd`) with every answer in the server HTML.
 - A dated line "Last updated" at the foot of every public page (`CONTENT_UPDATED` in `apps/web/server/public/seo.ts`).
-- `/llms.txt`, `/llms-full.txt` and `/facts.json`: PHYSICAL files in `apps/web/public`, written from the messages by `apps/web/server/public/geo.ts`. Licence `CC-BY-4.0`, attribution "TryAWS.now". The company is TryAWS.now with "BIN: 000000000-0000" and "Trade License: TRAD/DNCC/000000/2000" (owner, WPU-Y6, 2026-11-14), the same as the footer and the Organization JSON-LD (`identifier`).
+- `/llms.txt`, `/llms-full.txt` and `/facts.json`: PHYSICAL files in `apps/web/public`, written from the messages by `apps/web/server/public/geo.ts`. Licence `CC-BY-4.0`, attribution "PanelPay". The company is PanelPay with "BIN: 000000000-0000" and "Trade License: TRAD/DNCC/000000/2000" (owner, WPU-Y6, 2026-11-14), the same as the footer and the Organization JSON-LD (`identifier`).
 - `/robots.txt`: every crawler may read the public pages; GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-User, Claude-SearchBot, PerplexityBot, Perplexity-User, Google-Extended, bingbot and Applebot-Extended each have a group of their own; every group keeps out the panel, the sign-in pages, `/api/`, `/pay/` and `/dev/`. The admin app (admin.tryaws.now) is `noindex` on every page.
 - Only production is indexed (owner ruling 2026-11-14): on staging and every other stage (TC_STAGE not `production`, or missing) robots.txt is `User-Agent: *` / `Disallow: /` with no sitemap line, and every response of the proxy carries `X-Robots-Tag: noindex, nofollow` (`indexableStage` in `apps/web/server/public/indexing.ts`).
 - `/sitemap.xml`: the public pages in both locales with their `hreflang` alternates; a product family only while its flag is on.
@@ -51,8 +51,8 @@ No tracking tool is installed and none is needed for these steps.
 
 1. Google Search Console: add the domain property `tryaws.now`. Google shows a TXT value (`google-site-verification=...`). Add it as a TXT record at the apex of the Route 53 public hosted zone `tryaws.now` (Route 53 console, the zone, Create record, type TXT, the value in quotes; keep the SES and DMARC records as they are). Click Verify. Submit `https://tryaws.now/sitemap.xml`.
 2. Bing Webmaster Tools (Bing, and through it Copilot and ChatGPT search): add the site, choose DNS verification, add the given TXT (or CNAME) record in the same zone, verify, and submit the same sitemap. Import from Search Console is the shorter path once Google is verified.
-3. Business listings with the same name, company, address, identifiers and description as `facts.json` (the entity statement, word for word): Google Business Profile (as a service-area business in Dhaka if no walk-in address is wanted), Bing Places, and the profiles TryAWS.now will keep (LinkedIn company page, Facebook page, Crunchbase, Wikidata when notable). Then add each real profile URL to `sameAs` in `omnirank.config.json` and to the Organization JSON-LD (`organizationLd` in `apps/web/server/public/seo.ts`), and write the GEO files again.
-4. Every few weeks, ask ChatGPT, Claude, Gemini and Perplexity the questions of the help page ("how to pay for a cloud server in taka", "VAT invoice for cloud servers in Bangladesh", "Amazon Lightsail in Bangladesh"); note whether TryAWS.now is named and cited. No tool, no account linking.
+3. Business listings with the same name, company, address, identifiers and description as `facts.json` (the entity statement, word for word): Google Business Profile (as a service-area business in Dhaka if no walk-in address is wanted), Bing Places, and the profiles PanelPay will keep (LinkedIn company page, Facebook page, Crunchbase, Wikidata when notable). Then add each real profile URL to `sameAs` in `omnirank.config.json` and to the Organization JSON-LD (`organizationLd` in `apps/web/server/public/seo.ts`), and write the GEO files again.
+4. Every few weeks, ask ChatGPT, Claude, Gemini and Perplexity the questions of the help page ("how to pay for a cloud server in taka", "VAT invoice for cloud servers in Bangladesh", "Amazon Lightsail in Bangladesh"); note whether PanelPay is named and cited. No tool, no account linking.
 
 ## Rollback
 
@@ -68,10 +68,10 @@ Write in JOURNEY.md: the date, the audit target and its overall score, the gates
 
 - Install a tracking, analytics or chat script, or load anything from another origin (rule U3).
 - Serve `llms.txt`, `llms-full.txt` or `facts.json` from a route handler (403 behind CloudFront); they stay physical files.
-- Put a mark of AWS into a profile name other than the brand token TryAWS.now (16.13), or claim that AWS sells, supports or endorses the service.
+- Put a mark of AWS into a profile name other than the brand token PanelPay (16.13), or claim that AWS sells, supports or endorses the service.
 - Add a `sameAs` URL of a profile that does not exist.
 - Print or store the password of Search Console, Bing Webmaster Tools or a listing site anywhere in this repository.
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

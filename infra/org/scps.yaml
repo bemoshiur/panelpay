@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  TryAWS.now service control policies (Sections 3.1, 6.3, 15 item 13). Applied by DevOps in the
+  PanelPay service control policies (Sections 3.1, 6.3, 15 item 13). Applied by DevOps in the
   MANAGEMENT account, in us-east-1, after accounts-and-ous.yaml. Three policies:
   guardrails (all member OUs), pool allow-list (pool OUs), dns allow-list (the DNS OU).
   An SCP never applies to the management account itself. An SCP also binds the root user and every

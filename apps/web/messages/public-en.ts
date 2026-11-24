@@ -9,7 +9,7 @@ export const publicEn: Same<typeof publicBn> = {
     crumb: { home: "Home" },
     entity: {
       statement:
-        "TryAWS.now is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. TryAWS.now sells, bills and supports the service.",
+        "PanelPay is a prepaid cloud panel for people and businesses in Bangladesh. You buy Cloud Servers, built on Amazon Lightsail, that run in the AWS Region Singapore or Mumbai. Prices are in taka (BDT) and include VAT and fees; you pay from a taka wallet that you top up with EPS. PanelPay sells, bills and supports the service.",
     },
     updated: { label: "Last updated: <time>{date}</time>" },
     // WPU-X21: the alt text of the official "Pay with EPS" badge (footer, home page, top-up page).
@@ -18,7 +18,7 @@ export const publicEn: Same<typeof publicBn> = {
     },
     meta: {
       home: {
-        title: "TryAWS.now: Cloud Server, built on Amazon Lightsail",
+        title: "PanelPay: Cloud Server, built on Amazon Lightsail",
         description:
           "Prepaid cloud panel for Bangladesh. Cloud Server, built on Amazon Lightsail. Prices in taka, paid from a taka wallet, top up with EPS.",
       },
@@ -35,17 +35,17 @@ export const publicEn: Same<typeof publicBn> = {
       help: {
         title: "Help and frequently asked questions",
         description:
-          "Answers about TryAWS.now and Amazon Lightsail: AWS, billing, support and where your data is.",
+          "Answers about PanelPay and Amazon Lightsail: AWS, billing, support and where your data is.",
       },
       support: {
         title: "Support and contact",
         description:
-          "How to get support from TryAWS.now: support requests in the panel, or the form on the support page without an account.",
+          "How to get support from PanelPay: support requests in the panel, or the form on the support page without an account.",
       },
       legal: {
         title: "Legal documents",
-        description: "TryAWS.now terms, privacy, acceptable use and refund policy.",
-        descriptionOf: "{title} of TryAWS.now, the prepaid cloud panel for Bangladesh.",
+        description: "PanelPay terms, privacy, acceptable use and refund policy.",
+        descriptionOf: "{title} of PanelPay, the prepaid cloud panel for Bangladesh.",
       },
       soon: {
         description:
@@ -155,7 +155,7 @@ export const publicEn: Same<typeof publicBn> = {
       heading: "Pricing",
       lead: "Cloud Server, built on Amazon Lightsail. Every price is for 30 days, in taka (BDT).",
       answer:
-        "Every Cloud Server price on TryAWS.now is in taka (BDT) for 30 days and already includes VAT and fees. At checkout you see the exact amount before you confirm, and exactly that amount is taken from your taka wallet, which you top up with EPS.",
+        "Every Cloud Server price on PanelPay is in taka (BDT) for 30 days and already includes VAT and fees. At checkout you see the exact amount before you confirm, and exactly that amount is taken from your taka wallet, which you top up with EPS.",
       tabsLabel: "Product type",
       tabCloudServers: "Cloud Server",
       tableTitle: "Compare plans",
@@ -173,7 +173,7 @@ export const publicEn: Same<typeof publicBn> = {
       heading: "Cloud Server, built on Amazon Lightsail",
       lead: "Every Cloud Server is an Amazon Lightsail instance that runs in the AWS Region Singapore or Mumbai.",
       answer:
-        "A Cloud Server on TryAWS.now is an Amazon Lightsail instance that runs in the AWS Region Singapore or Mumbai. You pick a plan and a location, see the price in taka for 30 days with VAT and fees included, pay from your taka wallet, and manage the server from the TryAWS.now panel.",
+        "A Cloud Server on PanelPay is an Amazon Lightsail instance that runs in the AWS Region Singapore or Mumbai. You pick a plan and a location, see the price in taka for 30 days with VAT and fees included, pay from your taka wallet, and manage the server from the PanelPay panel.",
       plansTitle: "Plans",
       featuresTitle: "What you get",
       features: {
@@ -228,9 +228,9 @@ export const publicEn: Same<typeof publicBn> = {
     },
     help: {
       heading: "Frequently asked questions",
-      lead: "The questions we hear most about TryAWS.now and Amazon Lightsail.",
+      lead: "The questions we hear most about PanelPay and Amazon Lightsail.",
       answer:
-        "TryAWS.now sells Cloud Servers, built on Amazon Lightsail, in the AWS Region Singapore or Mumbai. You top up a wallet in taka with EPS and buy from it; prices are in taka (BDT), include VAT and fees, and are taken from the wallet at checkout. To buy, you verify your email and mobile and use an authenticator app.",
+        "PanelPay sells Cloud Servers, built on Amazon Lightsail, in the AWS Region Singapore or Mumbai. You top up a wallet in taka with EPS and buy from it; prices are in taka (BDT), include VAT and fees, and are taken from the wallet at checkout. To buy, you verify your email and mobile and use an authenticator app.",
       listTitle: "Questions and answers",
       stillTitle: "Did not find an answer?",
       stillText: "Tell us on the support page.",
@@ -241,11 +241,11 @@ export const publicEn: Same<typeof publicBn> = {
         },
         noAccount: {
           q: "Do I get an AWS account or the AWS console?",
-          a: "No. You run everything from the TryAWS.now panel. You do not need a separate AWS account or the AWS console.",
+          a: "No. You run everything from the PanelPay panel. You do not need a separate AWS account or the AWS console.",
         },
         billing: {
           q: "Who bills me and who supports me?",
-          a: "TryAWS.now. We sell and bill the service, and we support you through support requests in the panel. There is no support phone line.",
+          a: "PanelPay. We sell and bill the service, and we support you through support requests in the panel. There is no support phone line.",
         },
         dataLocation: {
           q: "Where is my data?",
@@ -285,7 +285,7 @@ export const publicEn: Same<typeof publicBn> = {
         },
         vatInvoice: {
           q: "Do I get a VAT invoice?",
-          a: "Yes. For each purchase and renewal TryAWS.now gives you a tax invoice (Mushak-6.3) in taka. Every price includes VAT and the other taxes and fees that apply, and the invoice shows the VAT and the fees. A VAT-registered business can have its BIN printed on the invoice.",
+          a: "Yes. For each purchase and renewal PanelPay gives you a tax invoice (Mushak-6.3) in taka. Every price includes VAT and the other taxes and fees that apply, and the invoice shows the VAT and the fees. A VAT-registered business can have its BIN printed on the invoice.",
         },
         refunds: {
           q: "Can I get a refund?",
@@ -295,7 +295,7 @@ export const publicEn: Same<typeof publicBn> = {
     },
     support: {
       heading: "Support and contact",
-      lead: "TryAWS.now gives support through support requests only, and our support team answers every request in writing. With an account, open a request in the panel and follow the answers there. Without an account, use the form on the support page and we answer by email. There is no support phone line and no support email address.",
+      lead: "PanelPay gives support through support requests only, and our support team answers every request in writing. With an account, open a request in the panel and follow the answers there. Without an account, use the form on the support page and we answer by email. There is no support phone line and no support email address.",
       customerTitle: "If you have an account",
       customerText:
         "Open a support request in the panel and follow it there: read our answers and reply in the same place. If you are not signed in, you sign in first.",

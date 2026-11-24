@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="t d">
-  <title id="t">TryAWS.now: open-source edition and Pro edition on AWS Marketplace</title>
-  <desc id="d">Two editions of TryAWS.now. Open source: free under Apache-2.0, self-hosted. Pro: one-click CloudFormation install on Amazon EC2, coming soon to AWS Marketplace, 199 US dollars for 36 months.</desc>
+  <title id="t">PanelPay: open-source edition and Pro edition on AWS Marketplace</title>
+  <desc id="d">Two editions of PanelPay. Open source: free under Apache-2.0, self-hosted. Pro: one-click CloudFormation install on Amazon EC2, coming soon to AWS Marketplace, 199 US dollars for 36 months.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0f1b3d"/>
@@ -33,7 +33,7 @@
   </g>
 
   <!-- title -->
-  <text x="56" y="76" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="44" font-weight="800" fill="#ffffff">TryAWS<tspan fill="url(#orange)">.now</tspan></text>
+  <text x="56" y="76" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="44" font-weight="800" fill="#ffffff">PanelPay<tspan fill="url(#orange)">.now</tspan></text>
   <text x="56" y="110" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" fill="#c9d3f5">Prepaid Amazon Lightsail reseller panel · wallet, billing, automatic provisioning · WHMCS addon</text>
   <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700">
     <rect x="964" y="46" width="260" height="32" rx="16" fill="url(#orange)"/>

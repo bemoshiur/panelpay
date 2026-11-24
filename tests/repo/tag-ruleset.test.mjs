@@ -52,10 +52,10 @@ describe("scripts/golive/tag-ruleset.sh", () => {
     );
     expect(r.lines).toHaveLength(3);
     expect(r.lines[0]).toContain(
-      "repos/bemoshiur/tryaws.now/rulesets?targets=tag&includes_parents=false&per_page=100",
+      "repos/bemoshiur/panelpay/rulesets?targets=tag&includes_parents=false&per_page=100",
     );
     expect(r.lines[0]).toContain("X-GitHub-Api-Version: 2022-11-28");
-    expect(r.lines[1]).toContain("--method POST repos/bemoshiur/tryaws.now/rulesets ");
+    expect(r.lines[1]).toContain("--method POST repos/bemoshiur/panelpay/rulesets ");
     expect(bodyOf(r.lines[1])).toEqual({
       name: "tc-release-tags",
       target: "tag",
@@ -64,7 +64,7 @@ describe("scripts/golive/tag-ruleset.sh", () => {
       conditions: { ref_name: { include: ["refs/tags/v*"], exclude: [] } },
       rules: [{ type: "creation" }, { type: "update" }, { type: "deletion" }],
     });
-    expect(r.lines[2]).toContain("repos/bemoshiur/tryaws.now/rulesets/777 ");
+    expect(r.lines[2]).toContain("repos/bemoshiur/panelpay/rulesets/777 ");
   });
 
   it("is idempotent: an existing ruleset of that name is updated in place (PUT), never created twice", () => {
@@ -73,7 +73,7 @@ describe("scripts/golive/tag-ruleset.sh", () => {
     expect(r.stdout).toContain("tag-ruleset: updated ruleset 4242");
     expect(r.calls).not.toContain("--method POST");
     const put = r.lines.find((l) => l.includes("--method PUT"));
-    expect(put).toContain("repos/bemoshiur/tryaws.now/rulesets/4242 ");
+    expect(put).toContain("repos/bemoshiur/panelpay/rulesets/4242 ");
     expect(bodyOf(put).rules.map((x) => x.type)).toEqual(["creation", "update", "deletion"]);
   });
 

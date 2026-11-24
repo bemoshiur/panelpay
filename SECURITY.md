@@ -1,13 +1,13 @@
 # Security policy
 
-TryAWS.now handles money (a wallet and a double-entry ledger) and creates cloud resources, so we take
+PanelPay handles money (a wallet and a double-entry ledger) and creates cloud resources, so we take
 security reports seriously.
 
 ## Report a vulnerability
 
 **Do not open a public issue for a security problem.**
 
-1. Use GitHub's private report: [Report a vulnerability](https://github.com/bemoshiur/tryaws.now/security/advisories/new).
+1. Use GitHub's private report: [Report a vulnerability](https://github.com/bemoshiur/panelpay/security/advisories/new).
 2. If that is not possible, send a private message to the maintainer on
    [LinkedIn](https://www.linkedin.com/in/in-moshiur) and say only that you have a security report; details
    follow in a private channel.
@@ -40,4 +40,4 @@ social engineering, and denial of service by volume.
 
 ---
 
-_TryAWS.now is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._
+_PanelPay is open source (Apache-2.0), created by [S M Moshiur Rahman](https://www.linkedin.com/in/in-moshiur) · [LinkedIn](https://www.linkedin.com/in/in-moshiur)._

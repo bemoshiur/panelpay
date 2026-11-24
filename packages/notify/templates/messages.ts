@@ -2,7 +2,7 @@ import type { TemplateId } from "../queue/types";
 
 // The texts of the 22 messages, Bengali first. Two typed catalogs: a missing key is a type error,
 // and test/templates.test.ts checks every placeholder, the SMS length and the forbidden forms
-// (16.16: "AWS Lightsail"). Placeholders are plain `{name}`. Wording: TryAWS.now sells, bills and
+// (16.16: "AWS Lightsail"). Placeholders are plain `{name}`. Wording: PanelPay sells, bills and
 // supports; AWS is named only in the footer statements of 16.13, which are used unchanged.
 
 export interface TemplateText {
@@ -31,18 +31,18 @@ export interface SharedText {
 // 16.13 "used unchanged": the trademark line is English in both locales.
 const TRADEMARK =
   "Amazon Web Services, AWS, Amazon Lightsail and Amazon Route 53 are trademarks of Amazon.com, Inc. or its affiliates.";
-// WPU-Y6 (owner, 2026-11-14): the company is TryAWS.now, with its BIN and trade licence written exactly
+// WPU-Y6 (owner, 2026-11-14): the company is PanelPay, with its BIN and trade licence written exactly
 // as the owner gave them (the same as the footer of the site, Shell.footer).
 const ADDRESS =
-  "TryAWS.now, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000. BIN: 000000000-0000. Trade License: TRAD/DNCC/000000/2000";
+  "PanelPay, Level 1, Example House, 1 Example Avenue, Sector-1, Example Area, Dhaka-1000. BIN: 000000000-0000. Trade License: TRAD/DNCC/000000/2000";
 
 export const SHARED: Readonly<Record<"bn" | "en", SharedText>> = {
   bn: {
-    wordmark: "TryAWS.now",
+    wordmark: "PanelPay",
     awsShort: "১০০% AWS অবকাঠামো। Amazon Lightsail দিয়ে তৈরি।",
     trademark: TRADEMARK,
     address: ADDRESS,
-    footerNote: "এই বার্তাটি আপনার TryAWS.now অ্যাকাউন্টের জন্য পাঠানো হয়েছে।",
+    footerNote: "এই বার্তাটি আপনার PanelPay অ্যাকাউন্টের জন্য পাঠানো হয়েছে।",
     cta: {
       open_panel: "প্যানেল খুলুন",
       kyc: "KYC দেখুন",
@@ -81,11 +81,11 @@ export const SHARED: Readonly<Record<"bn" | "en", SharedText>> = {
     },
   },
   en: {
-    wordmark: "TryAWS.now",
+    wordmark: "PanelPay",
     awsShort: "100% AWS infrastructure. Built on Amazon Lightsail.",
     trademark: TRADEMARK,
     address: ADDRESS,
-    footerNote: "This message was sent for your TryAWS.now account.",
+    footerNote: "This message was sent for your PanelPay account.",
     cta: {
       open_panel: "Open the panel",
       kyc: "View KYC",
@@ -138,7 +138,7 @@ const SECURITY_BN = (what: string, sms: string): TemplateText => ({
 
 export const BN: Catalog = {
   welcome: {
-    subject: "TryAWS.now-এ স্বাগতম",
+    subject: "PanelPay-এ স্বাগতম",
     headline: "স্বাগতম",
     body: [
       "আপনার অ্যাকাউন্ট প্রস্তুত।",
@@ -154,7 +154,7 @@ export const BN: Catalog = {
     subject: "আপনার KYC অনুমোদিত হয়েছে",
     headline: "KYC অনুমোদিত",
     body: ["আপনার KYC যাচাই সম্পন্ন হয়েছে। এখন আপনি রিসোর্স কিনতে পারবেন।"],
-    sms: "TryAWS.now: আপনার KYC অনুমোদিত হয়েছে। এখন রিসোর্স কিনতে পারবেন।",
+    sms: "PanelPay: আপনার KYC অনুমোদিত হয়েছে। এখন রিসোর্স কিনতে পারবেন।",
   },
   kyc_rejected: {
     subject: "আপনার KYC গ্রহণ করা যায়নি",
@@ -198,7 +198,7 @@ export const BN: Catalog = {
     subject: "আপনার {product} প্রস্তুত",
     headline: "রিসোর্স প্রস্তুত",
     body: ["{name} ({product}) প্রস্তুত।", "লোকেশন: {region}", "ঠিকানা: {address}"],
-    sms: "TryAWS.now: আপনার {product} প্রস্তুত। ঠিকানা: {address}",
+    sms: "PanelPay: আপনার {product} প্রস্তুত। ঠিকানা: {address}",
   },
   renewal_reminder: {
     subject: "{days} দিন পর রিনিউ",
@@ -208,7 +208,7 @@ export const BN: Catalog = {
       "রিনিউয়ের পরিমাণ: {amount}। ওয়ালেট ব্যালেন্স: {balance}।",
       "{note}",
     ],
-    sms: "TryAWS.now: {name} কাল ({date}) শেষ হচ্ছে। রিনিউ {amount}, ব্যালেন্স {balance}।",
+    sms: "PanelPay: {name} কাল ({date}) শেষ হচ্ছে। রিনিউ {amount}, ব্যালেন্স {balance}।",
     extra: {
       auto_on: "স্বয়ংক্রিয় রিনিউ চালু আছে। ওয়ালেটে যথেষ্ট টাকা রাখুন।",
       auto_off: "স্বয়ংক্রিয় রিনিউ বন্ধ আছে। মেয়াদের মধ্যে নিজে রিনিউ করুন।",
@@ -230,7 +230,7 @@ export const BN: Catalog = {
       "{until} পর্যন্ত রিনিউ করলে সব আগের মতো চলবে। এরপর রিসোর্স মুছে যাবে।",
       "রিনিউয়ের পরিমাণ: {amount}। ওয়ালেট ব্যালেন্স: {balance}।",
     ],
-    sms: "TryAWS.now: {name} স্থগিত। {until} এর মধ্যে রিনিউ ({amount}) না করলে মুছে যাবে।",
+    sms: "PanelPay: {name} স্থগিত। {until} এর মধ্যে রিনিউ ({amount}) না করলে মুছে যাবে।",
   },
   resource_destroyed: {
     subject: "রিসোর্স মুছে গেছে, {kept} রাখা আছে",
@@ -239,7 +239,7 @@ export const BN: Catalog = {
       "{name} মুছে ফেলা হয়েছে। আপনার {kept} {until} পর্যন্ত রাখা হবে।",
       "এর মধ্যে রিস্টোর করতে পারবেন।",
     ],
-    sms: "TryAWS.now: {name} মুছে গেছে। {kept} {until} পর্যন্ত রিস্টোর করতে পারবেন।",
+    sms: "PanelPay: {name} মুছে গেছে। {kept} {until} পর্যন্ত রিস্টোর করতে পারবেন।",
     extra: { backup: "ব্যাকআপ", settings: "সেটিং" },
   },
   backups_purged: {
@@ -266,19 +266,19 @@ export const BN: Catalog = {
   },
   security_new_sign_in: SECURITY_BN(
     "নতুন সাইন-ইন",
-    "TryAWS.now: আপনার অ্যাকাউন্টে নতুন সাইন-ইন হয়েছে। আপনি না হলে এখনই পাসওয়ার্ড বদলান।",
+    "PanelPay: আপনার অ্যাকাউন্টে নতুন সাইন-ইন হয়েছে। আপনি না হলে এখনই পাসওয়ার্ড বদলান।",
   ),
   security_password_changed: SECURITY_BN(
     "পাসওয়ার্ড পরিবর্তন",
-    "TryAWS.now: আপনার পাসওয়ার্ড বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
+    "PanelPay: আপনার পাসওয়ার্ড বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
   ),
   security_totp_changed: SECURITY_BN(
     "TOTP সেটিং পরিবর্তন",
-    "TryAWS.now: আপনার TOTP সেটিং বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
+    "PanelPay: আপনার TOTP সেটিং বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
   ),
   security_email_changed: SECURITY_BN(
     "ইমেইল ঠিকানা পরিবর্তন",
-    "TryAWS.now: আপনার ইমেইল ঠিকানা বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
+    "PanelPay: আপনার ইমেইল ঠিকানা বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
   ),
   security_totp_blocked: {
     subject: "নিরাপত্তা সতর্কতা: ভুল অথেনটিকেটর কোড",
@@ -291,7 +291,7 @@ export const BN: Catalog = {
   },
   security_phone_changed: SECURITY_BN(
     "ফোন নম্বর পরিবর্তন",
-    "TryAWS.now: আপনার ফোন নম্বর বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
+    "PanelPay: আপনার ফোন নম্বর বদলানো হয়েছে। আপনি না হলে এখনই সাপোর্টে জানান।",
   ),
   domain_contact_pending: {
     subject: "ডোমেইন {domain}: যোগাযোগ যাচাই বাকি",
@@ -309,7 +309,7 @@ export const BN: Catalog = {
       "অটো-রিনিউ চালু থাকলে মেয়াদ শেষের ৩০ দিন আগে ডোমেইনটি রিনিউ হয় এবং তখনই ওয়ালেট থেকে চার্জ কাটা হয়।",
       "রিনিউ না করলে ডোমেইনটি হারাতে পারেন।",
     ],
-    sms: "TryAWS.now: {domain} এর মেয়াদ {days} দিন পর ({date}) শেষ। মেয়াদ শেষের ৩০ দিন আগে রিনিউ হয়।",
+    sms: "PanelPay: {domain} এর মেয়াদ {days} দিন পর ({date}) শেষ। মেয়াদ শেষের ৩০ দিন আগে রিনিউ হয়।",
   },
   domain_renewal_refunded: {
     subject: "ডোমেইন {domain}: রিনিউ হয়নি, টাকা ফেরত",
@@ -418,7 +418,7 @@ const SECURITY_EN = (what: string, subject: string, sms: string): TemplateText =
 
 export const EN: Catalog = {
   welcome: {
-    subject: "Welcome to TryAWS.now",
+    subject: "Welcome to PanelPay",
     headline: "Welcome",
     body: [
       "Your account is ready.",
@@ -434,7 +434,7 @@ export const EN: Catalog = {
     subject: "Your KYC is approved",
     headline: "KYC approved",
     body: ["Your KYC check is complete. You can now buy resources."],
-    sms: "TryAWS.now: your KYC is approved. You can now buy resources.",
+    sms: "PanelPay: your KYC is approved. You can now buy resources.",
   },
   kyc_rejected: {
     subject: "Your KYC could not be accepted",
@@ -478,7 +478,7 @@ export const EN: Catalog = {
     subject: "Your {product} is ready",
     headline: "Resource ready",
     body: ["{name} ({product}) is ready.", "Location: {region}", "Address: {address}"],
-    sms: "TryAWS.now: your {product} is ready. Address: {address}",
+    sms: "PanelPay: your {product} is ready. Address: {address}",
   },
   renewal_reminder: {
     subject: "Renews in {days} days",
@@ -488,7 +488,7 @@ export const EN: Catalog = {
       "Renewal amount: {amount}. Wallet balance: {balance}.",
       "{note}",
     ],
-    sms: "TryAWS.now: {name} ends tomorrow ({date}). Renewal {amount}, balance {balance}.",
+    sms: "PanelPay: {name} ends tomorrow ({date}). Renewal {amount}, balance {balance}.",
     extra: {
       auto_on: "Automatic renewal is on. Keep enough money in your wallet.",
       auto_off: "Automatic renewal is off. Renew yourself before it ends.",
@@ -510,7 +510,7 @@ export const EN: Catalog = {
       "Renew by {until} and everything runs as before. After that the resource is deleted.",
       "Renewal amount: {amount}. Wallet balance: {balance}.",
     ],
-    sms: "TryAWS.now: {name} is suspended. Renew ({amount}) by {until} or it is deleted.",
+    sms: "PanelPay: {name} is suspended. Renew ({amount}) by {until} or it is deleted.",
   },
   resource_destroyed: {
     subject: "Resource deleted, {kept} kept",
@@ -519,7 +519,7 @@ export const EN: Catalog = {
       "{name} was deleted. Your {kept} is kept until {until}.",
       "You can restore it until then.",
     ],
-    sms: "TryAWS.now: {name} was deleted. You can restore the {kept} until {until}.",
+    sms: "PanelPay: {name} was deleted. You can restore the {kept} until {until}.",
     extra: { backup: "backup", settings: "settings" },
   },
   backups_purged: {
@@ -547,22 +547,22 @@ export const EN: Catalog = {
   security_new_sign_in: SECURITY_EN(
     "A new sign-in to your account was seen",
     "new sign-in",
-    "TryAWS.now: a new sign-in to your account. If it was not you, change your password now.",
+    "PanelPay: a new sign-in to your account. If it was not you, change your password now.",
   ),
   security_password_changed: SECURITY_EN(
     "Your password was changed",
     "password changed",
-    "TryAWS.now: your password was changed. If it was not you, tell support now.",
+    "PanelPay: your password was changed. If it was not you, tell support now.",
   ),
   security_totp_changed: SECURITY_EN(
     "Your TOTP setting was changed",
     "TOTP changed",
-    "TryAWS.now: your TOTP setting was changed. If it was not you, tell support now.",
+    "PanelPay: your TOTP setting was changed. If it was not you, tell support now.",
   ),
   security_email_changed: SECURITY_EN(
     "Your email address was changed",
     "email changed",
-    "TryAWS.now: your email address was changed. If it was not you, tell support now.",
+    "PanelPay: your email address was changed. If it was not you, tell support now.",
   ),
   security_totp_blocked: {
     subject: "Security alert: wrong authenticator codes",
@@ -576,7 +576,7 @@ export const EN: Catalog = {
   security_phone_changed: SECURITY_EN(
     "Your phone number was changed",
     "phone changed",
-    "TryAWS.now: your phone number was changed. If it was not you, tell support now.",
+    "PanelPay: your phone number was changed. If it was not you, tell support now.",
   ),
   domain_contact_pending: {
     subject: "Domain {domain}: contact verification pending",
@@ -594,7 +594,7 @@ export const EN: Catalog = {
       "With auto-renew on, a domain is renewed 30 days before its expiry date, and the wallet is charged then.",
       "If you do not renew, you can lose the domain.",
     ],
-    sms: "TryAWS.now: {domain} ends in {days} days ({date}). Domains renew 30 days before expiry.",
+    sms: "PanelPay: {domain} ends in {days} days ({date}). Domains renew 30 days before expiry.",
   },
   domain_renewal_refunded: {
     subject: "Domain {domain}: not renewed, payment refunded",

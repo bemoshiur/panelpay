@@ -11,7 +11,7 @@ const SECRET = "b".repeat(48);
 const client: WhmcsClient = { clientId: "7", email: "Buyer@Example.test", currencyCode: "USD" };
 const ref = clientRef(SECRET, "7", "buyer@example.test");
 const line = (amount: string, currency = "USD", r = ref) => ({
-  description: `TryAWS.now wallet top-up (${currency} ${amount}) [ref ${r}]`,
+  description: `PanelPay wallet top-up (${currency} ${amount}) [ref ${r}]`,
   amount,
 });
 const invoice = (over: Partial<WhmcsInvoice> = {}): WhmcsInvoice => ({
@@ -121,7 +121,7 @@ describe("decideInvoice", () => {
 
   it("refuses a line that is not the addon's own format or disagrees with its amount", () => {
     expect(
-      decide(invoice({ items: [{ description: "TryAWS.now wallet top-up", amount: "25.00" }] })),
+      decide(invoice({ items: [{ description: "PanelPay wallet top-up", amount: "25.00" }] })),
     ).toEqual({
       kind: "mismatch",
       reason: "line",

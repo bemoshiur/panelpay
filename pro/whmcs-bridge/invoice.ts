@@ -18,7 +18,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 //   panel already credited (finding 2, scenario B). An operator decides.
 
 /** Every line of a top-up invoice starts with this (the WHMCS addon writes it, pro/whmcs). */
-export const TOPUP_MARKER = "TryAWS.now wallet top-up";
+export const TOPUP_MARKER = "PanelPay wallet top-up";
 
 export interface WhmcsInvoice {
   readonly invoiceId: string;
@@ -53,9 +53,9 @@ export type InvoiceDecision =
 
 const AMOUNT = /^(0|[1-9][0-9]{0,11})(\.[0-9]{1,2})?$/;
 const MAX_TOPUP_MINOR = 100_000_000_00n; // 100 million in major units: above it, an operator decides
-// "TryAWS.now wallet top-up (USD 25.00) [ref 0123456789abcdef]"
+// "PanelPay wallet top-up (USD 25.00) [ref 0123456789abcdef]"
 const LINE =
-  /^TryAWS\.now wallet top-up \(([A-Z]{3}) ([0-9]{1,12}\.[0-9]{2})\) \[ref ([0-9a-f]{16})\]$/;
+  /^PanelPay wallet top-up \(([A-Z]{3}) ([0-9]{1,12}\.[0-9]{2})\) \[ref ([0-9a-f]{16})\]$/;
 
 /** "12.5" -> 1250n, "12.50" -> 1250n; anything else (negative, 3 decimals, exponent, text) -> null. */
 export function parseAmountMinor(value: unknown): bigint | null {
