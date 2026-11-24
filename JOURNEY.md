@@ -429,3 +429,15 @@ Owner approval: "হ্যাঁ, বানাও ও টেস্ট করো"
 - Marketplace listing assets regenerated with the PanelPay brand and pink theme and put in a new neutral bucket `ticon-mp-assets-739275468267` (us-east-1, prefixes panelpay-pro/ and blessbit/). The old bucket stays until the BlessBit listing and the restricted TryAWS-era versions no longer reference it.
 - Kept on purpose: the domain tryaws.now, the SST app name `tryaws-now` and every resource name derived from it (renaming would replace the deployed staging stack).
 - Evidence: `npx vitest run tests/repo` 1247 passed, 1 failed (workspace-layout Node 24 pin, environment, same on main).
+
+## 2026-11-24 16:55 BRAND-2: Marketplace listing renamed, AMI 1.0.2 baked (track Pro, Claude)
+Owner: "হ্যাঁ, বানাও ও Publish করো" (bake 1.0.2 and publish).
+- Partner Central, prod-ill7oycvmsrme: "Provide product details" succeeded (title "PanelPay Pro: Prepaid Lightsail Reseller Panel with WHMCS", SKU PANELPAY-PRO, new logo, every text and resource link renamed, GitHub links to bemoshiur/panelpay); "Add images and videos" succeeded (four new images from ticon-mp-assets-739275468267/panelpay-pro/images/).
+- Release tc-pro-be5ee67747ce.tar.gz (95,929,156 bytes, sha256 d6942964…54d2743) from main be5ee67: no "TryAWS" in it, product-sku present.
+- Bake in 739275468267 ap-southeast-1: build instance i-03af12ae4bfb35fa3 (terminated), console "TC-BAKE-OK be5ee67747ce", image **ami-09489aa31c596a804** (IMDSv2 required). Build bucket deleted.
+- End-to-end test instance i-0bd504e805118665f (t3.small, same test as 1.0.1 plus a check that the web and admin pages say PanelPay) launched 10:45 UTC; it powers itself off. Result not read yet: the owner's Mac (AWS access) and Chrome went offline at about 10:53 UTC.
+Left to do, in order:
+1. Read the e2e console (tc-e2e lines), then terminate i-0bd504e805118665f and delete security group sg-08f9e55afa1c31d00.
+2. Copy ami-09489aa31c596a804 to us-east-1, share with 542374379351, copy it in the seller account, deregister the ap-southeast-1 image and its snapshot.
+3. Add version 1.0.2 (template https://ticon-mp-assets-739275468267.s3.amazonaws.com/panelpay-pro/1.0.2/panelpay-pro.yaml, delivery option title "One-click install: PanelPay Pro stack", texts in the session's version-1.0.2.md), restrict 1.0.1, then Publish.
+4. After AWS accepts: delete the old bucket tryawsnow-pro-mp-assets-739275468267 once the BlessBit listing images are moved to ticon-mp-assets-739275468267/blessbit/.
