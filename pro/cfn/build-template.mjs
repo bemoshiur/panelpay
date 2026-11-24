@@ -169,7 +169,7 @@ export function buildTemplate() {
       },
       Policies: [
         {
-          PolicyName: "TryAwsNowPro",
+          PolicyName: "PanelPayPro",
           PolicyDocument: {
             Version: "2012-10-17",
             Statement: [
